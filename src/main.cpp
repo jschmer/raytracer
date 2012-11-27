@@ -12,9 +12,7 @@ int main(int argc, char* argv[]) {
 
     scene.render();
 
-    scene.saveImage();
-
     std::cout << "Press a key...\n";
-    getchar();
+    //getchar();
     return 0;
 }

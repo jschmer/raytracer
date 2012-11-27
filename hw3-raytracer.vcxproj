@@ -88,11 +88,16 @@
     <ClCompile Include="src\SceneParser.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RayTraceImage.cpp" />
+    <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\RayTracer\Camera.h" />
+    <ClInclude Include="include\RayTracer\Geometry.h" />
+    <ClInclude Include="include\RayTracer\Ray.h" />
     <ClInclude Include="include\RayTracer\Scene.h" />
     <ClInclude Include="include\RayTracer\SceneParser.h" />
     <ClInclude Include="include\RayTracer\RayTraceImage.h" />
+    <ClInclude Include="include\RayTracer\Transform.h" />
     <ClInclude Include="include\StringSplit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

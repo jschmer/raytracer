@@ -1,5 +1,19 @@
 #pragma once
 #include <Windows.h>
+#include <FreeImage\FreeImage.h>
+#include <string>
+
+class Sample {
+public:
+    Sample() {}
+    Sample(int x, int y)
+        : x(x),
+          y(y)
+    {}
+
+    int x;
+    int y;
+};
 
 struct Pixel {
     BYTE Blue;
@@ -16,10 +30,35 @@ public:
     {
         pImage = new Pixel[width*height];
         numPixels = width*height;
+        currentSample = 0;
     }
 
     ~RayTraceImage() {
         delete[] pImage;
+    }
+
+    bool getSample(Sample &s) {
+        if (currentSample <= numPixels) {
+            s.x = currentSample % width;
+            s.y = currentSample / width;
+            ++currentSample;
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    void save(std::string filename) {
+        FreeImage_Initialise();
+
+        // save the rendered image
+        {
+            FIBITMAP *img = FreeImage_ConvertFromRawBits(this->getByteBuffer(), width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, false);
+            FreeImage_Save(FIF_PNG, img, filename.c_str(), 0);
+        }
+
+        FreeImage_DeInitialise();
     }
 
     void fill() {
@@ -49,5 +88,7 @@ private:
     unsigned int height;
     unsigned int numPixels;
     Pixel *pImage;
+
+    unsigned int currentSample;
 };
 

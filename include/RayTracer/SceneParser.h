@@ -1,5 +1,10 @@
 #pragma once
 #include <string>
+#include <sstream>
+#include <vector>
+
+using std::vector;
+using std::stringstream;
 
 class Scene;
 
@@ -20,5 +25,7 @@ public:
 
 private:
     std::string sceneFile;
+
+    bool readvals (stringstream &s, const int numvals, vector<float> &values);
 };
 
