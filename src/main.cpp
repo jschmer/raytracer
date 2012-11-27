@@ -3,9 +3,16 @@
 #include <iostream>
 
 #include <RayTracer\RayTraceImage.h>
+#include <RayTracer\Scene.h>
 
 int main(int argc, char* argv[]) {
     FreeImage_Initialise();
+
+    Scene scene;
+    std::cout << "output name: " << scene._outputFilename << "\n";
+    
+    scene.loadScene("testscenes/scene1.test");
+    std::cout << "output name: " << scene._outputFilename << "\n";
 
     // save a image
     {

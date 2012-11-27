@@ -3,6 +3,8 @@
 #include <vector>
 #include <glm\glm.hpp>
 
+#include "SceneParser.h"
+
 using namespace glm;
 
 class Scene
@@ -11,8 +13,34 @@ public:
     Scene() {
         // default values
         _maxdepth = 5;
+        _outputFilename = "SceneRender.png";
     }
-    ~Scene();
+    ~Scene() {}
+
+    void loadScene(std::string sceneFile) {
+        SceneParser parser(sceneFile);
+        *this = *parser.load();
+    }
+
+    /*
+     * ray tracing loop
+     */
+    void render() {
+        /*
+        RayTraceImage rayimg(width, height);
+        Sample sample;
+        Ray ray;
+        Color color;
+
+        while (sample = rayimg.getSample()) {
+            ray = camera.generateRay(sample);
+            color = raytracer.trace(ray);
+            rayimg.commit(sample, color);
+        }
+
+        film.writeImage();
+        */
+    }
 
     /*
      * General

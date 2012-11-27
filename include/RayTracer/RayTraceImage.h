@@ -36,7 +36,7 @@ public:
         BluePixel.Green  = 0x00;
         BluePixel.Red    = 0x00;
 
-        for (int i=0; i<numPixels; ++i)
+        for (unsigned int i=0; i<numPixels; ++i)
             pImage[i] = BluePixel;
     }
 

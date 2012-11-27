@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
-#include "Scene.h"
+
+class Scene;
 
 /*
  * @brief   parses given config file and populates a new config class
@@ -8,15 +9,16 @@
 class SceneParser
 {
 public:
-    SceneParser(std::string configFile)
-        : configFile(configFile)
-    {}
+    SceneParser(std::string sceneFile)
+        : sceneFile(sceneFile)
+    {
+    }
 
     ~SceneParser() {}
 
-    Scene parse();
+    Scene* load();
 
 private:
-    std::string configFile;
+    std::string sceneFile;
 };
 
