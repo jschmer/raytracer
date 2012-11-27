@@ -78,6 +78,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\RayTraceImage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\RayTracer\RayTraceImage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
