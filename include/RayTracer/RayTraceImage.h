@@ -10,7 +10,7 @@ struct Pixel {
 class RayTraceImage
 {
 public:
-    RayTraceImage(int width, int height)
+    RayTraceImage(int width = 200, int height = 200)
         : width(width),
           height(height)
     {
@@ -37,7 +37,7 @@ public:
         BluePixel.Red    = 0x00;
 
         for (unsigned int i=0; i<numPixels; ++i)
-            pImage[i] = BluePixel;
+            pImage[i] = RedPixel;
     }
 
     BYTE* getByteBuffer() {

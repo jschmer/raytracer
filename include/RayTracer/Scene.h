@@ -1,9 +1,12 @@
 #pragma once
-#include <string>
-#include <vector>
+#include <FreeImage\FreeImage.h>
 #include <glm\glm.hpp>
 
+#include <string>
+#include <vector>
+
 #include "SceneParser.h"
+#include "RayTraceImage.h"
 
 using namespace glm;
 
@@ -14,12 +17,35 @@ public:
         // default values
         _maxdepth = 5;
         _outputFilename = "SceneRender.png";
+
+        image = NULL;
+
+        _size.width  = 200;
+        _size.height = 200;
     }
     ~Scene() {}
 
     void loadScene(std::string sceneFile) {
         SceneParser parser(sceneFile);
         *this = *parser.load();
+
+        if (image)
+            delete image;
+        image = new RayTraceImage(_size.width, _size.height);
+    }
+
+    void saveImage() {
+        FreeImage_Initialise();
+
+        // save the rendered image
+        {
+            image->fill();
+
+            FIBITMAP *img = FreeImage_ConvertFromRawBits(image->getByteBuffer(), _size.width, _size.height, _size.width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, false);
+            FreeImage_Save(FIF_PNG, img, _outputFilename.c_str(), 0);
+        }
+
+        FreeImage_DeInitialise();
     }
 
     /*
@@ -41,6 +67,11 @@ public:
         film.writeImage();
         */
     }
+
+    /*
+     * raytraced output
+     */
+    RayTraceImage *image;
 
     /*
      * General
