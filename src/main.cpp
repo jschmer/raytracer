@@ -20,6 +20,8 @@ int main(int argc, char* argv[]) {
     }
 
     FreeImage_DeInitialise();
+
+    std::cout << "Press a key...\n";
     getchar();
     return 0;
 }
