@@ -44,13 +44,36 @@ public:
     }
 
     void render() {
+        _camera->initFov((float)_size.width, (float)_size.height);
         Sample sample;
+        Ray ray;
 
-        while(_image->getSample(sample)) {
-            _image->commit(sample, vec3(1, 0, 0));
+        while(_image->getSample(sample)) {          // OK
+            _camera->generateRay(sample, ray);      // OK
+
+            vec3 color = trace(ray);
+
+            _image->commit(sample, color);  // OK
         }
 
         _image->save(_outputFilename);
+    }
+
+    vec3 trace(Ray &ray) {
+        float mindist = FLT_MAX;
+        float t;
+        vec3 tmpcolor;
+        vec3 retColor = vec3(0, 0, 0);
+
+        for (std::vector<Primitive*>::iterator it = _primitives.begin(); it < _primitives.end(); ++it) {
+            t = (*it)->Intersect(ray, tmpcolor);
+            if (t > 0 && t < mindist) {
+                mindist = t;
+                retColor = tmpcolor;
+            }
+        }
+
+        return retColor;
     }
 
 

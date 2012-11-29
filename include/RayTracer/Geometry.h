@@ -7,7 +7,7 @@ using namespace glm;
 
 class Primitive {
 public:
-    virtual bool Intersect(Ray& r, float &t) = 0;
+    virtual float Intersect(Ray& r, vec3 &color) = 0;
 };
 
 class Sphere : public Primitive {
@@ -17,7 +17,7 @@ public:
         radius(radius)
     {}
 
-    bool Intersect(Ray &ray, float &t) {
+    float Intersect(Ray &ray, vec3 &color) {
         //Compute A, B and C coefficients
         float a = dot(ray.dir, ray.dir);
         vec3 center_to_camera = ray.pos - position;
@@ -32,13 +32,15 @@ public:
         if (disc < 0)
             return false;
 
+        color = vec3(1, 0, 0);
+
         // compute q as described above
         float distSqrt = sqrtf(disc);
         float q;
         if (b < 0)
-            q = (-b - distSqrt)/2.0;
+            q = (-b - distSqrt)/2.0f;
         else
-            q = (-b + distSqrt)/2.0;
+            q = (-b + distSqrt)/2.0f;
 
         // compute t0 and t1
         float t0 = q / a;
@@ -60,16 +62,11 @@ public:
 
         // if t0 is less than zero, the intersection point is at t1
         if (t0 < 0)
-        {
-            t = t1;
-            return true;
-        }
+            return t1;
+
         // else the intersection point is at t0
         else
-        {
-            t = t0;
-            return true;
-        }
+            return t0;
     }
 
     // object parameters
@@ -95,7 +92,7 @@ public:
         faceNormal = glm::normalize(glm::cross(z - x, y - x)); 
     }
 
-    bool Intersect(Ray &ray, float &t) {
+    float Intersect(Ray &ray, vec3 &color) {
         return false;
     }
 

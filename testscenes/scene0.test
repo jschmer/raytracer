@@ -1,0 +1,10 @@
+# Test Scene 1 
+# A simple quad viewed from different camera positions
+
+size 600 600 
+
+# camera
+camera 0 0 4 0 0 0 0 1 0 30
+
+sphere 0 0 0 .5
+
