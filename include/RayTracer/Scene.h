@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "SceneParser.h"
 #include "RayTraceImage.h"
@@ -22,45 +23,35 @@ public:
         _maxdepth = 5;
         _outputFilename = "SceneRender.png";
 
-        image = NULL;
+        _image = NULL;
+        _camera = NULL;
 
         _size.width  = 200;
         _size.height = 200;
     }
-    ~Scene() {}
-
-
+    ~Scene() {
+        if (_camera)
+            delete _camera;
+    }
 
     void loadScene(std::string sceneFile) {
         SceneParser parser(sceneFile);
         *this = *parser.load();
 
-        if (image)
-            delete image;
-        image = new RayTraceImage(_size.width, _size.height);
+        if (_image)
+            delete _image;
+        _image = new RayTraceImage(_size.width, _size.height);
     }
 
-    /*
-     * ray tracing loop
-     */
     void render() {
         Sample sample;
-        Ray ray;
-        vec3 color;
 
-        while (image->getSample(sample)) {
-            ray = _camera.generateRay(sample);
-            color = trace(ray);
-            //rayimg.commit(sample, color);
+        while(_image->getSample(sample)) {
+            _image->commit(sample, vec3(1, 0, 0));
         }
 
-        image->save(_outputFilename);
+        _image->save(_outputFilename);
     }
-
-    vec3 trace(Ray &ray) {
-
-    }
-
 
 
     ////////// scene variables
@@ -68,7 +59,7 @@ public:
     /*
      * raytraced output
      */
-    RayTraceImage *image;
+    RayTraceImage *_image;
 
     /*
      * General
@@ -84,13 +75,12 @@ public:
     /*
      * Camera
      */
-    Camera _camera;
+    Camera *_camera;
 
     /*
      * Geometry
      */
-    std::vector<Sphere>   _spheres;
-    std::vector<Triangle> _triangles;
+    std::vector<Primitive*> _primitives;
 
     /*
      * Lights

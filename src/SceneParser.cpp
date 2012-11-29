@@ -153,20 +153,19 @@ Scene* SceneParser::load(){
                         // fovy         90.0
 
                         // camera 0 -2 2 0 0 0 0 1 1 30.0
-                        scene->_camera.eye = vec3(values[0], values[1], values[2]);
-                        scene->_camera.center = vec3(values[3], values[4], values[5]);
-                        scene->_camera.up = Transform::upvector(vec3(values[6], values[7], values[8]), scene->_camera.eye);
-                        scene->_camera.fovy = values[9];
+                        vec3 eye = vec3(values[0], values[1], values[2]);
+                        vec3 center = vec3(values[3], values[4], values[5]);
+                        vec3 up = Transform::upvector(vec3(values[6], values[7], values[8]), eye);
+                        float fovy = values[9];
+
+                        if (scene->_camera)
+                            delete scene->_camera;
+                        Camera *c = new Camera(eye, center, up, fovy);
+                        scene->_camera = c;
                     }
                 }
 
                 // Geometry
-                else if (cmd == "sphere") {
-                    validinput = readvals(s, 4, values); 
-                    if (validinput) {
-                        // store object with material properties and transformation
-                    }
-                }
                 else if (cmd == "vertex") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
@@ -179,20 +178,28 @@ Scene* SceneParser::load(){
 
                     }
                 }
+                else if (cmd == "sphere") {
+                    validinput = readvals(s, 4, values); 
+                    if (validinput) {
+                        // store object with material properties and transformation
+                        scene->_primitives.push_back(new Sphere(vec3(values[0], values[1], values[2]), values[3]));
+                    }
+                }
                 else if (cmd == "tri") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
-                        Triangle t( vertices[(unsigned int)values[0]],
+                        Triangle* t = new Triangle( vertices[(unsigned int)values[0]],
                                     vertices[(unsigned int)values[1]],
                                     vertices[(unsigned int)values[2]]);
-                        t.ambient  = ambient;
-                        t.specular = specular;
-                        t.emission = emission;
-                        t.diffuse  = diffuse;
-                        t.transformation = transfstack.top();
-                        scene->_triangles.push_back(t);
+                        t->ambient  = ambient;
+                        t->specular = specular;
+                        t->emission = emission;
+                        t->diffuse  = diffuse;
+                        t->transformation = transfstack.top();
+                        scene->_primitives.push_back(t);
                     }
                 }
+
                 else if (cmd == "trinormal") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {

@@ -2,6 +2,9 @@
 #include <Windows.h>
 #include <FreeImage\FreeImage.h>
 #include <string>
+#include <glm\glm.hpp>
+
+using namespace glm;
 
 class Sample {
 public:
@@ -11,8 +14,8 @@ public:
           y(y)
     {}
 
-    int x;
-    int y;
+    int width, height;
+    int x, y;
 };
 
 struct Pixel {
@@ -41,12 +44,23 @@ public:
         if (currentSample <= numPixels) {
             s.x = currentSample % width;
             s.y = currentSample / width;
+            s.width = width;
+            s.height = height;
             ++currentSample;
 
             return true;
         } else {
             return false;
         }
+    }
+
+    void commit(Sample &s, vec3 color) {
+        Pixel PixelColor;
+        PixelColor.Red   = (unsigned int) color[0]*255;
+        PixelColor.Green = (unsigned int) color[1]*255;
+        PixelColor.Blue  = (unsigned int) color[2]*255;
+
+        pImage[s.y*width+s.x] = PixelColor;
     }
 
     void save(std::string filename) {

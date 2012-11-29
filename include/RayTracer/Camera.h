@@ -6,19 +6,19 @@ using namespace glm;
 
 class Camera {
 public:
-    Camera(vec3 eye = vec3(), vec3 center = vec3(), vec3 up = vec3(), float fovy = 0.0F)
+    Camera(vec3 eye, vec3 center, vec3 up, float fovy)
         : eye(eye),
         center(center),
         up(up),
+        fovx(0.0),
         fovy(fovy)
     {}
 
     Ray generateRay(Sample& sample) {
-        vec3 w = glm::normalize(eye-center);
-        vec3 b = up;
-        vec3 u = glm::normalize(glm::cross(b,w));
+        // origin = eye
 
-        Ray r;
+
+        // vec v - vec w = vec, der von punkt w auf punkt v zeigt
     }
 
     vec3 eye;
@@ -26,4 +26,8 @@ public:
     vec3 up;
 
     float fovy;
+    float fovx;
+
+    float width;
+    float height;
 };

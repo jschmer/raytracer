@@ -84,10 +84,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneParser.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\RayTraceImage.cpp" />
     <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
