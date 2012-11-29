@@ -37,7 +37,7 @@ public:
         float alpha = tanFovx * ((sample.x - halfWidth)/halfWidth);
         float beta = tanFovy * ((halfHeight - sample.y)/halfHeight);
 
-        vec3 dir = alpha*u + beta*v - w;
+        vec3 dir = alpha*u + beta*-v - w;
 
         ray.pos = eye;
         ray.dir = dir;
