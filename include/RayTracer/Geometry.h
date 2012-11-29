@@ -30,9 +30,7 @@ public:
         // if discriminant is negative there are no real roots, so return 
         // false as ray misses sphere
         if (disc < 0)
-            return false;
-
-        color = vec3(1, 0, 0);
+            return -1.0f;
 
         // compute q as described above
         float distSqrt = sqrtf(disc);
@@ -58,7 +56,9 @@ public:
         // if t1 is less than zero, the object is in the ray's negative direction
         // and consequently the ray misses the sphere
         if (t1 < 0)
-            return false;
+            return -1.0f;
+
+        color = vec3(1, 0, 0);
 
         // if t0 is less than zero, the intersection point is at t1
         if (t0 < 0)
@@ -86,18 +86,58 @@ public:
 class Triangle : public Primitive {
 public:
     Triangle(vec3 &f, vec3 &g, vec3 &h) {
-        x = f;
-        y = g;
-        z = h;
-        faceNormal = glm::normalize(glm::cross(z - x, y - x)); 
+        v0 = f;
+        v1 = g;
+        v2 = h;
+        faceNormal = glm::normalize(glm::cross(v2 - v0, v1 - v0)); 
     }
 
     float Intersect(Ray &ray, vec3 &color) {
-        return false;
+         vec3 v0v1 = v1 - v0;
+         vec3 v0v2 = v2 - v0;
+         vec3 N = cross(v0v1, v0v2);
+         
+         float nDotRay = dot(N, ray.dir);
+
+         if (nDotRay == 0)
+             return -1.0f; // ray parallel to triangle
+         
+         float d = dot(N, v0);
+         float t = -(dot(N, ray.pos) + d) / nDotRay;
+         
+         // compute intersection point
+         vec3 Phit = ray.pos + t * ray.dir;
+         
+         // inside-out test edge0
+         vec3 v0p = Phit - v0;
+         float v = dot(N, cross(v0v1, v0p));
+         if (v < 0)
+             return -1.0f; // P outside triangle
+         
+         // inside-out test edge1
+         vec3 v1p = Phit - v1;
+         vec3 v1v2 = v2 - v1;
+         float w = dot(N, cross(v1v2, v1p));
+         
+         if (w < 0)
+             return -1.0f; // P outside triangle
+         
+         // inside-out test edge2
+         vec3 v2p = Phit - v2;
+         vec3 v2v0 = v0 - v2;
+         float u = dot(N, cross(v2v0, v2p));
+         
+         if (u < 0)
+             return -1.0f; // P outside triangle
+         
+         color = vec3(0, 0, 1);
+         return t;
+
+         return true;
     }
 
     // object parameters
-    vec3 x, y, z;    // vertices
+    vec3 v0, v1, v2;    // vertices
     vec3 faceNormal;
 
     // lighting

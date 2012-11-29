@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[]) {
     Scene scene;
-    scene.loadScene("testscenes/scene0.test");
+    scene.loadScene("testscenes/scene1.test");
 
     std::cout << "output name: " << scene._outputFilename << "\n";
 
