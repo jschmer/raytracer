@@ -36,24 +36,21 @@ Scene* SceneParser::load(){
     ifstream in;
     in.open(sceneFile); 
     if (in.is_open()) {
-
-        // I need to implement a matrix stack to store transforms.  
-        // This is done using standard STL Templates 
+        // matrix stack to store transforms.  
         stack <mat4> transfstack; 
-        transfstack.push(mat4(1.0));  // identity
+        transfstack.push(mat4(1.0f));  // identity
 
         vector<vec3> vertices;
 
-        vec3 ambient(3);
-        for (unsigned int i=0; i<3; ++i)
-            ambient[i] = 0.2F;
+        vec3 ambient(0.2f, 0.2f, 0.2f);
 
-        vec3 diffuse(3);
-        vec3 specular(3);
-        vec3 emission(3);
-        float shininess;
+        vec3 diffuse(0.0);
+        vec3 specular(0.0);
+        vec3 emission(0.0);
+        float shininess = 0;
 
-        vec3 attenuation;
+        // constant, linear, quadratic attenuations 
+        vec3 attenuation(1.0, 0.0, 0.0);
 
         std::getline(in, str); 
         while (in) {
@@ -65,8 +62,53 @@ Scene* SceneParser::load(){
                 vector<float> values;
                 bool validinput; // Validity of input 
 
+                // image size
+                if (cmd == "maxdepth") {
+                    validinput = readvals(s,1,values); 
+                    if (validinput) { 
+                        scene->_maxdepth = (int) values[0];
+                    } 
+                }
+
+                else if (cmd == "size") {
+                    validinput = readvals(s, 2, values); 
+                    if (validinput) {
+                        scene->_size.width  = (int)values[0];
+                        scene->_size.height = (int)values[1];
+                    }
+                }
+
+                // output filename
+                else if (cmd == "output") {
+                    s >> scene->_outputFilename; 
+                }
+
+                // camera spec
+                else if (cmd == "camera") {
+                    validinput = readvals(s,10,values); // 10 values eye cen up fov
+                    if (validinput) {
+                        // camera       0 0 5 0 0 0 0 1 0 90.0
+                        // look from    0 0 5   eye
+                        // look at      0 0 0   origin
+                        // up           0 1 0   up
+                        // fovy         90.0
+
+                        // camera 0 -2 2 0 0 0 0 1 1 30.0
+                        vec3 eye    = vec3(values[0], values[1], values[2]);
+                        vec3 center = vec3(values[3], values[4], values[5]);
+                        vec3 up     = Transform::upvector(vec3(values[6], values[7], values[8]), eye);
+                        float fovy  = values[9];
+
+                        if (scene->_camera)
+                            delete scene->_camera;
+                        Camera *c = new Camera(eye, center, up, fovy);
+                        scene->_camera = c;
+                    }
+                }
+
+
                 // Process the lights, add it to database.
-                if (cmd == "directional") {
+                else if (cmd == "directional") {
                     validinput = readvals(s, 6, values); // Position/color for lts.
                     if (validinput) {
                         vec4 dir(values[0], values[1], values[2], 0);
@@ -89,7 +131,6 @@ Scene* SceneParser::load(){
                 else if (cmd == "attenuation") {
                     validinput = readvals(s, 3, values); // Position/color for lts.
                     if (validinput) {
-                        // store light in scene
                         attenuation = vec3(values[0], values[1], values[2]);
                     }
                 }
@@ -97,7 +138,6 @@ Scene* SceneParser::load(){
                 // Material Commands 
                 // Ambient, diffuse, specular, shininess properties for each object.
                 // Note that no transforms/stacks are applied to the colors. 
-
                 else if (cmd == "ambient") {
                     validinput = readvals(s, 3, values); // Position/color for lts.
                     if (validinput) {
@@ -124,44 +164,6 @@ Scene* SceneParser::load(){
                     validinput = readvals(s, 1, values); 
                     if (validinput) {
                         shininess = values[0];
-                    }
-                }
-                
-                // image size
-                else if (cmd == "size") {
-                    validinput = readvals(s,2,values); 
-                    if (validinput) { 
-                        scene->_size.width = (int) values[0];
-                        scene->_size.height = (int) values[1];
-                    } 
-                }
-
-                // camera spec
-                else if (cmd == "camera") {
-                    validinput = readvals(s,10,values); // 10 values eye cen up fov
-                    if (validinput) {
-
-                        // DONE YOUR CODE FOR HW 2 HERE
-                        // Use all of values[0...9]
-                        // You may need to use the upvector fn in Transform.cpp
-                        // to set up correctly. 
-
-                        // camera       0 0 5 0 0 0 0 1 0 90.0
-                        // look from    0 0 5   eye
-                        // look at      0 0 0   origin
-                        // up           0 1 0   up
-                        // fovy         90.0
-
-                        // camera 0 -2 2 0 0 0 0 1 1 30.0
-                        vec3 eye = vec3(values[0], values[1], values[2]);
-                        vec3 center = vec3(values[3], values[4], values[5]);
-                        vec3 up = Transform::upvector(vec3(values[6], values[7], values[8]), eye);
-                        float fovy = values[9];
-
-                        if (scene->_camera)
-                            delete scene->_camera;
-                        Camera *c = new Camera(eye, center, up, fovy);
-                        scene->_camera = c;
                     }
                 }
 
@@ -206,51 +208,35 @@ Scene* SceneParser::load(){
 
                     }
                 }
+
+                // transformations
                 else if (cmd == "translate") {
                     validinput = readvals(s,3,values); 
                     if (validinput) {
-
-                        // TODO YOUR CODE FOR HW 2 HERE.  
-                        // Think about how the transformation stack is affected
-                        // You might want to use helper functions on top of file. 
-                        // Also keep in mind what order your matrix is!
                         transfstack.top() = transfstack.top()*Transform::translate(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "scale") {
                     validinput = readvals(s,3,values); 
                     if (validinput) {
-
-                        // TODO YOUR CODE FOR HW 2 HERE.  
-                        // Think about how the transformation stack is affected
-                        // You might want to use helper functions on top of file.  
-                        // Also keep in mind what order your matrix is!
                         transfstack.top() = transfstack.top()*Transform::scale(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "rotate") {
                     validinput = readvals(s,4,values); 
                     if (validinput) {
-
-                        // TODO YOUR CODE FOR HW 2 HERE. 
-                        // values[0..2] are the axis, values[3] is the angle.  
-                        // You may want to normalize the axis (or in Transform::rotate)
-                        // See how the stack is affected, as above.  
-                        // Note that rotate returns a mat3. 
-                        // Also keep in mind what order your matrix is!
-
                         // rotate 0 0 1 90 
                         mat4 rotMatrix(Transform::rotate(values[3], vec3(values[0], values[1], values[2])));
                         transfstack.top() = transfstack.top()*rotMatrix;
                     }
                 }
 
-                // I include the basic push/pop code for matrix stacks
+                // basic push/pop code for matrix stacks
                 else if (cmd == "pushTransform") {
                     transfstack.push(transfstack.top()); 
                 } else if (cmd == "popTransform") {
                     if (transfstack.size() <= 1) {
-                        cerr << "Stack has no elements.  Cannot Pop\n"; 
+                        cerr << "Stack has no elements. Cannot Pop\n"; 
                     } else {
                         transfstack.pop(); 
                     }

@@ -8,6 +8,16 @@ using namespace glm;
 class Primitive {
 public:
     virtual float Intersect(Ray& r, vec3 &color) = 0;
+    virtual vec3 Normal() = 0;
+
+    // lighting
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    vec3 emission;
+
+    // transform matrix
+    mat4 transformation;
 };
 
 class Sphere : public Primitive {
@@ -69,18 +79,13 @@ public:
             return t0;
     }
 
+    vec3 Normal() {
+        return vec3(0.0);
+    }
+
     // object parameters
     vec3 position;    // position
     float radius;
-
-    // lighting
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    vec3 emission;
-
-    // transform matrix
-    mat4 transformation;
 };
 
 class Triangle : public Primitive {
@@ -136,18 +141,13 @@ public:
          return true;
     }
 
+    vec3 Normal() {
+        return faceNormal;
+    }
+
     // object parameters
     vec3 v0, v1, v2;    // vertices
     vec3 faceNormal;
-
-    // lighting
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    vec3 emission;
-
-    // transform matrix
-    mat4 transformation;
 };
 
 class Light {

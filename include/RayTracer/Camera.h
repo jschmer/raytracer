@@ -2,6 +2,9 @@
 #include <glm\glm.hpp>
 #include "Ray.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 using namespace glm;
 
 class Camera {
@@ -16,14 +19,13 @@ public:
 
     void initFov(float width, float height) {
         float aspect = width/height;
-
         fovy = radians(fovy);
         fovx = fovy * aspect;
-        tanFovx = tan(fovx/2);
-        tanFovy = tan(fovy/2);
+        tanFovx = tan(fovx/2.0);
+        tanFovy = tan(fovy/2.0);
 
-        halfHeight = height/2;
-        halfWidth = width/2;
+        halfHeight = height/2.0;
+        halfWidth = width/2.0;
     }
 
     void generateRay(Sample& sample, Ray &ray) {
@@ -37,10 +39,10 @@ public:
         float alpha = tanFovx * ((sample.x - halfWidth)/halfWidth);
         float beta = tanFovy * ((halfHeight - sample.y)/halfHeight);
 
-        vec3 dir = alpha*u + beta*-v - w;
+        vec3 dir = alpha*u - beta*v - w;
 
         ray.pos = eye;
-        ray.dir = dir;
+        ray.dir = normalize(dir);
     }
 
     vec3 eye;
