@@ -14,8 +14,7 @@ public:
           y(y)
     {}
 
-    int width, height;
-    int x, y;
+    float x, y;
 };
 
 struct Pixel {
@@ -33,7 +32,8 @@ public:
     {
         pImage = new Pixel[width*height];
         numPixels = width*height;
-        currentSample = 0;
+        currentSampleWidth = 0;
+        currentSampleHeight = 0;
     }
 
     ~RayTraceImage() {
@@ -41,12 +41,14 @@ public:
     }
 
     bool getSample(Sample &s) {
-        if (currentSample <= numPixels) {
-            s.x = currentSample % width;
-            s.y = currentSample / width;
-            s.width = width;
-            s.height = height;
-            ++currentSample;
+        if (currentSampleHeight <= height) {
+            int w = width;
+            currentSampleHeight += currentSampleWidth/w;
+            currentSampleWidth %= w;
+
+            s.x = currentSampleWidth + 0.5f;
+            s.y = currentSampleHeight + 0.5f;
+            ++currentSampleWidth;
 
             return true;
         } else {
@@ -56,11 +58,11 @@ public:
 
     void commit(Sample &s, vec3 color) {
         Pixel PixelColor;
-        PixelColor.Red   = (unsigned int) color[0]*255;
-        PixelColor.Green = (unsigned int) color[1]*255;
-        PixelColor.Blue  = (unsigned int) color[2]*255;
+        PixelColor.Red   = (unsigned int) (color[2]*255);
+        PixelColor.Green = (unsigned int) (color[1]*255);
+        PixelColor.Blue  = (unsigned int) (color[0]*255);
 
-        pImage[s.y*width+s.x] = PixelColor;
+        pImage[(int)s.y*width+(int)s.x] = PixelColor;
     }
 
     void save(std::string filename) {
@@ -103,6 +105,7 @@ private:
     unsigned int numPixels;
     Pixel *pImage;
 
-    unsigned int currentSample;
+    unsigned int currentSampleWidth;
+    unsigned int currentSampleHeight;
 };
 

@@ -7,8 +7,24 @@ using namespace glm;
 
 class Primitive {
 public:
-    virtual float Intersect(Ray& r, vec3 &color) = 0;
+    Primitive()
+      : ambient(0.0),
+        diffuse(0.0),
+        specular(0.0),
+        emission(0.0) 
+    {}
+
+    virtual float Intersect(Ray& r) = 0;
     virtual vec3 Normal() = 0;
+
+    vec3 MaterialColor() {
+        vec3 color(0.0);
+
+        color += this->ambient;
+        color += this->emission;
+
+        return color;
+    }
 
     // lighting
     vec3 ambient;
@@ -27,7 +43,7 @@ public:
         radius(radius)
     {}
 
-    float Intersect(Ray &ray, vec3 &color) {
+    float Intersect(Ray &ray) {
         //Compute A, B and C coefficients
         float a = dot(ray.dir, ray.dir);
         vec3 center_to_camera = ray.pos - position;
@@ -68,8 +84,6 @@ public:
         if (t1 < 0)
             return -1.0f;
 
-        color = vec3(1, 0, 0);
-
         // if t0 is less than zero, the intersection point is at t1
         if (t0 < 0)
             return t1;
@@ -97,7 +111,7 @@ public:
         faceNormal = glm::normalize(glm::cross(v2 - v0, v1 - v0)); 
     }
 
-    float Intersect(Ray &ray, vec3 &color) {
+    float Intersect(Ray &ray) {
          vec3 v0v1 = v1 - v0;
          vec3 v0v2 = v2 - v0;
          vec3 N = cross(v0v1, v0v2);
@@ -135,10 +149,7 @@ public:
          if (u < 0)
              return -1.0f; // P outside triangle
          
-         color = vec3(0, 0, 1);
          return t;
-
-         return true;
     }
 
     vec3 Normal() {

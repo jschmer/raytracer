@@ -21,11 +21,11 @@ public:
         float aspect = width/height;
         fovy = radians(fovy);
         fovx = fovy * aspect;
-        tanFovx = tan(fovx/2.0);
-        tanFovy = tan(fovy/2.0);
+        tanFovx = tan(fovx/2.0f);
+        tanFovy = tan(fovy/2.0f);
 
-        halfHeight = height/2.0;
-        halfWidth = width/2.0;
+        halfHeight = height/2.0f;
+        halfWidth = width/2.0f;
     }
 
     void generateRay(Sample& sample, Ray &ray) {
