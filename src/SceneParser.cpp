@@ -10,6 +10,7 @@
 #include <fstream>
 #include <stack>
 
+#define GLM_SWIZZLE_XYZW 
 #include <glm\glm.hpp>
 
 using namespace std;
@@ -184,7 +185,12 @@ Scene* SceneParser::load(){
                     validinput = readvals(s, 4, values); 
                     if (validinput) {
                         // store object with material properties and transformation
-                        Sphere* s = new Sphere(vec3(values[0], values[1], values[2]), values[3]);
+                        vec4 pos(values[0], values[1], values[2], 1);
+                        float radius = values[3];
+                        mat4 transf = transfstack.top();
+                        pos = pos * transf;
+
+                        Sphere* s = new Sphere(vec3(pos), radius);
                         s->ambient  = ambient;
                         s->specular = specular;
                         s->emission = emission;
@@ -197,9 +203,15 @@ Scene* SceneParser::load(){
                 else if (cmd == "tri") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
-                        Triangle* t = new Triangle( vertices[(unsigned int)values[0]],
-                                    vertices[(unsigned int)values[1]],
-                                    vertices[(unsigned int)values[2]]);
+                        vec4 v0(vertices[(unsigned int)values[0]], 1);
+                        vec4 v1(vertices[(unsigned int)values[1]], 1);
+                        vec4 v2(vertices[(unsigned int)values[2]], 1);
+
+                        v0 = v0 * transfstack.top();
+                        v1 = v1 * transfstack.top();
+                        v2 = v2 * transfstack.top();
+
+                        Triangle* t = new Triangle(vec3(v0), vec3(v1), vec3(v2));
                         t->ambient  = ambient;
                         t->specular = specular;
                         t->emission = emission;
@@ -221,20 +233,20 @@ Scene* SceneParser::load(){
                 else if (cmd == "translate") {
                     validinput = readvals(s,3,values); 
                     if (validinput) {
-                        transfstack.top() = transfstack.top()*Transform::translate(values[0], values[1], values[2]);
+                        transfstack.top() = transfstack.top()*transpose(Transform::translate(values[0], values[1], values[2]));
                     }
                 }
                 else if (cmd == "scale") {
                     validinput = readvals(s,3,values); 
                     if (validinput) {
-                        transfstack.top() = transfstack.top()*Transform::scale(values[0], values[1], values[2]);
+                        transfstack.top() = transfstack.top()*transpose(Transform::scale(values[0], values[1], values[2]));
                     }
                 }
                 else if (cmd == "rotate") {
                     validinput = readvals(s,4,values); 
                     if (validinput) {
                         // rotate 0 0 1 90 
-                        mat4 rotMatrix(Transform::rotate(values[3], vec3(values[0], values[1], values[2])));
+                        mat4 rotMatrix(transpose(Transform::rotate(values[3], vec3(values[0], values[1], values[2]))));
                         transfstack.top() = transfstack.top()*rotMatrix;
                     }
                 }

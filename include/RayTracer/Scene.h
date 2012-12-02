@@ -1,4 +1,5 @@
 #pragma once
+#define GLM_SWIZZLE_XYZW 
 #include <glm\glm.hpp>
 
 #include <string>

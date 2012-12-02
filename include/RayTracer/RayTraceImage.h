@@ -58,9 +58,9 @@ public:
 
     void commit(Sample &s, vec3 color) {
         Pixel PixelColor;
-        PixelColor.Red   = (unsigned int) (color[2]*255);
+        PixelColor.Red   = (unsigned int) (color[0]*255);
         PixelColor.Green = (unsigned int) (color[1]*255);
-        PixelColor.Blue  = (unsigned int) (color[0]*255);
+        PixelColor.Blue  = (unsigned int) (color[2]*255);
 
         pImage[(int)s.y*width+(int)s.x] = PixelColor;
     }

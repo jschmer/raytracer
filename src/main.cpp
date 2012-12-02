@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
         }
     } else {
         Scene scene;
-        scene.loadScene("testscenes/scene_tris.test");
+        scene.loadScene("testscenes/scene_scale.test");
 
         std::cout << "output name: " << scene._outputFilename << "\n";
 

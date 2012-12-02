@@ -18,7 +18,7 @@ public:
     {}
 
     void initFov(float width, float height) {
-        float aspect = width/height;
+        double aspect = width/height;
         fovy = radians(fovy);
         fovx = fovy * aspect;
         tanFovx = tan(fovx/2.0f);
@@ -49,11 +49,11 @@ public:
     vec3 center;
     vec3 up;
 
-    float fovy;
-    float fovx;
+    double fovy;
+    double fovx;
 
-    float tanFovy;
-    float tanFovx;
+    double tanFovy;
+    double tanFovx;
 
     float halfWidth;
     float halfHeight;
