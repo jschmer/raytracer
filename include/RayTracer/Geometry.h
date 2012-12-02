@@ -16,7 +16,7 @@ public:
     {}
 
     virtual float Intersect(Ray& r) = 0;
-    virtual vec3 Normal() = 0;
+    virtual vec3 Normal(vec3 hitPoint) = 0;
 
     // lighting
     vec3 ambient;
@@ -86,8 +86,8 @@ public:
             return t0;
     }
 
-    vec3 Normal() {
-        return vec3(0.0);
+    vec3 Normal(vec3 hitPoint) {
+        return hitPoint - position;
     }
 
     // object parameters
@@ -145,7 +145,7 @@ public:
          return t;
     }
 
-    vec3 Normal() {
+    vec3 Normal(vec3 hitPoint) {
         return faceNormal;
     }
 

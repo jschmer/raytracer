@@ -4,19 +4,18 @@
 size 600 600 
 
 # camera
-#camera 0 0 4 0 0 0 0 1 0 30
+camera 0 0 4 0 0 0 0 1 0 30
 #camera 0 -3 3 0 0 0 0 1 0 30
 #camera -4 0 1 0 0 1 0 0 1 45
-camera -4 -4 4 1 0 0 0 1 0 30
+#camera -4 -4 4 1 0 0 0 1 0 30
 
-sphere 0 0 0 .1
+# lights
+ambient .1 .1 .1
+directional 0 0 1 .5 .5 .5 
+point 4 0 4 .5 .5 .5
 
-maxverts 4 
+# objects
+diffuse 1 0 0 
+specular 0 0 0
 
-vertex -1 -1 0 
-vertex +1 -1 0
-vertex +1 +1 0
-vertex -1 +1 0
-
-tri 0 1 2
-tri 0 2 3
+sphere 0 0 0 .7

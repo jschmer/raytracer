@@ -41,7 +41,7 @@ public:
     }
 
     bool getSample(Sample &s) {
-        if (currentSampleHeight <= height) {
+        if (currentSampleHeight < height) {
             int w = width;
             currentSampleHeight += currentSampleWidth/w;
             currentSampleWidth %= w;

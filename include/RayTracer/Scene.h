@@ -74,7 +74,7 @@ public:
         for (std::vector<Light>::iterator it = _lights.begin(); it != _lights.end(); ++it) {
             vec3 dir_to_light = normalize(it->LightVectorFrom(hitPoint));
 
-            Ray r(hitPoint, dir_to_light);
+            Ray r(hitPoint + 0.1f*dir_to_light, dir_to_light);
 
             float tmp;
             Primitive* hit = trace(r, tmp);
@@ -83,7 +83,7 @@ public:
                 // in shadow, continue
                 continue;
 
-            float normal_dot_lightray = dot(dir_to_light, obj->Normal());
+            float normal_dot_lightray = dot(dir_to_light, obj->Normal(hitPoint));
             vec3 diffuse = obj->diffuse * common::max(normal_dot_lightray, 0.0f);
 
             // half vec = eyepos - currentpos
