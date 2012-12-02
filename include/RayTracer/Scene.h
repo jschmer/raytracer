@@ -56,7 +56,7 @@ public:
 
             vec3 color(0.0);
             if (hitObj)
-                color = shade(hitObj, hitPoint, ray);
+                color = shade(hitObj, hitPoint, ray, _camera->eye);
 
             _image->commit(sample, color);  // OK
         }
@@ -64,7 +64,7 @@ public:
         _image->save(_outputFilename);
     }
 
-    vec3 shade(Primitive* obj, float t, Ray r) {
+    vec3 shade(Primitive* obj, float t, Ray r, vec3 eye) {
         vec3 color(0.0);
         color += obj->ambient;
         color += obj->emission;
@@ -72,7 +72,7 @@ public:
         vec3 hitPoint = r.pos + r.dir * t;
 
         for (std::vector<Light>::iterator it = _lights.begin(); it != _lights.end(); ++it) {
-            vec3 dir_to_light = normalize(it->LightVectorFrom(hitPoint));
+            vec3 dir_to_light = it->LightVectorFrom(hitPoint);
 
             Ray r(hitPoint + 0.1f*dir_to_light, dir_to_light);
 
@@ -83,12 +83,16 @@ public:
                 // in shadow, continue
                 continue;
 
-            float normal_dot_lightray = dot(dir_to_light, obj->Normal(hitPoint));
+            // diffuse term
+            float normal_dot_lightray = dot(obj->Normal(hitPoint), dir_to_light);
             vec3 diffuse = obj->diffuse * common::max(normal_dot_lightray, 0.0f);
 
+            // specular term
             // half vec = eyepos - currentpos
-            vec3 half_angle(0.0);
-            vec3 specular(0.0); // = obj->specular * pow(common::max((float) dot(half_angle, obj->Normal()), 0.0f) ,obj->shininess);
+            vec3 eyevec = normalize(eye - hitPoint);
+            vec3 halfVec = normalize(dir_to_light + eyevec);
+            float halfAngle = dot(obj->Normal(hitPoint), halfVec);
+            vec3 specular = obj->specular * pow(common::max(halfAngle, 0.0f), obj->shininess);
 
             color += it->color * (diffuse + specular);
         }

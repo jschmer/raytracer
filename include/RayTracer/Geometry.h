@@ -87,7 +87,7 @@ public:
     }
 
     vec3 Normal(vec3 hitPoint) {
-        return hitPoint - position;
+        return normalize(hitPoint - position);
     }
 
     // object parameters
@@ -146,7 +146,7 @@ public:
     }
 
     vec3 Normal(vec3 hitPoint) {
-        return faceNormal;
+        return normalize(faceNormal);
     }
 
     // object parameters
@@ -166,10 +166,10 @@ public:
     vec3 LightVectorFrom(vec3 point) {
         if (pos_or_dir[3] == 1)
             // point light
-            return vec3(pos_or_dir) - point;
+            return normalize(vec3(pos_or_dir) - point);
         else
             // directional light
-            return vec3(pos_or_dir);
+            return normalize(vec3(pos_or_dir));
     }
 
     vec3 attenuation;   // const, linear, quadratic term
