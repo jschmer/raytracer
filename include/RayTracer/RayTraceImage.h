@@ -10,8 +10,8 @@ class Sample {
 public:
     Sample() {}
     Sample(int x, int y)
-        : x(x),
-          y(y)
+        : x(static_cast<float>(x)),
+          y(static_cast<float>(y))
     {}
 
     float x, y;

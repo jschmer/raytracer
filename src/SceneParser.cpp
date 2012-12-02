@@ -184,7 +184,14 @@ Scene* SceneParser::load(){
                     validinput = readvals(s, 4, values); 
                     if (validinput) {
                         // store object with material properties and transformation
-                        scene->_primitives.push_back(new Sphere(vec3(values[0], values[1], values[2]), values[3]));
+                        Sphere* s = new Sphere(vec3(values[0], values[1], values[2]), values[3]);
+                        s->ambient  = ambient;
+                        s->specular = specular;
+                        s->emission = emission;
+                        s->diffuse  = diffuse;
+                        s->shininess = shininess;
+                        s->transformation = transfstack.top();
+                        scene->_primitives.push_back(s);
                     }
                 }
                 else if (cmd == "tri") {
@@ -197,6 +204,7 @@ Scene* SceneParser::load(){
                         t->specular = specular;
                         t->emission = emission;
                         t->diffuse  = diffuse;
+                        t->shininess = shininess;
                         t->transformation = transfstack.top();
                         scene->_primitives.push_back(t);
                     }

@@ -11,26 +11,19 @@ public:
       : ambient(0.0),
         diffuse(0.0),
         specular(0.0),
-        emission(0.0) 
+        emission(0.0) ,
+        shininess(0.0f)
     {}
 
     virtual float Intersect(Ray& r) = 0;
     virtual vec3 Normal() = 0;
-
-    vec3 MaterialColor() {
-        vec3 color(0.0);
-
-        color += this->ambient;
-        color += this->emission;
-
-        return color;
-    }
 
     // lighting
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     vec3 emission;
+    float shininess;
 
     // transform matrix
     mat4 transformation;
@@ -108,7 +101,7 @@ public:
         v0 = f;
         v1 = g;
         v2 = h;
-        faceNormal = glm::normalize(glm::cross(v2 - v0, v1 - v0)); 
+        faceNormal = -glm::normalize(glm::cross(v2 - v0, v1 - v0)); 
     }
 
     float Intersect(Ray &ray) {
@@ -169,6 +162,15 @@ public:
         attenuation(attenuation),
         transform(transform)
     {}
+
+    vec3 LightVectorFrom(vec3 point) {
+        if (pos_or_dir[3] == 1)
+            // point light
+            return vec3(pos_or_dir) - point;
+        else
+            // directional light
+            return vec3(pos_or_dir);
+    }
 
     vec3 attenuation;   // const, linear, quadratic term
     vec4 pos_or_dir;
