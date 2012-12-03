@@ -21,7 +21,7 @@ void getAllFilesIn(std::string folder, std::vector<std::string> &files) {
 
 int main(int argc, char* argv[]) {
     bool batch = false;
-    bool folder = true;
+    bool folder = false;
 
     if (batch) {
         for (int i=1; i<5; ++i) {
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         Scene scene;
-        scene.loadScene("testscenes/scene3.test");
+        scene.loadScene("testscenes/scene2.test");
 
         std::cout << "output name: " << scene._outputFilename << "\n";
 
@@ -59,6 +59,6 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Press a key...\n";
-    getchar();
+    //getchar();
     return 0;
 }

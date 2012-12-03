@@ -14,8 +14,7 @@ size 640 480
 
 # There are 3 camera positions.  Make images for all 3
 
-camera 0 0 4 0 0 0 1 1 2 60
-#camera -2 -2 2 0 0 0 1 1 2 60
+camera -2 -2 2 0 0 0 1 1 2 60
 #camera +2 +2 2 0 0 0 -1 -1 2 60
 #camera -2 -2 -2 0 0 0 -1 -1 2 60
 
@@ -38,37 +37,26 @@ vertex -1 +1 +1
 # No lighting calculations should be performed since I haven't defined any 
 # lights.
 
-# lila
-ambient .5 0 .5
+ambient .5 0 .5 
 # face -Y
 tri 0 1 5 
 tri 0 5 4 
-
-# giftgrün
 ambient .5 1 .5 
 # face +Y
 tri 3 7 6
 tri 3 6 2
-
-# hellrot
 ambient 1 .5 .5 
 # face +X
 tri 1 2 6
 tri 1 6 5 
-
-# türkis
 ambient 0 .5 .5 
 # face -X
 tri 0 7 3 
 tri 0 4 7 
-
-# ocker
 ambient .5 .5 0
 # face -Z
 tri 0 3 2 
 tri 0 2 1
-
-# blau
 ambient .5 .5 1
 # face +Z
 tri 4 5 6 

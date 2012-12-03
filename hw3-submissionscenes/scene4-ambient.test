@@ -51,6 +51,8 @@ tri 4 5 6
 tri 4 6 7 
 
 popTransform
+
+
 pushTransform 
 # This idiom restores the camera transform and pushes it back on the stack
 # Now, I draw the 4 legs of the table.
@@ -139,6 +141,11 @@ tri 4 6 7
 
 ambient 0 1 0 
 popTransform
+
+
+
+
+# TODO
 pushTransform 
 translate  0 0 0.5
 rotate 0 0 1 45
