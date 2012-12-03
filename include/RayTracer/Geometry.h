@@ -8,7 +8,7 @@ using namespace glm;
 class Primitive {
 public:
     Primitive()
-      : ambient(0.0),
+        : ambient(0.0),
         diffuse(0.0),
         specular(0.0),
         emission(0.0) ,
@@ -37,10 +37,14 @@ public:
     {}
 
     float Intersect(Ray &ray) {
+        Ray objRay;
+        objRay.pos = (vec4(ray.pos, 1) * this->transformation._inverse()).xyz;
+        objRay.dir = (vec4(ray.dir, 0) * this->transformation._inverse()).xyz;
+
         //Compute A, B and C coefficients
-        float a = dot(ray.dir, ray.dir);
-        vec3 center_to_camera = ray.pos - position;
-        float b = 2*dot(ray.dir, center_to_camera);
+        float a = dot(objRay.dir, objRay.dir);
+        vec3 center_to_camera = objRay.pos - position;
+        float b = 2*dot(objRay.dir, center_to_camera);
         float c = dot(center_to_camera, center_to_camera) - (radius * radius);
 
         //Find discriminant
@@ -105,44 +109,48 @@ public:
     }
 
     float Intersect(Ray &ray) {
-         vec3 v0v1 = v1 - v0;
-         vec3 v0v2 = v2 - v0;
-         vec3 N = cross(v0v1, v0v2);
-         
-         float nDotRay = dot(N, ray.dir);
+        Ray objRay;
+        objRay.pos = (vec4(ray.pos, 1) * this->transformation._inverse()).xyz;
+        objRay.dir = (vec4(ray.dir, 0) * this->transformation._inverse()).xyz;
 
-         if (nDotRay == 0)
-             return -1.0f; // ray parallel to triangle
-         
-         float d = dot(N, v0);
-         float t = -(dot(N, ray.pos) + d) / nDotRay;
-         
-         // compute intersection point
-         vec3 Phit = ray.pos + t * ray.dir;
-         
-         // inside-out test edge0
-         vec3 v0p = Phit - v0;
-         float v = dot(N, cross(v0v1, v0p));
-         if (v < 0)
-             return -1.0f; // P outside triangle
-         
-         // inside-out test edge1
-         vec3 v1p = Phit - v1;
-         vec3 v1v2 = v2 - v1;
-         float w = dot(N, cross(v1v2, v1p));
-         
-         if (w < 0)
-             return -1.0f; // P outside triangle
-         
-         // inside-out test edge2
-         vec3 v2p = Phit - v2;
-         vec3 v2v0 = v0 - v2;
-         float u = dot(N, cross(v2v0, v2p));
-         
-         if (u < 0)
-             return -1.0f; // P outside triangle
-         
-         return t;
+        vec3 v0v1 = v1 - v0;
+        vec3 v0v2 = v2 - v0;
+        vec3 N = cross(v0v1, v0v2);
+
+        float nDotRay = dot(N, objRay.dir);
+
+        if (nDotRay == 0)
+            return -1.0f; // ray parallel to triangle
+
+        float d = dot(N, v0);
+        float t = -(dot(N, objRay.pos) + d) / nDotRay;
+
+        // compute intersection point
+        vec3 Phit = objRay.pos + t * objRay.dir;
+
+        // inside-out test edge0
+        vec3 v0p = Phit - v0;
+        float v = dot(N, cross(v0v1, v0p));
+        if (v < 0)
+            return -1.0f; // P outside triangle
+
+        // inside-out test edge1
+        vec3 v1p = Phit - v1;
+        vec3 v1v2 = v2 - v1;
+        float w = dot(N, cross(v1v2, v1p));
+
+        if (w < 0)
+            return -1.0f; // P outside triangle
+
+        // inside-out test edge2
+        vec3 v2p = Phit - v2;
+        vec3 v2v0 = v0 - v2;
+        float u = dot(N, cross(v2v0, v2p));
+
+        if (u < 0)
+            return -1.0f; // P outside triangle
+
+        return t;
     }
 
     vec3 Normal(vec3 hitPoint) {

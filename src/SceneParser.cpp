@@ -185,12 +185,10 @@ Scene* SceneParser::load(){
                     validinput = readvals(s, 4, values); 
                     if (validinput) {
                         // store object with material properties and transformation
-                        vec4 pos(values[0], values[1], values[2], 1);
+                        vec3 pos(values[0], values[1], values[2]);
                         float radius = values[3];
 
-                        pos = transfstack.top() * pos;
-
-                        Sphere* s = new Sphere(vec3(pos), radius);
+                        Sphere* s = new Sphere(pos, radius);
                         s->ambient  = ambient;
                         s->specular = specular;
                         s->emission = emission;
@@ -206,10 +204,6 @@ Scene* SceneParser::load(){
                         vec4 v0(vertices[(unsigned int)values[0]], 1);
                         vec4 v1(vertices[(unsigned int)values[1]], 1);
                         vec4 v2(vertices[(unsigned int)values[2]], 1);
-
-                        v0 = transfstack.top() * v0;
-                        v1 = transfstack.top() * v1;
-                        v2 = transfstack.top() * v2;
 
                         Triangle* t = new Triangle(vec3(v0), vec3(v1), vec3(v2));
                         t->ambient  = ambient;
@@ -233,14 +227,12 @@ Scene* SceneParser::load(){
                 else if (cmd == "translate") {
                     validinput = readvals(s,3,values); 
                     if (validinput) {
-                        //transfstack.top() = transfstack.top()*transpose(Transform::translate(values[0], values[1], values[2]));
                         transfstack.top() = glm::translate(transfstack.top(),vec3(values[0], values[1], values[2]));
                     }
                 }
                 else if (cmd == "scale") {
                     validinput = readvals(s,3,values); 
                     if (validinput) {
-                        //transfstack.top() = transfstack.top()*transpose(Transform::scale(values[0], values[1], values[2]));
                         transfstack.top() = glm::scale(transfstack.top(),vec3(values[0], values[1], values[2]));
                     }
                 }
@@ -248,10 +240,7 @@ Scene* SceneParser::load(){
                     validinput = readvals(s,4,values); 
                     if (validinput) {
                         // rotate 0 0 1 90 
-                        //mat4 rotMatrix(transpose(Transform::rotate(values[3], vec3(values[0], values[1], values[2]))));
-                        //transfstack.top() = transfstack.top()*rotMatrix;
-
-                        transfstack.top() = glm::rotate(transfstack.top(), values[3], vec3(values[0], values[1], values[2]));
+                        transfstack.top() = glm::rotate(transfstack.top(), values[3], normalize(vec3(values[0], values[1], values[2])));
                     }
                 }
 
