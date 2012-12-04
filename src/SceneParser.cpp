@@ -3,6 +3,7 @@
 #include <RayTracer\SceneParser.h>
 #include <RayTracer\Scene.h>
 #include <RayTracer\Transform.h>
+#include <RayTracer\Helper.h>
 
 #include <string>
 #include <sstream>
@@ -49,6 +50,8 @@ Scene* SceneParser::load(){
         vec3 specular(0.0);
         vec3 emission(0.0);
         float shininess = 0;
+
+        bool last = false;   // transformation applied last
 
         // constant, linear, quadratic attenuations 
         vec3 attenuation(1.0, 0.0, 0.0);
@@ -185,16 +188,15 @@ Scene* SceneParser::load(){
                     validinput = readvals(s, 4, values); 
                     if (validinput) {
                         // store object with material properties and transformation
-                        vec3 pos(values[0], values[1], values[2]);
+                        vec4 pos(values[0], values[1], values[2], 1);
                         float radius = values[3];
 
-                        Sphere* s = new Sphere(pos, radius);
+                        Sphere* s = new Sphere(transfstack.top(), pos, radius);
                         s->ambient  = ambient;
                         s->specular = specular;
                         s->emission = emission;
                         s->diffuse  = diffuse;
                         s->shininess = shininess;
-                        s->transformation = transfstack.top();
                         scene->_primitives.push_back(s);
                     }
                 }
@@ -205,13 +207,16 @@ Scene* SceneParser::load(){
                         vec4 v1(vertices[(unsigned int)values[1]], 1);
                         vec4 v2(vertices[(unsigned int)values[2]], 1);
 
-                        Triangle* t = new Triangle(vec3(v0), vec3(v1), vec3(v2));
+                        //v0 = transfstack.top() * v0;
+                        //v1 = transfstack.top() * v1;
+                        //v2 = transfstack.top() * v2;
+
+                        Triangle* t = new Triangle(transfstack.top(), vec3(v0), vec3(v1), vec3(v2));
                         t->ambient  = ambient;
                         t->specular = specular;
                         t->emission = emission;
                         t->diffuse  = diffuse;
                         t->shininess = shininess;
-                        t->transformation = transfstack.top();
                         scene->_primitives.push_back(t);
                     }
                 }
@@ -227,20 +232,32 @@ Scene* SceneParser::load(){
                 else if (cmd == "translate") {
                     validinput = readvals(s,3,values); 
                     if (validinput) {
-                        transfstack.top() = glm::translate(transfstack.top(),vec3(values[0], values[1], values[2]));
+                        mat4 trans = glm::translate(mat4(1),vec3(values[0], values[1], values[2]));
+                        if (last)   // rechte matrix kommt zuerst!
+                            transfstack.top() = trans * transfstack.top();
+                        else
+                            transfstack.top() = transfstack.top() * trans;
                     }
                 }
                 else if (cmd == "scale") {
                     validinput = readvals(s,3,values); 
                     if (validinput) {
-                        transfstack.top() = glm::scale(transfstack.top(),vec3(values[0], values[1], values[2]));
+                        mat4 scale = glm::scale(mat4(1),vec3(values[0], values[1], values[2]));
+                        if (last)   // rechte matrix kommt zuerst!
+                            transfstack.top() = scale * transfstack.top();
+                        else
+                            transfstack.top() = transfstack.top() * scale;
                     }
                 }
                 else if (cmd == "rotate") {
                     validinput = readvals(s,4,values); 
                     if (validinput) {
                         // rotate 0 0 1 90 
-                        transfstack.top() = glm::rotate(transfstack.top(), values[3], normalize(vec3(values[0], values[1], values[2])));
+                        mat4 rot = glm::rotate(mat4(1), values[3], normalize(vec3(values[0], values[1], values[2])));
+                        if (last)   // rechte matrix kommt zuerst!
+                            transfstack.top() = rot * transfstack.top();
+                        else
+                            transfstack.top() = transfstack.top() * rot;
                     }
                 }
 

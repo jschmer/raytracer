@@ -7,13 +7,16 @@ using namespace glm;
 
 class Primitive {
 public:
-    Primitive()
-        : ambient(0.0),
+    Primitive(mat4 obj2world)
+        : obj2world(obj2world),
+        ambient(0.0),
         diffuse(0.0),
         specular(0.0),
         emission(0.0) ,
         shininess(0.0f)
-    {}
+    {
+        world2obj = inverse(obj2world);
+    }
 
     virtual float Intersect(Ray& r) = 0;
     virtual vec3 Normal(vec3 hitPoint) = 0;
@@ -26,26 +29,28 @@ public:
     float shininess;
 
     // transform matrix
-    mat4 transformation;
+    mat4 obj2world;
+    mat4 world2obj;
 };
 
 class Sphere : public Primitive {
 public:
-    Sphere(vec3 pos, float radius)
-        : position(pos),
+    Sphere(mat4 obj2world, vec4 pos, float radius)
+        : Primitive(obj2world),
+        position(pos),
         radius(radius)
     {}
 
     float Intersect(Ray &ray) {
         Ray objRay;
-        objRay.pos = (vec4(ray.pos, 1) * this->transformation._inverse()).xyz;
-        objRay.dir = (vec4(ray.dir, 0) * this->transformation._inverse()).xyz;
+        objRay.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
+        objRay.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
 
         //Compute A, B and C coefficients
         float a = dot(objRay.dir, objRay.dir);
-        vec3 center_to_camera = objRay.pos - position;
-        float b = 2*dot(objRay.dir, center_to_camera);
-        float c = dot(center_to_camera, center_to_camera) - (radius * radius);
+        //vec3 center_to_camera = objRay.pos - vec3(position);
+        float b = 2*dot(objRay.dir, objRay.pos);
+        float c = dot(objRay.pos, objRay.pos) - (radius * radius);
 
         //Find discriminant
         float disc = b * b - 4 * a * c;
@@ -91,42 +96,44 @@ public:
     }
 
     vec3 Normal(vec3 hitPoint) {
-        return normalize(hitPoint - position);
+        return normalize(hitPoint - vec3(position));
     }
 
     // object parameters
-    vec3 position;    // position
+    vec4 position;    // position
     float radius;
 };
 
 class Triangle : public Primitive {
 public:
-    Triangle(vec3 &f, vec3 &g, vec3 &h) {
+    Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h)
+        : Primitive(obj2world)
+    {
         v0 = f;
         v1 = g;
         v2 = h;
-        faceNormal = -glm::normalize(glm::cross(v2 - v0, v1 - v0)); 
+        faceNormal = glm::normalize(glm::cross(v1 - v0, v2 - v0)); 
     }
 
     float Intersect(Ray &ray) {
-        Ray objRay;
-        objRay.pos = (vec4(ray.pos, 1) * this->transformation._inverse()).xyz;
-        objRay.dir = (vec4(ray.dir, 0) * this->transformation._inverse()).xyz;
+        Ray r;
+        r.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
+        r.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
 
         vec3 v0v1 = v1 - v0;
         vec3 v0v2 = v2 - v0;
         vec3 N = cross(v0v1, v0v2);
 
-        float nDotRay = dot(N, objRay.dir);
+        float nDotRay = dot(N, r.dir);
 
         if (nDotRay == 0)
             return -1.0f; // ray parallel to triangle
 
         float d = dot(N, v0);
-        float t = -(dot(N, objRay.pos) + d) / nDotRay;
+        float t = -(dot(N, r.pos) + d) / nDotRay;
 
         // compute intersection point
-        vec3 Phit = objRay.pos + t * objRay.dir;
+        vec3 Phit = r.pos + t * r.dir;
 
         // inside-out test edge0
         vec3 v0p = Phit - v0;

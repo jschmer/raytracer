@@ -3,7 +3,13 @@
 #include <iostream>
 #include <Windows.h>
 
+#define GLM_SWIZZLE_XYZW 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp> 
+using namespace glm;
+
 #include <RayTracer\Scene.h>
+#include <RayTracer\Helper.h>
 
 void getAllFilesIn(std::string folder, std::vector<std::string> &files) {
     HANDLE hFind;
@@ -23,6 +29,31 @@ int main(int argc, char* argv[]) {
     bool batch = false;
     bool folder = true;
 
+    // vektoren von rechts multiplizieren!
+    // matrix stack: rechte transformation kommt zuerst!!
+
+    if (false) {
+        vec4 pos(1, 0, 1, 1);   // scale (2, 1, 3)
+        // -> vec4 pos(2, 0, 3, 1);   // translate (-1, 1, -3)
+        // -> vec4 pos(1, 1, 0, 1);   // rotate 90° um (0, 1, 0)
+        // -> vec4 pos(0, 1, -1, 1);
+
+        mat4 transf(1);
+        printVec4(pos, "pos = no transform");
+
+        // scale
+        transf = glm::scale(mat4(1), vec3(2, 1, 3)) * transf;
+        printVec4(transf * pos, "pos = scale");
+
+        // translate
+        transf = glm::translate(mat4(1), vec3(-1, 1, -3)) * transf;
+        printVec4(transf * pos, "pos = scale+translate");
+
+        // rotate
+        transf = glm::rotate(mat4(1), 90.0f, vec3(0, 1, 0)) * transf;
+        printVec4(transf * pos, "pos = scale+translate+rotate");
+
+    }
     if (batch) {
         for (int i=1; i<5; ++i) {
             stringstream s;
