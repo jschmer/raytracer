@@ -261,6 +261,10 @@ Scene* SceneParser::load(){
                     }
                 }
 
+                else if (cmd == "maxverts") {
+                    // skipping
+                }
+
                 // basic push/pop code for matrix stacks
                 else if (cmd == "pushTransform") {
                     transfstack.push(transfstack.top()); 
