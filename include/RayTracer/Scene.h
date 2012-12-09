@@ -18,6 +18,12 @@ class Scene
 {
     friend class SceneParser;
 
+    struct Intersection {
+        Primitive *obj;
+        vec3 hitPoint;
+        float t;
+    };
+
 public:
     Scene() {
         // default values
@@ -48,16 +54,16 @@ public:
         _camera->initFov((float)_size.width, (float)_size.height);
         Sample sample;
         Ray ray;
-        float hitPoint;
+        vec3 hitPoint;
 
         while(_image->getSample(sample)) {          // OK
             _camera->generateRay(sample, ray);      // OK
 
-            Primitive* hitObj = trace(ray, hitPoint);
+            Intersection Hit = trace(ray);
 
             vec3 color(0.0);
-            if (hitObj)
-                color = shade(hitObj, hitPoint, ray, _camera->eye);
+            if (Hit.obj)
+                color = shade(Hit, ray, _camera->eye);
 
             _image->commit(sample, color);  // OK
         }
@@ -65,35 +71,35 @@ public:
         _image->save(_outputFilename);
     }
 
-    vec3 shade(Primitive* obj, float t, Ray r, vec3 eye) {
+    vec3 shade(Intersection &Hit, Ray r, vec3 eye) {
         vec3 color(0.0);
-        color += obj->ambient;
-        color += obj->emission;
+        color += Hit.obj->ambient;
+        color += Hit.obj->emission;
 
-        vec3 hitPoint = r.pos + r.dir * t;
+        //Hit.hitPoint = r.pos + Hit.t * r.dir;
+        //vec3 hitPoint = r.pos + r.dir * t;
 
         for (std::vector<Light>::iterator it = _lights.begin(); it != _lights.end(); ++it) {
-            vec3 dir_to_light = it->LightVectorFrom(hitPoint);
+            vec3 dir_to_light = it->LightVectorFrom(Hit.hitPoint);
 
-            Ray r(hitPoint + 0.1f*dir_to_light, dir_to_light);
+             Ray r(Hit.hitPoint + 0.1f*dir_to_light, dir_to_light);
 
-            float tmp;
-            Primitive* hit = trace(r, tmp);
+            Intersection hit = trace(r);
 
-            if (hit)
+            if (hit.obj)
                 // in shadow, continue
                 continue;
 
             // diffuse term
-            float normal_dot_lightray = dot(obj->Normal(hitPoint), dir_to_light);
-            vec3 diffuse = obj->diffuse * common::max(normal_dot_lightray, 0.0f);
+            float normal_dot_lightray = dot(Hit.obj->Normal(Hit.hitPoint), dir_to_light);
+            vec3 diffuse = Hit.obj->diffuse * common::max(normal_dot_lightray, 0.0f);
 
             // specular term
             // half vec = eyepos - currentpos
-            vec3 eyevec = normalize(eye - hitPoint);
-            vec3 halfVec = normalize(dir_to_light + eyevec);
-            float halfAngle = dot(obj->Normal(hitPoint), halfVec);
-            vec3 specular = obj->specular * pow(common::max(halfAngle, 0.0f), obj->shininess);
+            //vec3 eyevec = normalize(eye - hitPoint);
+            //vec3 halfVec = normalize(dir_to_light + eyevec);
+            //float halfAngle = dot(obj->Normal(hitPoint), halfVec);
+            vec3 specular(0); // = obj->specular * pow(common::max(halfAngle, 0.0f), obj->shininess);
 
             color += it->color * (diffuse + specular);
         }
@@ -101,20 +107,27 @@ public:
         return color;
     }
 
-    Primitive* trace(Ray &ray, float &t_hit) {
-        t_hit = FLT_MAX;
+    Intersection trace(Ray &ray) {
+        float t_hit = FLT_MAX;
         Primitive *hitObject = nullptr;
+        vec3 retHitPoint(0);
 
         float t;
+        vec3 hitPoint(0);
         for (std::vector<Primitive*>::iterator it = _primitives.begin(); it < _primitives.end(); ++it) {
-            t = (*it)->Intersect(ray);
+            t = (*it)->Intersect(ray, hitPoint);
             if (t > 0 && t < t_hit) {
                 t_hit = t;
                 hitObject = *it;
+                retHitPoint = hitPoint;
             }
         }
 
-        return hitObject;
+        Intersection ret;
+        ret.obj = hitObject;
+        ret.t   = t_hit;
+        ret.hitPoint = retHitPoint;
+        return ret;
     }
 
 

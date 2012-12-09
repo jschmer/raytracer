@@ -18,7 +18,7 @@ public:
         world2obj = inverse(obj2world);
     }
 
-    virtual float Intersect(Ray& r) = 0;
+    virtual float Intersect(Ray& r, vec3 &hitPoint) = 0;
     virtual vec3 Normal(vec3 hitPoint) = 0;
 
     // lighting
@@ -41,7 +41,7 @@ public:
         radius(radius)
     {}
 
-    float Intersect(Ray &ray) {
+    float Intersect(Ray &ray, vec3 &hitPoint) {
         Ray objRay;
         objRay.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
         objRay.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
@@ -86,17 +86,26 @@ public:
         if (t1 < 0)
             return -1.0f;
 
+        float ret;
         // if t0 is less than zero, the intersection point is at t1
         if (t0 < 0)
-            return t1;
+            ret = t1;
 
         // else the intersection point is at t0
         else
-            return t0;
+            ret = t0;
+
+        hitPoint = objRay.pos + ret * objRay.dir;
+        hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
+        return ret;
     }
 
     vec3 Normal(vec3 hitPoint) {
-        return normalize(hitPoint - vec3(position));
+        vec4 hitPointInObjSpace(0);
+        hitPointInObjSpace = this->world2obj * vec4(hitPoint, 1);
+        vec4 normal = normalize(hitPointInObjSpace - position);
+        // normal = transpose(this->world2obj) * normal;
+        return vec3(normal);
     }
 
     // object parameters
@@ -112,10 +121,10 @@ public:
         v0 = f;
         v1 = g;
         v2 = h;
-        faceNormal = glm::normalize(glm::cross(v1 - v0, v2 - v0)); 
+        faceNormal = -vec4(glm::normalize(glm::cross(v1 - v0, v2 - v0)), 0); 
     }
 
-    float Intersect(Ray &ray) {
+    float Intersect(Ray &ray, vec3 &hitPoint) {
         Ray r;
         r.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
         r.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
@@ -157,16 +166,19 @@ public:
         if (u < 0)
             return -1.0f; // P outside triangle
 
+        hitPoint = r.pos + t * r.dir;
+        hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
         return t;
     }
 
     vec3 Normal(vec3 hitPoint) {
-        return normalize(faceNormal);
+        //return vec3(transpose(this->obj2world) * faceNormal);
+        return vec3(faceNormal);
     }
 
     // object parameters
     vec3 v0, v1, v2;    // vertices
-    vec3 faceNormal;
+    vec4 faceNormal;
 };
 
 class Light {

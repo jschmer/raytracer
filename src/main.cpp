@@ -27,7 +27,7 @@ void getAllFilesIn(std::string folder, std::vector<std::string> &files) {
 
 int main(int argc, char* argv[]) {
     bool batch = false;
-    bool folder = true;
+    bool submission = true;
 
     // vektoren von rechts multiplizieren!
     // matrix stack: rechte transformation kommt zuerst!!
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
             scene.render();
         }
     } 
-    else if (folder) {
+    else if (submission) {
         std::vector<std::string> files;
         std::string folder = "hw3-submissionscenes\\";
         getAllFilesIn(folder, files);
@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         Scene scene;
-        scene.loadScene("testscenes/scene3.test");
+        scene.loadScene("testscenes/scene4-diffuse_test.test");
 
         std::cout << "output name: " << scene._outputFilename << "\n";
 
@@ -90,6 +90,6 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Press a key...\n";
-    //getchar();
+    getchar();
     return 0;
 }

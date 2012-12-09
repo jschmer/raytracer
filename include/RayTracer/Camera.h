@@ -36,8 +36,8 @@ public:
         vec3 u = normalize(cross(up, w));
         vec3 v = cross(w, u);
 
-        float alpha = tanFovx * ((sample.x - halfWidth)/halfWidth);
-        float beta = tanFovy * ((halfHeight - sample.y)/halfHeight);
+        float alpha = static_cast<float>(tanFovx * ((sample.x - halfWidth)/halfWidth));
+        float beta = static_cast<float>(tanFovy * ((halfHeight - sample.y)/halfHeight));
 
         vec3 dir = alpha*u - beta*v - w;
 
