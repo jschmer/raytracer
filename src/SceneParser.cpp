@@ -101,7 +101,7 @@ Scene* SceneParser::load(){
                         // camera 0 -2 2 0 0 0 0 1 1 30.0
                         vec3 eye    = vec3(values[0], values[1], values[2]);
                         vec3 center = vec3(values[3], values[4], values[5]);
-                        vec3 up     = Transform::upvector(vec3(values[6], values[7], values[8]), eye);
+                        vec3 up     = vec3(values[6], values[7], values[8]);
                         float fovy  = values[9];
 
                         if (scene->_camera)

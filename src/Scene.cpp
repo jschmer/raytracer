@@ -37,16 +37,16 @@ void Scene::render() {
     Ray ray;
     vec3 hitPoint;
 
-    while(_image->getSample(sample)) {          // OK
-        _camera->generateRay(sample, ray);      // OK
+    while(_image->getSample(sample)) {
+        _camera->generateRay(sample, ray);
 
         Intersection Hit = trace(ray);
 
-        vec3 color(0.0);
+        vec3 color(0.0);    // black
         if (Hit.obj)
-            color = shade(Hit, ray, _camera->eye);
+            color = shade(Hit, _camera->eye);
 
-        _image->commit(sample, color);  // OK
+        _image->commit(sample, color);
     }
 
     _image->save(_outputFilename);
@@ -71,7 +71,7 @@ Intersection Scene::trace(Ray &ray) {
     return ret;
 }
 
-vec3 Scene::shade(Intersection &Hit, Ray r, vec3 eye) {
+vec3 Scene::shade(Intersection &Hit, vec3 eye) {
     vec3 color(0.0);
     color += Hit.obj->ambient;
     color += Hit.obj->emission;
