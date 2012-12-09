@@ -93,10 +93,10 @@ vec3 Scene::shade(Intersection &Hit, Ray r, vec3 eye) {
 
         // specular term
         // half vec = eyepos - currentpos
-        //vec3 eyevec = normalize(eye - hitPoint);
-        //vec3 halfVec = normalize(dir_to_light + eyevec);
-        //float halfAngle = dot(obj->Normal(hitPoint), halfVec);
-        vec3 specular(0); // = obj->specular * pow(common::max(halfAngle, 0.0f), obj->shininess);
+        vec3 eyevec = normalize(eye - Hit.hitPoint);
+        vec3 halfVec = normalize(dir_to_light + eyevec);
+        float halfAngle = dot(Hit.normal, halfVec);
+        vec3 specular = Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess);
 
         color += it->color * (diffuse + specular);
     }
