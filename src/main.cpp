@@ -11,6 +11,8 @@ using namespace glm;
 #include <RayTracer\Scene.h>
 #include <RayTracer\Helper.h>
 
+#include <sstream>
+
 void getAllFilesIn(std::string folder, std::vector<std::string> &files) {
     HANDLE hFind;
     WIN32_FIND_DATA data;
@@ -82,7 +84,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         Scene scene;
-        scene.loadScene("testscenes/scene4-diffuse_test.test");
+        scene.loadScene("testscenes/scene4-diffuse.test");
 
         std::cout << "output name: " << scene._outputFilename << "\n";
 

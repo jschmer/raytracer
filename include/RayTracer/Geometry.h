@@ -2,8 +2,18 @@
 
 #include <glm\glm.hpp>
 #include "Ray.h"
+#include <RayTracer\Scene.h>
 
 using namespace glm;
+
+class Primitive;
+
+struct Intersection {
+    Primitive *obj;
+    vec3 hitPoint;
+    vec3 normal;
+    float t;
+};
 
 class Primitive {
 public:
@@ -18,7 +28,7 @@ public:
         world2obj = inverse(obj2world);
     }
 
-    virtual float Intersect(Ray& r, vec3 &hitPoint) = 0;
+    virtual float Intersect(Ray& r, Intersection &Hit) = 0;
     virtual vec3 Normal(vec3 hitPoint) = 0;
 
     // lighting
@@ -41,7 +51,7 @@ public:
         radius(radius)
     {}
 
-    float Intersect(Ray &ray, vec3 &hitPoint) {
+    float Intersect(Ray &ray, Intersection &Hit) {
         Ray objRay;
         objRay.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
         objRay.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
@@ -95,16 +105,19 @@ public:
         else
             ret = t0;
 
-        hitPoint = objRay.pos + ret * objRay.dir;
-        hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
+        vec3 hitPointObjSpace = objRay.pos + ret * objRay.dir;
+
+        Hit.obj = this;
+        Hit.t = ret;
+        Hit.normal = normalize(hitPointObjSpace - vec3(position));
+        Hit.normal = normalize(vec3(transpose(this->world2obj) * vec4(Hit.normal, 0)));
+        Hit.hitPoint = vec3(this->obj2world * vec4(hitPointObjSpace, 1));
         return ret;
     }
 
     vec3 Normal(vec3 hitPoint) {
-        vec4 hitPointInObjSpace(0);
-        hitPointInObjSpace = this->world2obj * vec4(hitPoint, 1);
+        vec4 hitPointInObjSpace = this->world2obj * vec4(hitPoint, 1);
         vec4 normal = normalize(hitPointInObjSpace - position);
-        // normal = transpose(this->world2obj) * normal;
         return vec3(normal);
     }
 
@@ -124,7 +137,7 @@ public:
         faceNormal = -vec4(glm::normalize(glm::cross(v1 - v0, v2 - v0)), 0); 
     }
 
-    float Intersect(Ray &ray, vec3 &hitPoint) {
+    float Intersect(Ray &ray, Intersection &Hit) {
         Ray r;
         r.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
         r.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
@@ -166,13 +179,15 @@ public:
         if (u < 0)
             return -1.0f; // P outside triangle
 
-        hitPoint = r.pos + t * r.dir;
-        hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
+        Hit.obj = this;
+        Hit.t = t;
+        vec3 hitPoint = r.pos + t * r.dir;
+        Hit.hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
+        Hit.normal = vec3(faceNormal);
         return t;
     }
 
     vec3 Normal(vec3 hitPoint) {
-        //return vec3(transpose(this->obj2world) * faceNormal);
         return vec3(faceNormal);
     }
 

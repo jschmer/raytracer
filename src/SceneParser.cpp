@@ -4,6 +4,7 @@
 #include <RayTracer\Scene.h>
 #include <RayTracer\Transform.h>
 #include <RayTracer\Helper.h>
+#include <RayTracer\Camera.h>
 
 #include <string>
 #include <sstream>
