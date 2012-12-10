@@ -83,7 +83,7 @@ Intersection Scene::trace(Ray &ray, int depth) {
             t = (*it)->Intersect(ray, hit);
             if (t > 0 && t < t_hit) {
                 t_hit = t;
-                ret = Intersection(hit);
+                ret = hit;
             }
         }
     }
@@ -111,20 +111,15 @@ vec3 Scene::shade(Intersection &Hit, Ray &ray, int depth) {
             continue;
 
         // diffuse term
-        float normal_dot_lightray = dot(Hit.normal, dir_to_light);
-        vec3 diffuse = Hit.obj->diffuse * common::max(normal_dot_lightray, 0.0f);
+        color += it->color * (Hit.obj->diffuse * common::max(dot(Hit.normal, dir_to_light), 0.0f));
 
         // specular term
-        // half vec = eyepos - currentpos
-        vec3 eyevec = -ray.dir;
-        vec3 halfVec = normalize(dir_to_light + eyevec);
+        vec3 halfVec = normalize(dir_to_light + -ray.dir);
         float halfAngle = dot(Hit.normal, halfVec);
-        vec3 specular = Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess);
-
-        color += it->color * (diffuse + specular);
+        color += it->color * (Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess));
     }
 
-    // TODO: reflection
+    // reflection
     // R = V – 2 * (V·N) * N 
     Ray reflectionRay;
     reflectionRay.dir = ray.dir - 2 * dot(ray.dir, Hit.normal) * Hit.normal;

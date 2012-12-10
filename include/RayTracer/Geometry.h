@@ -49,19 +49,20 @@ public:
     Sphere(mat4 obj2world, vec4 pos, float radius)
         : Primitive(obj2world),
         position(pos),
-        radius(radius)
+        radius(radius),
+        radius2(radius*radius)
     {}
 
     float Intersect(Ray &ray, Intersection &Hit) {
+        // transforming ray to object space
         Ray objRay;
         objRay.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
         objRay.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
 
         //Compute A, B and C coefficients
         float a = dot(objRay.dir, objRay.dir);
-        //vec3 center_to_camera = objRay.pos - vec3(position);
         float b = 2*dot(objRay.dir, objRay.pos);
-        float c = dot(objRay.pos, objRay.pos) - (radius * radius);
+        float c = dot(objRay.pos, objRay.pos) - radius2;
 
         //Find discriminant
         float disc = b * b - 4 * a * c;
@@ -110,9 +111,13 @@ public:
 
         Hit.obj = this;
         Hit.t = ret;
-        Hit.normal = normalize(hitPointObjSpace - vec3(position));
-        Hit.normal = normalize(vec3(transpose(this->world2obj) * vec4(Hit.normal, 0)));
         Hit.hitPoint = vec3(this->obj2world * vec4(hitPointObjSpace, 1));
+
+        // calculating the normal in object space
+        Hit.normal = normalize(hitPointObjSpace - vec3(position));
+        // transforming the normal
+        Hit.normal = normalize(vec3(transpose(this->world2obj) * vec4(Hit.normal, 0)));
+        
         return ret;
     }
 
@@ -125,6 +130,7 @@ public:
     // object parameters
     vec4 position;    // position
     float radius;
+    float radius2;
 };
 
 class Triangle : public Primitive {
@@ -139,6 +145,7 @@ public:
     }
 
     float Intersect(Ray &ray, Intersection &Hit) {
+        // transforming ray to object space
         Ray r;
         r.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
         r.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
@@ -165,17 +172,13 @@ public:
             return -1.0f; // P outside triangle
 
         // inside-out test edge1
-        vec3 v1p = Phit - v1;
-        vec3 v1v2 = v2 - v1;
-        float w = dot(N, cross(v1v2, v1p));
+        float w = dot(N, cross(v2 - v1, Phit - v1));
 
         if (w < 0)
             return -1.0f; // P outside triangle
 
         // inside-out test edge2
-        vec3 v2p = Phit - v2;
-        vec3 v2v0 = v0 - v2;
-        float u = dot(N, cross(v2v0, v2p));
+        float u = dot(N, cross(v0 - v2, Phit - v2));
 
         if (u < 0)
             return -1.0f; // P outside triangle
@@ -189,7 +192,7 @@ public:
     }
 
     vec3 Normal(vec3 hitPoint) {
-        return vec3(faceNormal);
+        return faceNormal.xyz;
     }
 
     // object parameters
