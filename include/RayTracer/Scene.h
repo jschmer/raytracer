@@ -24,8 +24,9 @@ public:
 
     void loadScene(std::string sceneFile);
     void render();
-    vec3 shade(Intersection &Hit, vec3 eye);
-    Intersection trace(Ray &ray);
+    vec3 shade(Intersection &Hit, Ray &ray, int depth);
+    Intersection trace(Ray &ray, int depth);
+    bool inShadow(Ray &ray);
 
 
     ////////// scene variables

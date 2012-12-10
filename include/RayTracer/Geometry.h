@@ -12,6 +12,7 @@ struct Intersection {
     Primitive *obj;
     vec3 hitPoint;
     vec3 normal;
+    vec3 color;
     float t;
 };
 

@@ -40,20 +40,15 @@ void Scene::render() {
     while(_image->getSample(sample)) {
         _camera->generateRay(sample, ray);
 
-        Intersection Hit = trace(ray);
+        Intersection Hit = trace(ray, 0);
 
-        vec3 color(0.0);    // black
-        if (Hit.obj)
-            color = shade(Hit, _camera->eye);
-
-        _image->commit(sample, color);
+        _image->commit(sample, Hit.color);
     }
 
     _image->save(_outputFilename);
 }
 
-
-Intersection Scene::trace(Ray &ray) {
+bool Scene::inShadow(Ray &ray) {
     float t_hit = FLT_MAX;
     Intersection ret;
     ret.obj = nullptr;
@@ -68,10 +63,40 @@ Intersection Scene::trace(Ray &ray) {
         }
     }
 
+    // got a hit point -> get color!
+    if (ret.obj) {
+        return true;
+    }
+
+    return false;
+}
+
+Intersection Scene::trace(Ray &ray, int depth) {
+    float t_hit = FLT_MAX;
+    Intersection ret;
+    ret.obj = nullptr;
+
+    if (depth <= this->_maxdepth) {
+        float t;
+        Intersection hit;
+        for (std::vector<Primitive*>::iterator it = _primitives.begin(); it < _primitives.end(); ++it) {
+            t = (*it)->Intersect(ray, hit);
+            if (t > 0 && t < t_hit) {
+                t_hit = t;
+                ret = Intersection(hit);
+            }
+        }
+    }
+
+    // got a hit point -> get color!
+    if (ret.obj) {
+        ret.color = shade(ret, ray, depth);
+    }
+
     return ret;
 }
 
-vec3 Scene::shade(Intersection &Hit, vec3 eye) {
+vec3 Scene::shade(Intersection &Hit, Ray &ray, int depth) {
     vec3 color(0.0);
     color += Hit.obj->ambient;
     color += Hit.obj->emission;
@@ -79,12 +104,10 @@ vec3 Scene::shade(Intersection &Hit, vec3 eye) {
     for (std::vector<Light>::iterator it = _lights.begin(); it != _lights.end(); ++it) {
         vec3 dir_to_light = it->LightVectorFrom(Hit.hitPoint);
 
-        Ray r(Hit.hitPoint + 0.1f*dir_to_light, dir_to_light);
-
-        Intersection hit = trace(r);
-
-        if (hit.obj)
-            // in shadow, continue
+        Ray r(Hit.hitPoint + 0.01f*dir_to_light, dir_to_light);
+        
+        if (inShadow(r))
+            // in shadow, next light
             continue;
 
         // diffuse term
@@ -93,13 +116,23 @@ vec3 Scene::shade(Intersection &Hit, vec3 eye) {
 
         // specular term
         // half vec = eyepos - currentpos
-        vec3 eyevec = normalize(eye - Hit.hitPoint);
+        vec3 eyevec = -ray.dir;
         vec3 halfVec = normalize(dir_to_light + eyevec);
         float halfAngle = dot(Hit.normal, halfVec);
         vec3 specular = Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess);
 
         color += it->color * (diffuse + specular);
     }
+
+    // TODO: reflection
+    // R = V – 2 * (V·N) * N 
+    Ray reflectionRay;
+    reflectionRay.dir = ray.dir - 2 * dot(ray.dir, Hit.normal) * Hit.normal;
+    reflectionRay.pos = Hit.hitPoint + 0.01f*reflectionRay.dir;
+
+    Intersection t = this->trace(reflectionRay, depth+1);
+    if (t.obj)
+        color += Hit.obj->specular * t.color;
 
     return color;
 }

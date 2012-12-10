@@ -28,8 +28,8 @@ void getAllFilesIn(std::string folder, std::vector<std::string> &files) {
 }
 
 int main(int argc, char* argv[]) {
-    bool batch = true;
-    bool submission = true;
+    bool batch = false;
+    bool submission = false;
 
     // vektoren von rechts multiplizieren!
     // matrix stack: rechte transformation kommt zuerst!!
@@ -55,6 +55,10 @@ int main(int argc, char* argv[]) {
         transf = glm::rotate(mat4(1), 90.0f, vec3(0, 1, 0)) * transf;
         printVec4(transf * pos, "pos = scale+translate+rotate");
 
+        printVec4(vec4(), "Vec4");
+
+        getchar();
+        return 0;
     }
     if (batch) {
         for (int i=1; i<5; ++i) {
@@ -84,7 +88,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         Scene scene;
-        scene.loadScene("testscenes/scene6.test");
+        scene.loadScene("testscenes/scene_tris.test");
 
         std::cout << "output name: " << scene._outputFilename << "\n";
 

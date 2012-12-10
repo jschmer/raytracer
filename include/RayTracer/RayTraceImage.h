@@ -56,7 +56,14 @@ public:
         }
     }
 
+    void clampToUpper(vec3 &v, float up) {
+        for (int i=0; i<3; ++i)
+            v[i] = v[i] > up ? up : v[i]; 
+    }
+
     void commit(Sample &s, vec3 color) {
+        clampToUpper(color, 1.0f);
+
         Pixel PixelColor;
         PixelColor.Red   = (unsigned int) (color[0]*255);
         PixelColor.Green = (unsigned int) (color[1]*255);
