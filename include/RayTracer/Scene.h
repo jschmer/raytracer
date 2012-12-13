@@ -26,7 +26,7 @@ public:
     void render();
     vec3 shade(Intersection &Hit, Ray &ray, int depth);
     Intersection trace(Ray &ray, int depth);
-    bool inShadow(Ray &ray);
+    Intersection inShadow(Ray &ray, float t_hit);
 
 
     ////////// scene variables

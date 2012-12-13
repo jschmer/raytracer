@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         Scene scene;
-        scene.loadScene("testscenes/scene4-specular.test");
+        scene.loadScene("testscenes/scene6.test");
 
         std::cout << "output name: " << scene._outputFilename << "\n";
 

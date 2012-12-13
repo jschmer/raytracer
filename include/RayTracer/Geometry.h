@@ -30,7 +30,6 @@ public:
     }
 
     virtual float Intersect(Ray& r, Intersection &Hit) = 0;
-    virtual vec3 Normal(vec3 hitPoint) = 0;
 
     // lighting
     vec3 ambient;
@@ -121,12 +120,6 @@ public:
         return ret;
     }
 
-    vec3 Normal(vec3 hitPoint) {
-        vec4 hitPointInObjSpace = this->world2obj * vec4(hitPoint, 1);
-        vec4 normal = normalize(hitPointInObjSpace - position);
-        return vec3(normal);
-    }
-
     // object parameters
     vec4 position;    // position
     float radius;
@@ -141,7 +134,7 @@ public:
         v0 = f;
         v1 = g;
         v2 = h;
-        faceNormal = -vec4(glm::normalize(glm::cross(v0 - v1, v0 - v2)), 0); 
+        faceNormal = -vec4(glm::normalize(glm::cross(v1 - v0, v2 - v0)), 0); 
     }
 
     float Intersect(Ray &ray, Intersection &Hit) {
@@ -191,10 +184,6 @@ public:
         return t;
     }
 
-    vec3 Normal(vec3 hitPoint) {
-        return faceNormal.xyz;
-    }
-
     // object parameters
     vec3 v0, v1, v2;    // vertices
     vec4 faceNormal;
@@ -214,8 +203,8 @@ public:
             // point light
             return normalize(vec3(pos_or_dir) - point);
         else
-            // directional light
-            return normalize(-vec3(pos_or_dir));
+            // directional light, pos_or_dir is the light vector TO the light source
+            return normalize(vec3(pos_or_dir));
     }
 
     vec3 attenuation;   // const, linear, quadratic term
