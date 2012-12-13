@@ -4,6 +4,8 @@
 #include <RayTracer\RayTraceImage.h>
 #include <RayTracer\Camera.h>
 
+#include <RayTracer\Helper.h>
+
 #include <iostream>
 
 Scene::Scene() {
@@ -108,9 +110,9 @@ vec3 Scene::shade(Intersection &Hit, Ray &ray, int depth) {
                 vec3 HitpointToIntersection = ShadowHit.hitPoint - r.pos;
 
                 //vec3::size_type h1_len = HitpointToLight.length();
-                float h1 = sqrt(pow(HitpointToLight[0], 2.0f)+pow(HitpointToLight[1], 2.0f)+pow(HitpointToLight[2], 2.0f));
+                float h1 = ::vecLen(HitpointToLight);
                 //vec3::size_type h2_len = HitpointToIntersection.length();
-                float h2 = sqrt(pow(HitpointToIntersection[0], 2.0f)+pow(HitpointToIntersection[1], 2.0f)+pow(HitpointToIntersection[2], 2.0f));
+                float h2 = ::vecLen(HitpointToIntersection);
 
                 if (h2 < h1)
                     // hitpoint in shadow, next light
@@ -118,14 +120,22 @@ vec3 Scene::shade(Intersection &Hit, Ray &ray, int depth) {
             }
         }
 
+        vec3 L = it->color;
+
+        // only consider point light for attenuation
+        if (it->pos_or_dir[3] == 1) {
+            float d = glm::distance(Hit.hitPoint, vec3(it->pos_or_dir));
+            L = it->color / (it->attenuation[0] + it->attenuation[1] * d + it->attenuation[2] * d * d);
+        }
+
         // diffuse term
         float dotP = dot(Hit.normal, dir_to_light);
-        color += it->color * (Hit.obj->diffuse * common::max(dotP, 0.0f));
+        color += L * (Hit.obj->diffuse * common::max(dotP, 0.0f));
 
         // specular term
         vec3 halfVec = normalize(dir_to_light + -ray.dir);
         float halfAngle = dot(Hit.normal, halfVec);
-        color += it->color * (Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess));
+        color += L * (Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess));
     }
 
     // reflection
