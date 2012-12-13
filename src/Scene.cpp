@@ -106,20 +106,24 @@ vec3 Scene::shade(Intersection &Hit, Ray &ray, int depth) {
         
             Intersection ShadowHit = inShadow(r);
             if (ShadowHit.obj) {
-                // only consider position lights for shadow testing
+                // if i'm testing against point light: check if intersection is between startpoint and light!
+                // the startpoint is in shadow only then!
                 if (it->pos_or_dir[3] == 1) {
-                    float len_to_light        = glm::distance(vec3(it->pos_or_dir), r.pos);
-                    float len_to_intersection = glm::distance(ShadowHit.hitPoint, r.pos);
+                    float len_to_light        = glm::distance(vec3(it->pos_or_dir), Hit.hitPoint);
+                    float len_to_intersection = glm::distance(ShadowHit.hitPoint, Hit.hitPoint);
 
                     if (len_to_intersection <= len_to_light)
                         // Hit.hitPoint in shadow, next light
                         continue;  
+                } else {
+                    // intersection with directional light
+                    continue;
                 }
             }
 
             vec3 L = it->color;
 
-            // only consider point light for attenuation
+            // only consider point light for attenuation (directional light would be 1 0 0 -> no change)
             if (it->pos_or_dir[3] == 1) {
                 float d = glm::distance(Hit.hitPoint, vec3(it->pos_or_dir));
                 L = it->color / (it->attenuation[0] + it->attenuation[1] * d + it->attenuation[2] * d * d);
