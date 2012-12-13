@@ -134,7 +134,7 @@ public:
         v0 = f;
         v1 = g;
         v2 = h;
-        faceNormal = -vec4(glm::normalize(glm::cross(v1 - v0, v2 - v0)), 0); 
+        faceNormal = vec4(glm::normalize(glm::cross(v1 - v0, v2 - v0)), 0); 
     }
 
     float Intersect(Ray &ray, Intersection &Hit) {
@@ -180,7 +180,7 @@ public:
         Hit.t = t;
         vec3 hitPoint = r.pos + t * r.dir;
         Hit.hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
-        Hit.normal = normalize((transpose(this->world2obj) * faceNormal)).xyz;
+        Hit.normal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
         return t;
     }
 
