@@ -139,18 +139,18 @@ rotate 0 1 0 15
 scale 0.25 0.4 0.2
 diffuse 1 1 1
 
-tri 6 4 5
-tri 7 6 5
-tri 5 4 8
-tri 9 5 8
-tri 9 7 5
-tri 11 7 9
-tri 8 4 10
-tri 10 4 6
-tri 10 6 11
-tri 11 6 7
-tri 8 10 9
-tri 9 10 11
+tri 4 6 5
+tri 6 7 5
+tri 4 5 8
+tri 5 9 8
+tri 7 9 5
+tri 7 11 9
+tri 4 8 10
+tri 4 10 6
+tri 6 10 11
+tri 6 11 7
+tri 10 8 9
+tri 10 9 11
 popTransform
 
 #cube2
@@ -162,19 +162,31 @@ rotate 0 1 0 -15
 scale 0.2 0.2 0.2
 diffuse 1 1 1
 
-tri 6 4 5
-tri 7 6 5
-tri 5 4 8
-tri 9 5 8
-tri 9 7 5
-tri 11 7 9
-tri 8 4 10
-tri 10 4 6
-tri 10 6 11
-tri 11 6 7
-tri 8 10 9
-tri 9 10 11
+tri 4 6 5
+tri 6 7 5
+tri 4 5 8
+tri 5 9 8
+tri 7 9 5
+tri 7 11 9
+tri 4 8 10
+tri 4 10 6
+tri 6 10 11
+tri 6 11 7
+tri 10 8 9
+tri 10 9 11
 
+#trinormal 0 2 1
+#trinormal 2 3 1
+#trinormal 0 1 4
+#trinormal 1 5 4
+#trinormal 3 5 1
+#trinormal 3 7 5
+#trinormal 0 4 6
+#trinormal 0 6 2
+#trinormal 2 6 7
+#trinormal 2 7 3
+#trinormal 6 4 5
+#trinormal 6 5 7
 popTransform
 
 popTransform
