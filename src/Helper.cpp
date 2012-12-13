@@ -6,10 +6,6 @@
 using namespace glm;
 using namespace std;
 
-float vecLen(vec3 &vec) {
-    return sqrt(pow(vec[0], 2.0f)+pow(vec[1], 2.0f)+pow(vec[2], 2.0f));
-}
-
 void printMat4(mat4 &mat, std::string title) {
     cout << title << endl;
     for (int i=0; i<4; ++i) {

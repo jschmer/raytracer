@@ -100,42 +100,40 @@ vec3 Scene::shade(Intersection &Hit, Ray &ray, int depth) {
     for (std::vector<Light>::iterator it = _lights.begin(); it != _lights.end(); ++it) {
         vec3 dir_to_light = it->LightVectorFrom(Hit.hitPoint);
 
-        Ray r(Hit.hitPoint +0.001f*dir_to_light, dir_to_light);
+        // light in front of object?
+        if (dot(Hit.normal, dir_to_light) > 0) {
+            Ray r(Hit.hitPoint +0.001f*dir_to_light, dir_to_light);
         
-        Intersection ShadowHit = inShadow(r);
-        if (ShadowHit.obj) {
-            // only consider position lights for shadow testing
-            if (it->pos_or_dir[3] == 1) {
-                vec3 HitpointToLight        = vec3(it->pos_or_dir) - r.pos;
-                vec3 HitpointToIntersection = ShadowHit.hitPoint - r.pos;
+            Intersection ShadowHit = inShadow(r);
+            if (ShadowHit.obj) {
+                // only consider position lights for shadow testing
+                if (it->pos_or_dir[3] == 1) {
+                    float len_to_light        = glm::distance(vec3(it->pos_or_dir), r.pos);
+                    float len_to_intersection = glm::distance(ShadowHit.hitPoint, r.pos);
 
-                //vec3::size_type h1_len = HitpointToLight.length();
-                float h1 = ::vecLen(HitpointToLight);
-                //vec3::size_type h2_len = HitpointToIntersection.length();
-                float h2 = ::vecLen(HitpointToIntersection);
-
-                if (h2 < h1)
-                    // hitpoint in shadow, next light
-                    continue;  
+                    if (len_to_intersection <= len_to_light)
+                        // Hit.hitPoint in shadow, next light
+                        continue;  
+                }
             }
+
+            vec3 L = it->color;
+
+            // only consider point light for attenuation
+            if (it->pos_or_dir[3] == 1) {
+                float d = glm::distance(Hit.hitPoint, vec3(it->pos_or_dir));
+                L = it->color / (it->attenuation[0] + it->attenuation[1] * d + it->attenuation[2] * d * d);
+            }
+
+            // diffuse term
+            float dotP = dot(Hit.normal, dir_to_light);
+            color += L * (Hit.obj->diffuse * common::max(dotP, 0.0f));
+
+            // specular term
+            vec3 halfVec = normalize(dir_to_light + -ray.dir);
+            float halfAngle = dot(Hit.normal, halfVec);
+            color += L * (Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess));
         }
-
-        vec3 L = it->color;
-
-        // only consider point light for attenuation
-        if (it->pos_or_dir[3] == 1) {
-            float d = glm::distance(Hit.hitPoint, vec3(it->pos_or_dir));
-            L = it->color / (it->attenuation[0] + it->attenuation[1] * d + it->attenuation[2] * d * d);
-        }
-
-        // diffuse term
-        float dotP = dot(Hit.normal, dir_to_light);
-        color += L * (Hit.obj->diffuse * common::max(dotP, 0.0f));
-
-        // specular term
-        vec3 halfVec = normalize(dir_to_light + -ray.dir);
-        float halfAngle = dot(Hit.normal, halfVec);
-        color += L * (Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess));
     }
 
     // reflection
