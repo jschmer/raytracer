@@ -30,7 +30,7 @@ void getAllFilesIn(std::string folder, std::vector<std::string> &files) {
 int main(int argc, char* argv[]) {
     bool batch      = false;
     bool submission = false;
-    bool scene7     = true;
+    bool scene7     = false;
 
     // vektoren von rechts multiplizieren!
     // matrix stack: rechte transformation kommt zuerst!!
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         Scene scene;
-        scene.loadScene("testscenes/scene6.test");
+        scene.loadScene("testscenes/scene6_flipped_walls.test");
 
         std::cout << "output name: " << scene._outputFilename << "\n";
 

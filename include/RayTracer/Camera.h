@@ -40,7 +40,7 @@ public:
         float alpha = static_cast<float>(tanFovx * ((sample.x - halfWidth)/halfWidth));
         float beta = static_cast<float>(tanFovy * ((halfHeight - sample.y)/halfHeight));
 
-        vec3 dir = alpha*u - beta*v - w;
+        vec3 dir = alpha*u + beta*v - w;
 
         ray.pos = eye;
         ray.dir = normalize(dir);

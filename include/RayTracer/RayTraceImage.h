@@ -21,19 +21,30 @@ struct Pixel {
     BYTE Blue;
     BYTE Green;
     BYTE Red;
+
+    Pixel() {
+        Blue  = 0U;
+        Green = 0U;
+        Red   = 0U;
+    }
 };
 
 class RayTraceImage
 {
 public:
-    RayTraceImage(int width = 200, int height = 200)
+    RayTraceImage(int width = 200, int height = 200, std::string filename = "SceneRender.png")
         : width(width),
-          height(height)
+          height(height),
+          filename(filename),
+          pixelCounter(0)
     {
         pImage = new Pixel[width*height];
+        memset(pImage, 0, sizeof(Pixel));
         numPixels = width*height;
         currentSampleWidth = 0;
         currentSampleHeight = 0;
+
+        saveAfterNumPixel = numPixels/20;
     }
 
     ~RayTraceImage() {
@@ -41,6 +52,9 @@ public:
     }
 
     bool getSample(Sample &s) {
+        if ((pixelCounter % saveAfterNumPixel) == 0)
+            this->save();
+
         if (currentSampleHeight < height) {
             int w = width;
             currentSampleHeight += currentSampleWidth/w;
@@ -49,6 +63,7 @@ public:
             s.x = currentSampleWidth + 0.5f;
             s.y = currentSampleHeight + 0.5f;
             ++currentSampleWidth;
+            ++pixelCounter;
 
             return true;
         } else {
@@ -72,34 +87,16 @@ public:
         pImage[(int)s.y*width+(int)s.x] = PixelColor;
     }
 
-    void save(std::string filename) {
+    void save() {
         FreeImage_Initialise();
 
         // save the rendered image
         {
-            FIBITMAP *img = FreeImage_ConvertFromRawBits(this->getByteBuffer(), width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, false);
+            FIBITMAP *img = FreeImage_ConvertFromRawBits(this->getByteBuffer(), width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
             FreeImage_Save(FIF_PNG, img, filename.c_str(), 0);
         }
 
         FreeImage_DeInitialise();
-    }
-
-    void fill() {
-        Pixel RedPixel, GreenPixel, BluePixel;
-        RedPixel.Blue    = 0x00;
-        RedPixel.Green   = 0x00;
-        RedPixel.Red     = 0xFF;
-
-        GreenPixel.Blue  = 0x00;
-        GreenPixel.Green = 0xFF;
-        GreenPixel.Red   = 0x00;
-
-        BluePixel.Blue   = 0xFF;
-        BluePixel.Green  = 0x00;
-        BluePixel.Red    = 0x00;
-
-        for (unsigned int i=0; i<numPixels; ++i)
-            pImage[i] = RedPixel;
     }
 
     BYTE* getByteBuffer() {
@@ -114,5 +111,9 @@ private:
 
     unsigned int currentSampleWidth;
     unsigned int currentSampleHeight;
+    unsigned int pixelCounter;
+    unsigned int saveAfterNumPixel;
+
+    std::string filename;
 };
 

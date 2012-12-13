@@ -30,7 +30,7 @@ void Scene::loadScene(std::string sceneFile) {
 
     if (_image)
         delete _image;
-    _image = new RayTraceImage(_size.width, _size.height);
+    _image = new RayTraceImage(_size.width, _size.height, _outputFilename);
 }
 
 void Scene::render() {
@@ -47,7 +47,7 @@ void Scene::render() {
         _image->commit(sample, Hit.color);
     }
 
-    _image->save(_outputFilename);
+    _image->save();
 }
 
 Intersection Scene::inShadow(Ray &ray, float t_hit = FLT_MAX) {
