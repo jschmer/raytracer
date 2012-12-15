@@ -29,7 +29,7 @@ public:
         world2obj = inverse(obj2world);
     }
 
-    virtual float Intersect(Ray& r, Intersection &Hit) = 0;
+    virtual float Intersect(Ray const &r, Intersection &Hit) = 0;
 
     // lighting
     vec3 ambient;
@@ -50,9 +50,11 @@ public:
         position(pos),
         radius(radius),
         radius2(radius*radius)
-    {}
+    {
+        transposed_world2obj = transpose(this->world2obj);
+    }
 
-    float Intersect(Ray &ray, Intersection &Hit) {
+    float Intersect(Ray const &ray, Intersection &Hit) {
         // transforming ray to object space
         Ray objRay;
         objRay.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
@@ -115,7 +117,7 @@ public:
         // calculating the normal in object space
         Hit.normal = normalize(hitPointObjSpace - vec3(position));
         // transforming the normal
-        Hit.normal = normalize(vec3(transpose(this->world2obj) * vec4(Hit.normal, 0)));
+        Hit.normal = normalize(vec3(this->transposed_world2obj * vec4(Hit.normal, 0)));
         
         return ret;
     }
@@ -124,6 +126,8 @@ public:
     vec4 position;    // position
     float radius;
     float radius2;
+
+    mat4 transposed_world2obj;
 };
 
 class Triangle : public Primitive {
@@ -135,9 +139,10 @@ public:
         v1 = g;
         v2 = h;
         faceNormal = -vec4(glm::normalize(glm::cross(v1 - v0, v2 - v0)), 0); 
+        tranformedNormal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
     }
 
-    float Intersect(Ray &ray, Intersection &Hit) {
+    float Intersect(Ray const &ray, Intersection &Hit) {
         // transforming ray to object space
         Ray r;
         r.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
@@ -180,13 +185,14 @@ public:
         Hit.t = t;
         vec3 hitPoint = r.pos + t * r.dir;
         Hit.hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
-        Hit.normal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
+        Hit.normal = this->tranformedNormal;
         return t;
     }
 
     // object parameters
     vec3 v0, v1, v2;    // vertices
     vec4 faceNormal;
+    vec3 tranformedNormal;
 };
 
 class Light {
@@ -196,19 +202,24 @@ public:
         color(color),
         attenuation(attenuation),
         transform(transform)
-    {}
+    {
+        normalized_dir = normalize(vec3(pos_or_dir));
+    }
 
-    vec3 LightVectorFrom(vec3 point) {
+    vec3 LightVectorFrom(vec3 const &point) const {
         if (pos_or_dir[3] == 1)
             // point light
             return normalize(vec3(pos_or_dir) - point);
         else
             // directional light, pos_or_dir is the light vector TO the light source
-            return normalize(vec3(pos_or_dir));
+            return this->normalized_dir;
     }
 
     vec3 attenuation;   // const, linear, quadratic term
+
     vec4 pos_or_dir;
+    vec3 normalized_dir;
     vec3 color;
+
     mat3 transform;
 };

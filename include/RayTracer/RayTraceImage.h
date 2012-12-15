@@ -44,17 +44,22 @@ public:
         currentSampleWidth = 0;
         currentSampleHeight = 0;
 
-        saveAfterNumPixel = numPixels/20;
+        saveAfterNumPixel = numPixels/10;
+
+        FreeImage_Initialise();
     }
 
     ~RayTraceImage() {
         delete[] pImage;
+
+        FreeImage_DeInitialise();
     }
 
     bool getSample(Sample &s) {
+        /*
         if ((pixelCounter % saveAfterNumPixel) == 0)
             this->save();
-
+        */
         if (currentSampleHeight < height) {
             int w = width;
             currentSampleHeight += currentSampleWidth/w;
@@ -71,12 +76,12 @@ public:
         }
     }
 
-    void clampToUpper(vec3 &v, float up) {
+    void clampToUpper(vec3 &v, float const up) const {
         for (int i=0; i<3; ++i)
             v[i] = v[i] > up ? up : v[i]; 
     }
 
-    void commit(Sample &s, vec3 color) {
+    void commit(Sample const &s, vec3 color) const {
         clampToUpper(color, 1.0f);
 
         Pixel PixelColor;
@@ -87,19 +92,13 @@ public:
         pImage[(int)s.y*width+(int)s.x] = PixelColor;
     }
 
-    void save() {
-        FreeImage_Initialise();
-
+    void save() const {
         // save the rendered image
-        {
-            FIBITMAP *img = FreeImage_ConvertFromRawBits(this->getByteBuffer(), width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
-            FreeImage_Save(FIF_PNG, img, filename.c_str(), 0);
-        }
-
-        FreeImage_DeInitialise();
+        FIBITMAP *img = FreeImage_ConvertFromRawBits(this->getByteBuffer(), width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
+        FreeImage_Save(FIF_PNG, img, filename.c_str(), 0);
     }
 
-    BYTE* getByteBuffer() {
+    BYTE* getByteBuffer() const {
         return (BYTE*)pImage;
     }
 

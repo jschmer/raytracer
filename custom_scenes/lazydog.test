@@ -1,0 +1,102 @@
+size 1024 768
+size 1920 1200
+maxdepth 10
+
+#### Uncomment for a nice big picture with lots of reflections.
+# size 10240 7680
+size 5120 3840
+# maxdepth 40
+maxdepth 40
+
+camera 0 0 1.5 0 0 0 0 1 0 52
+output my-scene-1.png
+
+ambient 0 0 0
+specular 0 0 0
+shininess 1
+emission 0 0 0
+diffuse 0 0 0
+
+attenuation 1 0.1 0.05
+
+point 2 2 1.5 0.8 0.8 0.8
+point -2 2 -1.5 0.8 0.8 0.8
+point -2 2 3.5 0.8 0.8 0.8
+directional 1 1 1 0.2 0.2 0.2
+
+####
+#### spheres now
+####
+diffuse 0.6 0.6 0.6
+specular 0.6 0.6 0.6
+shininess 20
+
+translate 0 0.25 0
+rotate 1 0 0 30
+rotate 0 1 0 -20
+
+#### Glow ball
+emission 0.8 0.2 0.1
+sphere  0 -0.4 0 0.25
+emission 0 0 0
+
+#### 1st layer of spheres
+diffuse 0.8 0.2 0.8
+pushTransform
+translate -0.4 -0.4 0.4
+sphere    0 0    0 0.1
+sphere  0.2 0    0 0.1
+sphere  0.4 0    0 0.1
+sphere  0.6 0    0 0.1
+sphere  0.8 0    0 0.1
+
+sphere    0 0 -0.2 0.1
+sphere  0.8 0 -0.2 0.1
+sphere    0 0 -0.4 0.1
+sphere  0.8 0 -0.4 0.1
+sphere    0 0 -0.6 0.1
+sphere  0.8 0 -0.6 0.1
+sphere    0 0 -0.8 0.1
+sphere  0.2 0 -0.8 0.1
+sphere  0.4 0 -0.8 0.1
+sphere  0.6 0 -0.8 0.1
+sphere  0.8 0 -0.8 0.1
+popTransform
+
+#### 2nd layer of spheres
+diffuse 0.8 0.8 0.2
+pushTransform
+translate -0.3 -0.251904 0.3
+sphere    0 0    0 0.1
+sphere  0.6 0    0 0.1
+sphere    0 0 -0.6 0.1
+sphere  0.6 0 -0.6 0.1
+popTransform
+
+#### 3rd layer of spheres
+diffuse 0.2 0.8 0.8
+pushTransform
+translate -0.2 -0.103808 0.2
+sphere    0 0    0 0.1
+sphere  0.4 0    0 0.1
+sphere    0 0 -0.4 0.1
+sphere  0.4 0 -0.4 0.1
+popTransform
+
+#### 4th layer of spheres
+diffuse 1 1 1
+pushTransform
+translate -0.1 0.044288 0.1
+sphere    0 0    0 0.1
+sphere  0.2 0    0 0.1
+sphere    0 0 -0.2 0.1
+sphere  0.2 0 -0.2 0.1
+
+popTransform
+
+#### 5th layer of spheres
+diffuse 0.2 0.6 0.8
+pushTransform
+translate 0  0.192384 0
+sphere    0 0 0 0.1
+popTransform

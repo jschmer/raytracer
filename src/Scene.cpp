@@ -50,7 +50,7 @@ void Scene::render() {
     _image->save();
 }
 
-Intersection Scene::inShadow(Ray &ray, float t_hit = FLT_MAX) {
+Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
     Intersection ret;
     ret.obj = nullptr;
 
@@ -67,7 +67,7 @@ Intersection Scene::inShadow(Ray &ray, float t_hit = FLT_MAX) {
     return ret;
 }
 
-Intersection Scene::trace(Ray &ray, int depth) {
+Intersection Scene::trace(Ray const &ray, int depth) {
     float t_hit = FLT_MAX;
     Intersection ret;
     ret.obj = nullptr;
@@ -92,7 +92,7 @@ Intersection Scene::trace(Ray &ray, int depth) {
     return ret;
 }
 
-vec3 Scene::shade(Intersection &Hit, Ray &ray, int depth) {
+vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     vec3 color(0.0);
     color += Hit.obj->ambient;
     color += Hit.obj->emission;

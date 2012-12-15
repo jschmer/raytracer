@@ -1,0 +1,57 @@
+size 640 480
+size 2560 1920
+maxdepth 5
+
+camera 0 0 15 0 0 0 1 0 0 30
+directional 0 10 7 0.3 0.3 0.3
+directional 0 -10 7 0.4 0.4 0.4
+output tricell.png
+
+
+shininess 20
+scale 3 3 3
+
+diffuse 0.0 1.0 0.0
+specular 1.0 1.0 1.0
+emission 0.0 0.1 0.0
+
+translate 0.5 0 0
+
+pushTransform 
+rotate 0 0 1 120
+translate 0.2887 0.5 0 
+rotate 0 0 1 180
+sphere  0 0 0 0.2886
+sphere  0.3849 0 0 0.09623
+sphere  -0.1924 -0.3333 0 0.09623
+sphere  -0.1924 0.3333 0 0.09623
+
+pushTransform 
+translate 0.2887 -0.5 0 
+rotate 0 0 1 180
+sphere  0 0 0 0.2886
+sphere  0.3849 0 0 0.09623
+sphere  -0.1924 -0.3333 0 0.09623
+sphere  -0.1924 0.3333 0 0.09623
+popTransform
+
+pushTransform 
+rotate 0 0 1 120
+translate 0.2887 -0.5 0 
+rotate 0 0 1 180
+sphere  0 0 0 0.2886
+sphere  0.3849 0 0 0.09623
+sphere  -0.1924 -0.3333 0 0.09623
+sphere  -0.1924 0.3333 0 0.09623
+popTransform
+
+pushTransform 
+rotate 0 0 1 240
+translate 0.2887 -0.5 0 
+rotate 0 0 1 180
+sphere  0 0 0 0.2886
+sphere  0.3849 0 0 0.09623
+sphere  -0.1924 -0.3333 0 0.09623
+sphere  -0.1924 0.3333 0 0.09623
+popTransform
+popTransform

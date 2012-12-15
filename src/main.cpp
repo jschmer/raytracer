@@ -118,6 +118,6 @@ int main(int argc, char* argv[]) {
     }
     
     std::cout << "Press a key...\n";
-    getchar();
+    //getchar();
     return 0;
 }
