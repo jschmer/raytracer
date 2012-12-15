@@ -12,12 +12,13 @@ using namespace glm;
 #include <RayTracer\Helper.h>
 
 #include <sstream>
+#include <Shlwapi.h>
 
-void getAllFilesIn(std::string folder, std::vector<std::string> &files) {
+void getAllFilesIn(std::string folder, std::vector<std::string> &files, std::string ext = "test") {
     HANDLE hFind;
     WIN32_FIND_DATA data;
 
-    hFind = FindFirstFile((folder + "*.test").c_str(), &data);
+    hFind = FindFirstFile((folder + "*."+ext).c_str(), &data);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
             if (data.cFileName[0] != '.')
@@ -27,84 +28,96 @@ void getAllFilesIn(std::string folder, std::vector<std::string> &files) {
     }
 }
 
-int main(int argc, char* argv[]) {
-    bool batch      = false;
-    bool submission = false;
-    bool scene7     = false;
-
+void MatrixOps() {
     // vektoren von rechts multiplizieren!
     // matrix stack: rechte transformation kommt zuerst!!
 
-    if (false) {
-        vec4 pos(1, 0, 1, 1);   // scale (2, 1, 3)
-        // -> vec4 pos(2, 0, 3, 1);   // translate (-1, 1, -3)
-        // -> vec4 pos(1, 1, 0, 1);   // rotate 90° um (0, 1, 0)
-        // -> vec4 pos(0, 1, -1, 1);
+    vec4 pos(1, 0, 1, 1);   // scale (2, 1, 3)
+    // -> vec4 pos(2, 0, 3, 1);   // translate (-1, 1, -3)
+    // -> vec4 pos(1, 1, 0, 1);   // rotate 90° um (0, 1, 0)
+    // -> vec4 pos(0, 1, -1, 1);
 
-        mat4 transf(1);
-        printVec4(pos, "pos = no transform");
+    mat4 transf(1);
+    printVec4(pos, "pos = no transform");
 
-        // scale
-        transf = glm::scale(mat4(1), vec3(2, 1, 3)) * transf;
-        printVec4(transf * pos, "pos = scale");
+    // scale
+    transf = glm::scale(mat4(1), vec3(2, 1, 3)) * transf;
+    printVec4(transf * pos, "pos = scale");
 
-        // translate
-        transf = glm::translate(mat4(1), vec3(-1, 1, -3)) * transf;
-        printVec4(transf * pos, "pos = scale+translate");
+    // translate
+    transf = glm::translate(mat4(1), vec3(-1, 1, -3)) * transf;
+    printVec4(transf * pos, "pos = scale+translate");
 
-        // rotate
-        transf = glm::rotate(mat4(1), 90.0f, vec3(0, 1, 0)) * transf;
-        printVec4(transf * pos, "pos = scale+translate+rotate");
+    // rotate
+    transf = glm::rotate(mat4(1), 90.0f, vec3(0, 1, 0)) * transf;
+    printVec4(transf * pos, "pos = scale+translate+rotate");
 
-        printVec4(vec4(), "Vec4");
+    printVec4(vec4(), "Vec4");
+}
 
-        getchar();
-        return 0;
+int main(int argc, char* argv[]) {
+    bool dir = false;
+    bool useExt = false;
+
+    std::string path = "";
+    std::string ext = "";
+    if (argc == 2) {
+        path = std::string(argv[1]);
     }
-    if (batch) {
-        for (int i=1; i<5; ++i) {
-            stringstream s;
-            s << i;
+    else if (argc == 3) {
+        path = std::string(argv[1]);
+        ext = std::string(argv[2]);
+        useExt = true;
+    }
+    
+    // append a backslash
+    if (argc != 2 && path != "" && path.at(path.length()-1) != '\\' && path.at(path.length()-1) != '/')
+        path += '\\';
 
-            Scene scene;
-            scene.loadScene("testscenes/scene1-" + s.str() + ".test");
-
-            std::cout << "output name: " << scene._outputFilename << "\n";
-
-            scene.render();
+    DWORD attr = 0;
+    if (attr = GetFileAttributes(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
+        if (attr & FILE_ATTRIBUTE_DIRECTORY) {
+            dir = true;
+        } else if (attr & FILE_ATTRIBUTE_NORMAL) {
+            ;
         }
-    } 
-    if (submission) {
-        std::vector<std::string> files;
-        std::string folder = "hw3-submissionscenes\\";
-        getAllFilesIn(folder, files);
+    } else {
+        std::cout << "Error getting file attributes for: " << path << std::endl;
+        getchar();
+        return -1;
+    }
 
+    std::vector<std::string> files;
+    if (dir) {
+        // read all *.test files in directory
+        if (useExt)
+            getAllFilesIn(path, files, ext);
+        else
+            getAllFilesIn(path, files);
+
+        if (files.size() == 0)
+            std::cout << "No files found!" << std::endl;
+
+        // render all the files
         for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
+            std::cout << "Rendering " << path + *it << std::endl;
+
             Scene scene;
-            scene.loadScene(folder + *it);
-            std::cout << "output name: " << scene._outputFilename << "\n";
+            scene.loadScene(path + *it);
+            std::cout << "\tOutput name: " << scene._outputFilename << "\n";
             scene.render();  
         }
+    } else {
+        std::cout << "Rendering " << path << std::endl;
 
-    }
-    else if (scene7) {
+        // render only the specified file
         Scene scene;
-        scene.loadScene("hw3-submissionscenes/scene7.test_");
-
-        std::cout << "output name: " << scene._outputFilename << "\n";
-
-        scene.render();
+        scene.loadScene(path);
+        std::cout << "\tOutput name: " << scene._outputFilename << "\n";
+        scene.render();  
     }
-    else {
-        Scene scene;
-        scene.loadScene("testscenes/scene6_flipped_walls.test");
-
-        std::cout << "output name: " << scene._outputFilename << "\n";
-
-        scene.render();
-    }
-
+    
     std::cout << "Press a key...\n";
-    //getchar();
+    getchar();
     return 0;
 }

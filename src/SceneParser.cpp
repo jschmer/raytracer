@@ -192,7 +192,13 @@ Scene* SceneParser::load(){
                         vec4 pos(values[0], values[1], values[2], 1);
                         float radius = values[3];
 
-                        Sphere* s = new Sphere(transfstack.top(), pos, radius);
+                        mat4 trans = glm::translate(mat4(1),vec3(pos));
+                        if (last)   // rechte matrix kommt zuerst!
+                            trans = trans * transfstack.top();
+                        else
+                            trans = transfstack.top() * trans;
+
+                        Sphere* s = new Sphere(trans, vec4(0.0f), radius);
                         s->ambient  = ambient;
                         s->specular = specular;
                         s->emission = emission;
