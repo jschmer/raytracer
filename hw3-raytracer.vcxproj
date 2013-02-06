@@ -39,12 +39,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(Configuration)\intermediate\</IntDir>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>bin\$(Configuration)\intermediate\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(Configuration)\intermediate\</IntDir>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>bin\$(Configuration)\intermediate\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -58,7 +58,7 @@
       <AdditionalDependencies>FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)dependencies\FreeImage.dll $(ProjectDir)$(Configuration)</Command>
+      <Command>copy $(ProjectDir)dependencies\FreeImage.dll $(ProjectDir)bin\$(Configuration)</Command>
       <Message>Copy FreeImage.dll dependency</Message>
     </PostBuildEvent>
     <PreLinkEvent>
@@ -85,7 +85,7 @@
       <AdditionalDependencies>FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)dependencies\FreeImage.dll $(ProjectDir)$(Configuration)</Command>
+      <Command>copy $(ProjectDir)dependencies\FreeImage.dll $(ProjectDir)bin\$(Configuration)</Command>
       <Message>Copy FreeImage.dll dependency</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
