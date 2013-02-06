@@ -91,8 +91,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Helper.cpp" />
+    <ClCompile Include="src\RayTracer\SceneReader\ObjParser.cpp" />
+    <ClCompile Include="src\RayTracer\SceneReader\SceneParser.cpp" />
     <ClCompile Include="src\Scene.cpp" />
-    <ClCompile Include="src\SceneParser.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
@@ -100,10 +101,12 @@
     <ClInclude Include="include\RayTracer\Camera.h" />
     <ClInclude Include="include\RayTracer\Geometry.h" />
     <ClInclude Include="include\RayTracer\Helper.h" />
+    <ClInclude Include="include\RayTracer\Output\RayTraceImage.h" />
     <ClInclude Include="include\RayTracer\Ray.h" />
     <ClInclude Include="include\RayTracer\Scene.h" />
-    <ClInclude Include="include\RayTracer\SceneParser.h" />
-    <ClInclude Include="include\RayTracer\RayTraceImage.h" />
+    <ClInclude Include="include\RayTracer\SceneReader\ISceneReader.h" />
+    <ClInclude Include="include\RayTracer\SceneReader\ObjParser.h" />
+    <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h" />
     <ClInclude Include="include\RayTracer\Transform.h" />
     <ClInclude Include="include\StringSplit.h" />
   </ItemGroup>

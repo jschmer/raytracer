@@ -1,9 +1,8 @@
 #include <RayTracer\Scene.h>
 
-#include <RayTracer\SceneParser.h>
-#include <RayTracer\RayTraceImage.h>
+#include <RayTracer\SceneReader\SceneParser.h>
+#include <RayTracer\Output\RayTraceImage.h>
 #include <RayTracer\Camera.h>
-
 #include <RayTracer\Helper.h>
 
 #include <iostream>

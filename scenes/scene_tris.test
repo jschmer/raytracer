@@ -1,0 +1,40 @@
+# Test Scene 1 
+# A simple quad viewed from different camera positions
+
+size 600 600 
+
+output reflection_test.png
+
+maxdepth 5
+
+# camera
+camera 2 1.5 10    -.7 1.5 0 0 1 0 30
+
+# lights
+directional 1 2 3 .3 .3 .3
+directional -1 1 3 .3 .3 .3 
+point -4 3 3 .4 .4 .4
+
+# objects
+ambient .1 .1 .1
+
+vertex 0 0 0 
+vertex 0 3 0
+vertex 1.5 0 2
+vertex -3 0 0
+
+#diffuse 0 1 0 
+specular .5 0 0
+tri 0 1 2
+
+#diffuse 0 0 1 
+specular 0 0 .5
+tri 3 1 0
+
+specular 0 .5 0
+shininess 15
+diffuse 1 0 1
+
+specular .3 .3 .3
+translate -.5 .8 0
+sphere 0 0 0 .5

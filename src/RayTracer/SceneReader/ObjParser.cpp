@@ -1,6 +1,5 @@
-#include "..\include\RayTracer\SceneParser.h"
+#include <RayTracer\SceneReader\ObjParser.h>
 
-#include <RayTracer\SceneParser.h>
 #include <RayTracer\Scene.h>
 #include <RayTracer\Transform.h>
 #include <RayTracer\Helper.h>
@@ -18,7 +17,7 @@
 using namespace std;
 using namespace glm;
 
-bool SceneParser::readvals(stringstream &s, const int numvals, vector<float> &values) 
+bool ObjParser::readvals(stringstream &s, const int numvals, vector<float> &values) 
 {
     for (int i = 0; i < numvals; i++) {
         float f;
@@ -32,7 +31,7 @@ bool SceneParser::readvals(stringstream &s, const int numvals, vector<float> &va
     return true; 
 }
 
-Scene* SceneParser::load(){
+Scene* ObjParser::load(){
     Scene *scene = new Scene();
 
     string str, cmd; 

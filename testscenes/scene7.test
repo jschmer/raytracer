@@ -1,0 +1,33 @@
+#Stanford Dragon
+
+size 640 480
+camera 2 3 5 0 0 -1 0 1 0 45
+output scene7.png
+
+diffuse 0.4 0.1 0.1
+ambient 0.0 0.0 0.0
+point 0 20 20 1 1 1
+shininess 20
+specular 0.3 0.3 0.3
+
+maxdepth 5
+
+maxverts 50001
+
+vertex 0 0 0
+vertex  1.6831 3.0852 -0.9792
+vertex  1.7310 3.1590 -0.9106
+vertex  1.7835 3.2305 -0.9748
+vertex  2.9331 3.9908 -1.9344
+vertex  2.9415 4.2018 -1.8686
+vertex  3.0716 4.2045 -1.9526
+vertex  4.5841 0.4763 -1.3029
+vertex  4.4857 0.6615 -1.3202
+vertex  4.5346 0.6206 -1.2836
+
+pushTransform
+translate 0 -5 0
+tri 1 2 3 
+tri 4 5 6 
+tri 7 8 9 
+popTransform
