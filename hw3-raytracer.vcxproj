@@ -56,6 +56,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>copy $(ProjectDir)dependencies\FreeImage.dll $(ProjectDir)bin\$(Configuration)</Command>
@@ -95,7 +97,6 @@
     <ClCompile Include="src\RayTracer\SceneReader\SceneParser.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RayTracer\Camera.h" />
@@ -107,7 +108,6 @@
     <ClInclude Include="include\RayTracer\SceneReader\ISceneReader.h" />
     <ClInclude Include="include\RayTracer\SceneReader\ObjParser.h" />
     <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h" />
-    <ClInclude Include="include\RayTracer\Transform.h" />
     <ClInclude Include="include\StringSplit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

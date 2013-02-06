@@ -14,6 +14,8 @@ using namespace glm;
 #include <sstream>
 #include <Shlwapi.h>
 
+#include <RayTracer\SceneReader\ObjParser.h>
+
 void getAllFilesIn(std::string folder, std::vector<std::string> &files, std::string ext = "test") {
     HANDLE hFind;
     WIN32_FIND_DATA data;
@@ -56,6 +58,9 @@ void MatrixOps() {
 }
 
 int main(int argc, char* argv[]) {
+    ObjParser obj("Sample.obj");
+    obj.load();
+
     bool dir = false;
     bool useExt = false;
 

@@ -1,7 +1,6 @@
 #include <RayTracer\SceneReader\SceneParser.h>
 
 #include <RayTracer\Scene.h>
-#include <RayTracer\Transform.h>
 #include <RayTracer\Helper.h>
 #include <RayTracer\Camera.h>
 
@@ -13,6 +12,7 @@
 
 #define GLM_SWIZZLE_XYZW 
 #include <glm\glm.hpp>
+#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
 
 using namespace std;
 using namespace glm;
