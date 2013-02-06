@@ -4,3 +4,4 @@
 *.png
 /Release
 *.user
+/bin
