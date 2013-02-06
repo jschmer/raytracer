@@ -58,8 +58,8 @@ void MatrixOps() {
 }
 
 int main(int argc, char* argv[]) {
-    ObjParser obj("Sample.obj");
-    obj.load();
+    //ObjParser obj("Sample.obj");
+    //obj.load();
 
     bool dir = false;
     bool useExt = false;

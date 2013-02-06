@@ -9,7 +9,7 @@ size 5120 3840
 maxdepth 40
 
 camera 0 0 1.5 0 0 0 0 1 0 52
-output my-scene-1.png
+output lazydog.png
 
 ambient 0 0 0
 specular 0 0 0

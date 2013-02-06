@@ -12,7 +12,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}</ProjectGuid>
-    <RootNamespace>hw3raytracer</RootNamespace>
+    <RootNamespace>raytracer</RootNamespace>
+    <ProjectName>raytracer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
