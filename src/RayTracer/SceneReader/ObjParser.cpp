@@ -32,6 +32,8 @@ bool ObjParser::readvals(stringstream &s, const int numvals, vector<float> &valu
 }
 
 Scene* ObjParser::load(){
+    assert(false && "Implement ObjParser for scene loading!");
+
     Scene *scene = new Scene();
 
     string str, cmd; 
