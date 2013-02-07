@@ -14,8 +14,6 @@ using namespace glm;
 #include <sstream>
 #include <Shlwapi.h>
 
-#include <RayTracer\SceneReader\ObjParser.h>
-
 void getAllFilesIn(std::string folder, std::vector<std::string> &files, std::string ext = "test") {
     HANDLE hFind;
     WIN32_FIND_DATA data;
@@ -58,9 +56,6 @@ void MatrixOps() {
 }
 
 int main(int argc, char* argv[]) {
-    //ObjParser obj("Sample.obj");
-    //obj.load();
-
     bool dir = false;
     bool useExt = false;
 
@@ -86,7 +81,8 @@ int main(int argc, char* argv[]) {
         } else if (attr & FILE_ATTRIBUTE_NORMAL) {
             ;
         }
-    } else {
+    }
+    else {
         std::cout << "Error getting file attributes for: " << path << std::endl;
         getchar();
         return -1;
@@ -108,16 +104,17 @@ int main(int argc, char* argv[]) {
             std::cout << "Rendering " << path + *it << std::endl;
 
             Scene scene;
-            scene.loadScene(path + *it);
+            scene.load(path + *it);
             std::cout << "\tOutput name: " << scene._outputFilename << "\n";
             scene.render();  
         }
-    } else {
+    }
+    else {
         std::cout << "Rendering " << path << std::endl;
 
         // render only the specified file
         Scene scene;
-        scene.loadScene(path);
+        scene.load(path);
         std::cout << "\tOutput name: " << scene._outputFilename << "\n";
         scene.render();  
     }

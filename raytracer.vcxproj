@@ -109,6 +109,7 @@
     <ClInclude Include="include\RayTracer\SceneReader\ISceneReader.h" />
     <ClInclude Include="include\RayTracer\SceneReader\ObjParser.h" />
     <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h" />
+    <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h" />
     <ClInclude Include="include\StringSplit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

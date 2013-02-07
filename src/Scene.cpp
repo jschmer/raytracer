@@ -1,5 +1,6 @@
 #include <RayTracer\Scene.h>
 
+#include <RayTracer/SceneReader/SceneReader.h>
 #include <RayTracer\SceneReader\SceneParser.h>
 #include <RayTracer\Output\RayTraceImage.h>
 #include <RayTracer\Camera.h>
@@ -10,22 +11,23 @@
 Scene::Scene() {
     // default values
     _maxdepth = 5;
-    _outputFilename = "SceneRender.png";
 
     _image = NULL;
     _camera = NULL;
 
-    _size.width  = 200;
-    _size.height = 200;
+    _size.width  = 600;
+    _size.height = 600;
 }
 Scene::~Scene() {
     if (_camera)
         delete _camera;
 }
 
-void Scene::loadScene(std::string sceneFile) {
-    SceneParser parser(sceneFile);
-    *this = *parser.load();
+void Scene::load(std::string sceneFile) {
+    *this = *(loadScene(sceneFile));
+
+    // set output filename to inpuptfilename with png extension
+    _outputFilename = sceneFile.substr(0, sceneFile.length()-4) + ".png";
 
     if (_image)
         delete _image;

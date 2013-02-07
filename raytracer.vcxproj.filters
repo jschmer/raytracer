@@ -71,5 +71,8 @@
     <ClInclude Include="include\RayTracer\Output\RayTraceImage.h">
       <Filter>Header Files\Output</Filter>
     </ClInclude>
+    <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h">
+      <Filter>Header Files\SceneReader</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

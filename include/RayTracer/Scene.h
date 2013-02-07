@@ -22,7 +22,7 @@ public:
     Scene();
     ~Scene();
 
-    void loadScene(std::string sceneFile);
+    void load(std::string sceneFile);
     void render();
     vec3 shade(Intersection &Hit, Ray const &ray, int depth);
     Intersection trace(Ray const &ray, int depth);

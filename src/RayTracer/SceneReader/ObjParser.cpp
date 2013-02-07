@@ -1,9 +1,5 @@
 #include <RayTracer\SceneReader\ObjParser.h>
 
-#include <RayTracer\Scene.h>
-#include <RayTracer\Helper.h>
-#include <RayTracer\Camera.h>
-
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -13,6 +9,12 @@
 #define GLM_SWIZZLE_XYZW 
 #include <glm\glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
+
+
+#include <RayTracer\Scene.h>
+#include <RayTracer\Helper.h>
+#include <RayTracer\Camera.h>
+#include <Stringsplit.h>
 
 using namespace std;
 using namespace glm;
@@ -32,9 +34,14 @@ bool ObjParser::readvals(stringstream &s, const int numvals, vector<float> &valu
 }
 
 Scene* ObjParser::load(){
-    assert(false && "Implement ObjParser for scene loading!");
-
     Scene *scene = new Scene();
+
+    // fixed camera for now
+    vec3 eye    = vec3(0, 0, 30);
+    vec3 center = vec3(0, 0, 0);
+    vec3 up     = vec3(0, 1, 0);
+    float fovy  = 90;
+    scene->_camera = new Camera(eye, center, up, fovy);
 
     string str, cmd; 
     ifstream in;
@@ -68,24 +75,8 @@ Scene* ObjParser::load(){
                 vector<float> values;
                 bool validinput; // Validity of input 
 
-                // image size
-                if (cmd == "maxdepth") {
-                    validinput = readvals(s,1,values); 
-                    if (validinput) { 
-                        scene->_maxdepth = (int) values[0];
-                    } 
-                }
-
-                else if (cmd == "size") {
-                    validinput = readvals(s, 2, values); 
-                    if (validinput) {
-                        scene->_size.width  = (int)values[0];
-                        scene->_size.height = (int)values[1];
-                    }
-                }
-
                 // output filename
-                else if (cmd == "output") {
+                if (cmd == "output") {
                     s >> scene->_outputFilename; 
                 }
 
@@ -174,7 +165,7 @@ Scene* ObjParser::load(){
                 }
 
                 // Geometry
-                else if (cmd == "vertex") {
+                else if (cmd == "v") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
                         vertices.push_back(vec3(values[0], values[1], values[2]));
@@ -208,25 +199,26 @@ Scene* ObjParser::load(){
                         scene->_primitives.push_back(s);
                     }
                 }
-                else if (cmd == "tri") {
-                    validinput = readvals(s, 3, values); 
-                    if (validinput) {
-                        vec4 v0(vertices[(unsigned int)values[0]], 1);
-                        vec4 v1(vertices[(unsigned int)values[1]], 1);
-                        vec4 v2(vertices[(unsigned int)values[2]], 1);
+                else if (cmd == "f") {
+                    auto parts = StringSplit::split(s.str(), ' ');
+                    parts.erase(parts.begin()); // get rid of 'f' at the start of the cmd
 
-                        //v0 = transfstack.top() * v0;
-                        //v1 = transfstack.top() * v1;
-                        //v2 = transfstack.top() * v2;
+                    std::vector<vec3> verts;
+                    for (auto& part : parts) {
+                        auto single = StringSplit::split(part, '/');
 
-                        Triangle* t = new Triangle(transfstack.top(), vec3(v0), vec3(v1), vec3(v2));
-                        t->ambient  = ambient;
-                        t->specular = specular;
-                        t->emission = emission;
-                        t->diffuse  = diffuse;
-                        t->shininess = shininess;
-                        scene->_primitives.push_back(t);
+                        unsigned int vert_idx = std::stoi(single[0]);
+
+                        verts.push_back(vertices[vert_idx-1]);
                     }
+
+                    Triangle* t = new Triangle(transfstack.top(), verts[0], verts[1], verts[2]);
+                    t->ambient  = ambient;
+                    t->specular = specular;
+                    t->emission = emission;
+                    t->diffuse  = diffuse;
+                    t->shininess = shininess;
+                    scene->_primitives.push_back(t);
                 }
 
                 else if (cmd == "trinormal") {
@@ -236,53 +228,6 @@ Scene* ObjParser::load(){
                     }
                 }
 
-                // transformations
-                else if (cmd == "translate") {
-                    validinput = readvals(s,3,values); 
-                    if (validinput) {
-                        mat4 trans = glm::translate(mat4(1),vec3(values[0], values[1], values[2]));
-                        if (last)   // rechte matrix kommt zuerst!
-                            transfstack.top() = trans * transfstack.top();
-                        else
-                            transfstack.top() = transfstack.top() * trans;
-                    }
-                }
-                else if (cmd == "scale") {
-                    validinput = readvals(s,3,values); 
-                    if (validinput) {
-                        mat4 scale = glm::scale(mat4(1),vec3(values[0], values[1], values[2]));
-                        if (last)   // rechte matrix kommt zuerst!
-                            transfstack.top() = scale * transfstack.top();
-                        else
-                            transfstack.top() = transfstack.top() * scale;
-                    }
-                }
-                else if (cmd == "rotate") {
-                    validinput = readvals(s,4,values); 
-                    if (validinput) {
-                        // rotate 0 0 1 90 
-                        mat4 rot = glm::rotate(mat4(1), values[3], normalize(vec3(values[0], values[1], values[2])));
-                        if (last)   // rechte matrix kommt zuerst!
-                            transfstack.top() = rot * transfstack.top();
-                        else
-                            transfstack.top() = transfstack.top() * rot;
-                    }
-                }
-
-                else if (cmd == "maxverts") {
-                    // skipping
-                }
-
-                // basic push/pop code for matrix stacks
-                else if (cmd == "pushTransform") {
-                    transfstack.push(transfstack.top()); 
-                } else if (cmd == "popTransform") {
-                    if (transfstack.size() <= 1) {
-                        cerr << "Stack has no elements. Cannot Pop\n"; 
-                    } else {
-                        transfstack.pop(); 
-                    }
-                }
                 else {
                     cerr << "Unknown Command: " << cmd << " Skipping \n"; 
                 }
