@@ -40,31 +40,35 @@ Scene* ObjParser::load(){
         vector<vec3> vertices;
 
         // default values
-        vec3 ambient(1, 0, 0);
+        vec3 ambient(0, 0, 0);
 
-        vec3 diffuse(0.0);
-        vec3 specular(0.0);
+        vec3 diffuse(1);
+        vec3 specular(0.9);
         vec3 emission(0.0);
-        float shininess = 0;
+        float shininess = 2;
+
+        // constant, linear, quadratic attenuations 
+        vec3 attenuation(1.0, 0.0, 0.0);
 
         // fixed camera for now
-        vec3 eye    = vec3(-30, 30, 60);
-        vec3 center = vec3(0, 0, 0);
+        vec3 eye    = vec3(-25, 35, 65);
+        vec3 center = vec3(5, 5, 5);
         vec3 up     = vec3(0, 1, 0);
         float fovy  = 30;
         scene->_camera = new Camera(eye, center, up, fovy);
 
-        // for debugging
-        Sphere* s = new Sphere(mat4(1.0f), vec4(0.0f), 1);
-        s->ambient  = vec3(0, 1.0, 0);
-        s->specular = specular;
-        s->emission = emission;
-        s->diffuse  = diffuse;
-        s->shininess = shininess;
-        scene->_primitives.push_back(s);
+        // directional light from camera
+        //vec4 dir(eye - center, 0);
+        //vec3 color(.6, 0, 0);
+        //// store object with transformation
+        //scene->_lights.push_back(Light(dir, color, attenuation, mat4(1.0f)));
 
-        // constant, linear, quadratic attenuations 
-        vec3 attenuation(1.0, 0.0, 0.0);
+        // point light
+        vec4 pos(-1, 11, 11, 1);
+        vec3 color2(1, 0, 0);
+
+        //// store object with transformation
+        scene->_lights.push_back(Light(pos, color2, attenuation, mat4(1.0f)));
 
         std::getline(in, str); 
         while (in) {
