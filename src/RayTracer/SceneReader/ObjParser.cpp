@@ -48,7 +48,7 @@ Scene* ObjParser::load(){
         float shininess = 0;
 
         // fixed camera for now
-        vec3 eye    = vec3(-60, 0, 0);
+        vec3 eye    = vec3(-30, 30, 60);
         vec3 center = vec3(0, 0, 0);
         vec3 up     = vec3(0, 1, 0);
         float fovy  = 30;

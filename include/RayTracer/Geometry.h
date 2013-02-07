@@ -150,7 +150,7 @@ public:
 
         vec3 v0v1 = v1 - v0;
         vec3 v0v2 = v2 - v0;
-        vec3 N = cross(v0v1, v0v2);
+        vec3 N = vec3(faceNormal); //cross(v0v1, v0v2);
 
         float nDotRay = dot(N, r.dir);
 
@@ -158,7 +158,7 @@ public:
             return -1.0f; // ray parallel to triangle
 
         float d = dot(N, v0);
-        float t = -(dot(N, r.pos) + d) / nDotRay;
+        float t = -(dot(N, r.pos) - d) / nDotRay;
 
         // compute intersection point
         vec3 Phit = r.pos + t * r.dir;
@@ -183,7 +183,7 @@ public:
 
         Hit.obj = this;
         Hit.t = t;
-        vec3 hitPoint = r.pos + t * r.dir;
+        vec3 hitPoint = Phit;
         Hit.hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
         Hit.normal = this->tranformedNormal;
         return t;
