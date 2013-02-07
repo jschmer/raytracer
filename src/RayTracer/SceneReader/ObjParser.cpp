@@ -8,11 +8,8 @@
 
 #define GLM_SWIZZLE_XYZW 
 #include <glm\glm.hpp>
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
-
 
 #include <RayTracer\Scene.h>
-#include <RayTracer\Helper.h>
 #include <RayTracer\Camera.h>
 #include <Stringsplit.h>
 
@@ -36,31 +33,35 @@ bool ObjParser::readvals(stringstream &s, const int numvals, vector<float> &valu
 Scene* ObjParser::load(){
     Scene *scene = new Scene();
 
-    // fixed camera for now
-    vec3 eye    = vec3(0, 0, 30);
-    vec3 center = vec3(0, 0, 0);
-    vec3 up     = vec3(0, 1, 0);
-    float fovy  = 90;
-    scene->_camera = new Camera(eye, center, up, fovy);
-
     string str, cmd; 
     ifstream in;
     in.open(sceneFile); 
     if (in.is_open()) {
-        // matrix stack to store transforms.  
-        stack <mat4> transfstack; 
-        transfstack.push(mat4(1.0f));  // identity
-
         vector<vec3> vertices;
 
-        vec3 ambient(0.2f, 0.2f, 0.2f);
+        // default values
+        vec3 ambient(1, 0, 0);
 
         vec3 diffuse(0.0);
         vec3 specular(0.0);
         vec3 emission(0.0);
         float shininess = 0;
 
-        bool last = false;   // transformation applied last
+        // fixed camera for now
+        vec3 eye    = vec3(-60, 0, 0);
+        vec3 center = vec3(0, 0, 0);
+        vec3 up     = vec3(0, 1, 0);
+        float fovy  = 30;
+        scene->_camera = new Camera(eye, center, up, fovy);
+
+        // for debugging
+        Sphere* s = new Sphere(mat4(1.0f), vec4(0.0f), 1);
+        s->ambient  = vec3(0, 1.0, 0);
+        s->specular = specular;
+        s->emission = emission;
+        s->diffuse  = diffuse;
+        s->shininess = shininess;
+        scene->_primitives.push_back(s);
 
         // constant, linear, quadratic attenuations 
         vec3 attenuation(1.0, 0.0, 0.0);
@@ -72,6 +73,7 @@ Scene* ObjParser::load(){
 
                 stringstream s(str);
                 s >> cmd; 
+
                 vector<float> values;
                 bool validinput; // Validity of input 
 
@@ -96,9 +98,8 @@ Scene* ObjParser::load(){
                         vec3 up     = vec3(values[6], values[7], values[8]);
                         float fovy  = values[9];
 
-                        if (scene->_camera)
-                            delete scene->_camera;
                         Camera *c = new Camera(eye, center, up, fovy);
+                        delete scene->_camera;
                         scene->_camera = c;
                     }
                 }
@@ -112,7 +113,7 @@ Scene* ObjParser::load(){
                         vec3 color(values[3], values[4], values[5]);
 
                         // store object with transformation
-                        scene->_lights.push_back(Light(dir, color, attenuation, transfstack.top()));
+                        scene->_lights.push_back(Light(dir, color, attenuation, mat4(1.0f)));
                     }
                 }
                 else if (cmd == "point") {
@@ -122,7 +123,7 @@ Scene* ObjParser::load(){
                         vec3 color(values[3], values[4], values[5]);
 
                         // store object with transformation
-                        scene->_lights.push_back(Light(pos, color, attenuation, transfstack.top()));
+                        scene->_lights.push_back(Light(pos, color, attenuation, mat4(1.0f)));
                     }
                 }
                 else if (cmd == "attenuation") {
@@ -147,17 +148,20 @@ Scene* ObjParser::load(){
                     if (validinput) {
                         diffuse = vec3(values[0], values[1], values[2]);
                     }
-                } else if (cmd == "specular") {
+                }
+                else if (cmd == "specular") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
                         specular = vec3(values[0], values[1], values[2]);
                     }
-                } else if (cmd == "emission") {
+                }
+                else if (cmd == "emission") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
                         emission = vec3(values[0], values[1], values[2]);
                     }
-                } else if (cmd == "shininess") {
+                }
+                else if (cmd == "shininess") {
                     validinput = readvals(s, 1, values); 
                     if (validinput) {
                         shininess = values[0];
@@ -165,66 +169,37 @@ Scene* ObjParser::load(){
                 }
 
                 // Geometry
+
+                // vertex
                 else if (cmd == "v") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
                         vertices.push_back(vec3(values[0], values[1], values[2]));
                     }
                 }
-                else if (cmd == "vertexnormal") {
-                    validinput = readvals(s, 6, values); 
-                    if (validinput) {
-
-                    }
-                }
-                else if (cmd == "sphere") {
-                    validinput = readvals(s, 4, values); 
-                    if (validinput) {
-                        // store object with material properties and transformation
-                        vec4 pos(values[0], values[1], values[2], 1);
-                        float radius = values[3];
-
-                        mat4 trans = glm::translate(mat4(1),vec3(pos));
-                        if (last)   // rechte matrix kommt zuerst!
-                            trans = trans * transfstack.top();
-                        else
-                            trans = transfstack.top() * trans;
-
-                        Sphere* s = new Sphere(trans, vec4(0.0f), radius);
-                        s->ambient  = ambient;
-                        s->specular = specular;
-                        s->emission = emission;
-                        s->diffuse  = diffuse;
-                        s->shininess = shininess;
-                        scene->_primitives.push_back(s);
-                    }
-                }
+                // triangle
                 else if (cmd == "f") {
                     auto parts = StringSplit::split(s.str(), ' ');
                     parts.erase(parts.begin()); // get rid of 'f' at the start of the cmd
 
+                    if (parts.size() == 3) {
+
                     std::vector<vec3> verts;
-                    for (auto& part : parts) {
-                        auto single = StringSplit::split(part, '/');
+                        for (auto& part : parts) {
+                            auto single = StringSplit::split(part, '/');
 
-                        unsigned int vert_idx = std::stoi(single[0]);
+                            unsigned int vert_idx = std::stoi(single[0]);
 
-                        verts.push_back(vertices[vert_idx-1]);
-                    }
+                            verts.push_back(vertices[vert_idx-1]);
+                        }
 
-                    Triangle* t = new Triangle(transfstack.top(), verts[0], verts[1], verts[2]);
-                    t->ambient  = ambient;
-                    t->specular = specular;
-                    t->emission = emission;
-                    t->diffuse  = diffuse;
-                    t->shininess = shininess;
-                    scene->_primitives.push_back(t);
-                }
-
-                else if (cmd == "trinormal") {
-                    validinput = readvals(s, 3, values); 
-                    if (validinput) {
-
+                        Triangle* t = new Triangle(mat4(1.0f), verts[0], verts[1], verts[2]);
+                        t->ambient  = ambient;
+                        t->specular = specular;
+                        t->emission = emission;
+                        t->diffuse  = diffuse;
+                        t->shininess = shininess;
+                        scene->_primitives.push_back(t);
                     }
                 }
 

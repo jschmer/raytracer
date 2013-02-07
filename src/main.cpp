@@ -9,7 +9,6 @@
 using namespace glm;
 
 #include <RayTracer\Scene.h>
-#include <RayTracer\Helper.h>
 
 #include <sstream>
 #include <Shlwapi.h>
@@ -38,21 +37,21 @@ void MatrixOps() {
     // -> vec4 pos(0, 1, -1, 1);
 
     mat4 transf(1);
-    printVec4(pos, "pos = no transform");
+    //printVec4(pos, "pos = no transform");
 
     // scale
     transf = glm::scale(mat4(1), vec3(2, 1, 3)) * transf;
-    printVec4(transf * pos, "pos = scale");
+    //printVec4(transf * pos, "pos = scale");
 
     // translate
     transf = glm::translate(mat4(1), vec3(-1, 1, -3)) * transf;
-    printVec4(transf * pos, "pos = scale+translate");
+    //printVec4(transf * pos, "pos = scale+translate");
 
     // rotate
     transf = glm::rotate(mat4(1), 90.0f, vec3(0, 1, 0)) * transf;
-    printVec4(transf * pos, "pos = scale+translate+rotate");
+    //printVec4(transf * pos, "pos = scale+translate+rotate");
 
-    printVec4(vec4(), "Vec4");
+    //printVec4(vec4(), "Vec4");
 }
 
 int main(int argc, char* argv[]) {

@@ -138,7 +138,7 @@ public:
         v0 = f;
         v1 = g;
         v2 = h;
-        faceNormal = -vec4(glm::normalize(glm::cross(v1 - v0, v2 - v0)), 0); 
+        faceNormal = vec4(glm::normalize(glm::cross(v1 - v0, v2 - v0)), 0); 
         tranformedNormal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
     }
 

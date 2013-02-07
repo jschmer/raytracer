@@ -4,7 +4,6 @@
 #include <RayTracer\SceneReader\SceneParser.h>
 #include <RayTracer\Output\RayTraceImage.h>
 #include <RayTracer\Camera.h>
-#include <RayTracer\Helper.h>
 
 #include <iostream>
 
@@ -12,25 +11,27 @@ Scene::Scene() {
     // default values
     _maxdepth = 5;
 
-    _image = NULL;
-    _camera = NULL;
+    _image = nullptr;
+    _camera = nullptr;
 
     _size.width  = 600;
     _size.height = 600;
 }
 Scene::~Scene() {
-    if (_camera)
-        delete _camera;
+    delete _camera;
 }
 
 void Scene::load(std::string sceneFile) {
     *this = *(loadScene(sceneFile));
 
     // set output filename to inpuptfilename with png extension
-    _outputFilename = sceneFile.substr(0, sceneFile.length()-4) + ".png";
+    auto point_pos = sceneFile.find_last_of('.');
+    if (point_pos == std::string::npos)
+        throw std::exception("Couldn't find a file extension?!");
 
-    if (_image)
-        delete _image;
+    _outputFilename = sceneFile.substr(0, point_pos) + ".png";
+
+    delete _image;
     _image = new RayTraceImage(_size.width, _size.height, _outputFilename);
 }
 

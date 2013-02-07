@@ -1,7 +1,6 @@
 #include <RayTracer\SceneReader\SceneParser.h>
 
 #include <RayTracer\Scene.h>
-#include <RayTracer\Helper.h>
 #include <RayTracer\Camera.h>
 
 #include <string>

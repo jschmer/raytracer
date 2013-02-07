@@ -93,7 +93,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Helper.cpp" />
     <ClCompile Include="src\RayTracer\SceneReader\ObjParser.cpp" />
     <ClCompile Include="src\RayTracer\SceneReader\SceneParser.cpp" />
     <ClCompile Include="src\Scene.cpp" />
@@ -102,7 +101,6 @@
   <ItemGroup>
     <ClInclude Include="include\RayTracer\Camera.h" />
     <ClInclude Include="include\RayTracer\Geometry.h" />
-    <ClInclude Include="include\RayTracer\Helper.h" />
     <ClInclude Include="include\RayTracer\Output\RayTraceImage.h" />
     <ClInclude Include="include\RayTracer\Ray.h" />
     <ClInclude Include="include\RayTracer\Scene.h" />
