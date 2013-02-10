@@ -1,19 +1,10 @@
 #pragma once
-#include <Windows.h>
-#include <FreeImage\FreeImage.h>
 #include <string>
-#include <glm\glm.hpp>
+#include <memory>
 
-using namespace glm;
+#include <FreeImage\FreeImage.h>
 
-class Sample {
-public:
-    Sample() {}
-    Sample(int x, int y)
-        : x(static_cast<float>(x)),
-          y(static_cast<float>(y))
-    {}
-
+struct Sample {
     float x, y;
 };
 
@@ -32,38 +23,35 @@ struct Pixel {
 class RayTraceImage
 {
 public:
-    RayTraceImage(int width = 200, int height = 200, std::string filename = "SceneRender.png")
+    RayTraceImage(const int width = 200, const int height = 200, const std::string filename = "SceneRender.png")
         : width(width),
           height(height),
           filename(filename),
           pixelCounter(0)
     {
-        pImage = new Pixel[width*height];
-        memset(pImage, 0, sizeof(Pixel));
+        pImage.reset(new Pixel[width*height]);
+
         numPixels = width*height;
-        currentSampleWidth = 0;
+        currentSampleWidth  = 0;
         currentSampleHeight = 0;
 
+        // save the image all 10%
         saveAfterNumPixel = numPixels/10;
 
         FreeImage_Initialise();
     }
 
     ~RayTraceImage() {
-        delete[] pImage;
-
         FreeImage_DeInitialise();
     }
 
     bool getSample(Sample &s) {
-        /*
         if ((pixelCounter % saveAfterNumPixel) == 0)
             this->save();
-        */
+
         if (currentSampleHeight < height) {
-            int w = width;
-            currentSampleHeight += currentSampleWidth/w;
-            currentSampleWidth %= w;
+            currentSampleHeight += currentSampleWidth/width;
+            currentSampleWidth %= width;
 
             s.x = currentSampleWidth + 0.5f;
             s.y = currentSampleHeight + 0.5f;
@@ -89,7 +77,7 @@ public:
         PixelColor.Green = (unsigned int) (color[1]*255);
         PixelColor.Blue  = (unsigned int) (color[2]*255);
 
-        pImage[(int)s.y*width+(int)s.x] = PixelColor;
+        pImage[(int)s.y*width + (int)s.x] = PixelColor;
     }
 
     void save() const {
@@ -99,14 +87,15 @@ public:
     }
 
     BYTE* getByteBuffer() const {
-        return (BYTE*)pImage;
+        return (BYTE*) (pImage.get());
     }
 
 private:
     unsigned int width;
     unsigned int height;
     unsigned int numPixels;
-    Pixel *pImage;
+
+    std::unique_ptr<Pixel[]> pImage;
 
     unsigned int currentSampleWidth;
     unsigned int currentSampleHeight;

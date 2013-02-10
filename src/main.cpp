@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
     }
 
     std::vector<std::string> files;
-    if (dir) {
+    if (dir || useExt) {
         // read all *.test files in directory
         if (useExt)
             getAllFilesIn(path, files, ext);
@@ -119,6 +119,5 @@ int main(int argc, char* argv[]) {
     }
     
     std::cout << "Press a key...\n";
-    //getchar();
     return 0;
 }

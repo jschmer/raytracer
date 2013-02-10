@@ -20,11 +20,11 @@ public:
 
     ~SceneParser() {}
 
-    Scene* load() override;
+    std::unique_ptr<Scene> load() const override;
 
 private:
     std::string sceneFile;
 
-    bool readvals (std::stringstream &s, const int numvals, std::vector<float> &values);
+    bool readvals(std::stringstream &s, const int numvals, std::vector<float> &values) const;
 };
 

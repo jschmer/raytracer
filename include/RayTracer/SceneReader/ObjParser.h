@@ -8,7 +8,7 @@
 class Scene;
 
 /*
- * @brief   parses a 3ds Max Wavefront OBJ file
+ * @brief   parses a Wavefront OBJ file
  */
 class ObjParser : public ISceneReader
 {
@@ -20,11 +20,11 @@ public:
 
     ~ObjParser() {}
 
-    Scene* load() override;
+    std::unique_ptr<Scene> load() const override;
 
 private:
     std::string sceneFile;
 
-    bool readvals(std::stringstream &s, const int numvals, std::vector<float> &values);
+    bool readvals(std::stringstream &s, const int numvals, std::vector<float> &values) const;
 };
 

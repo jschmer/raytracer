@@ -2,13 +2,14 @@
 
 #include <string>
 #include <algorithm>
+#include <memory>
 
 #include "SceneParser.h"
 #include "ObjParser.h"
 
 class Scene;
 
-Scene* loadScene(std::string scenefile) {
+std::unique_ptr<Scene> loadScene(const std::string scenefile) {
     auto point_pos = scenefile.find_last_of('.');
 
     if (point_pos == std::string::npos) {

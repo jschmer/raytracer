@@ -1,2 +1,2 @@
 @echo off 
-raytracer.exe lazydog.test
+raytracer.exe ShurikenWithTris.obj

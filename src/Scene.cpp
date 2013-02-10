@@ -22,7 +22,13 @@ Scene::~Scene() {
 }
 
 void Scene::load(std::string sceneFile) {
-    *this = *(loadScene(sceneFile));
+    auto scene = loadScene(sceneFile);
+
+    // copy scene content
+    *this = *scene;
+
+    // release scene from automatic memory management
+    scene.release();
 
     // set output filename to inpuptfilename with png extension
     auto point_pos = sceneFile.find_last_of('.');

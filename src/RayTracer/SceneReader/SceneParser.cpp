@@ -16,7 +16,7 @@
 using namespace std;
 using namespace glm;
 
-bool SceneParser::readvals(stringstream &s, const int numvals, vector<float> &values) 
+bool SceneParser::readvals(stringstream &s, const int numvals, vector<float> &values) const
 {
     for (int i = 0; i < numvals; i++) {
         float f;
@@ -30,8 +30,8 @@ bool SceneParser::readvals(stringstream &s, const int numvals, vector<float> &va
     return true; 
 }
 
-Scene* SceneParser::load(){
-    Scene *scene = new Scene();
+std::unique_ptr<Scene> SceneParser::load() const {
+    std::unique_ptr<Scene> scene(new Scene());
 
     string str, cmd; 
     ifstream in;

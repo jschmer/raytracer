@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 class Scene;
 
 /*
@@ -7,6 +9,6 @@ class Scene;
 class ISceneReader
 {
 public:
-    virtual Scene* load() = 0;
+    virtual std::unique_ptr<Scene> load() const = 0;
 };
 

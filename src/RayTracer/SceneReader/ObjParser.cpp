@@ -16,7 +16,7 @@
 using namespace std;
 using namespace glm;
 
-bool ObjParser::readvals(stringstream &s, const int numvals, vector<float> &values) 
+bool ObjParser::readvals(stringstream &s, const int numvals, vector<float> &values) const
 {
     for (int i = 0; i < numvals; i++) {
         float f;
@@ -30,8 +30,8 @@ bool ObjParser::readvals(stringstream &s, const int numvals, vector<float> &valu
     return true; 
 }
 
-Scene* ObjParser::load(){
-    Scene *scene = new Scene();
+std::unique_ptr<Scene> ObjParser::load() const {
+    std::unique_ptr<Scene> scene(new Scene());
 
     string str, cmd; 
     ifstream in;
@@ -40,7 +40,7 @@ Scene* ObjParser::load(){
         vector<vec3> vertices;
 
         // default values
-        vec3 ambient(0, 0, 0);
+        vec3 ambient(.1, .1, .1);
 
         vec3 diffuse(1);
         vec3 specular(0.9);
@@ -51,20 +51,14 @@ Scene* ObjParser::load(){
         vec3 attenuation(1.0, 0.0, 0.0);
 
         // fixed camera for now
-        vec3 eye    = vec3(-25, 35, 65);
-        vec3 center = vec3(5, 5, 5);
+        vec3 eye    = vec3(-30, 30, 60);
+        vec3 center = vec3(0, 0, 0);
         vec3 up     = vec3(0, 1, 0);
         float fovy  = 30;
         scene->_camera = new Camera(eye, center, up, fovy);
 
-        // directional light from camera
-        //vec4 dir(eye - center, 0);
-        //vec3 color(.6, 0, 0);
-        //// store object with transformation
-        //scene->_lights.push_back(Light(dir, color, attenuation, mat4(1.0f)));
-
-        // point light
-        vec4 pos(-1, 11, 11, 1);
+        // point light, fourth vector member = 1
+        vec4 pos(4, 4, 4, 1);
         vec3 color2(1, 0, 0);
 
         //// store object with transformation
@@ -208,7 +202,7 @@ Scene* ObjParser::load(){
                 }
 
                 else {
-                    cerr << "Unknown Command: " << cmd << " Skipping \n"; 
+                    //cerr << "Unknown Command: " << cmd << " Skipping \n"; 
                 }
             }
             getline (in, str); 
