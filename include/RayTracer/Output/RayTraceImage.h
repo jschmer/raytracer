@@ -13,10 +13,11 @@ struct Pixel {
     BYTE Green;
     BYTE Red;
 
+    // default - white!
     Pixel() {
-        Blue  = 0U;
-        Green = 0U;
-        Red   = 0U;
+        Blue  = 255U;
+        Green = 255U;
+        Red   = 255U;
     }
 };
 
@@ -29,7 +30,8 @@ public:
           filename(filename),
           pixelCounter(0)
     {
-        pImage.reset(new Pixel[width*height]);
+        auto dim = width*height;
+        pImage.reset(new Pixel[dim]);
 
         numPixels = width*height;
         currentSampleWidth  = 0;

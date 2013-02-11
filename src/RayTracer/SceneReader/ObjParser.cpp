@@ -181,8 +181,7 @@ std::unique_ptr<Scene> ObjParser::load() const {
                     parts.erase(parts.begin()); // get rid of 'f' at the start of the cmd
 
                     if (parts.size() == 3) {
-
-                    std::vector<vec3> verts;
+                        std::vector<vec3> verts;
                         for (auto& part : parts) {
                             auto single = StringSplit::split(part, '/');
 
