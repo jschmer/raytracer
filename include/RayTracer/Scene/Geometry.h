@@ -1,8 +1,8 @@
 #pragma once
 
 #include <glm\glm.hpp>
-#include "Ray.h"
-#include <RayTracer\Scene.h>
+#include <RayTracer/Ray.h>
+#include <RayTracer/Scene/Scene.h>
 
 using namespace glm;
 

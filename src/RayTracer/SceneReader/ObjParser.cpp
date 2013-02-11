@@ -9,8 +9,8 @@
 #define GLM_SWIZZLE_XYZW 
 #include <glm\glm.hpp>
 
-#include <RayTracer\Scene.h>
-#include <RayTracer\Camera.h>
+#include <RayTracer\Scene/Scene.h>
+#include <RayTracer\Scene/Camera.h>
 #include <Stringsplit.h>
 
 using namespace std;

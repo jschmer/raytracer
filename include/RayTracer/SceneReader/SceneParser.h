@@ -3,14 +3,14 @@
 #include <sstream>
 #include <vector>
 
-#include <RayTracer/SceneReader/ISceneReader.h>
+#include <RayTracer/SceneReader/ISceneLoader.h>
 
 class Scene;
 
 /*
  * @brief   parses a ".test" scene file used in edx course "3D Graphics"
  */
-class SceneParser : public ISceneReader
+class SceneParser : public ISceneLoader
 {
 public:
     SceneParser(std::string sceneFile)

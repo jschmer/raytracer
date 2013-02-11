@@ -3,14 +3,14 @@
 #include <sstream>
 #include <vector>
 
-#include <RayTracer/SceneReader/ISceneReader.h>
+#include <RayTracer/SceneReader/ISceneLoader.h>
 
 class Scene;
 
 /*
  * @brief   parses a Wavefront OBJ file
  */
-class ObjParser : public ISceneReader
+class ObjParser : public ISceneLoader
 {
 public:
     ObjParser(std::string sceneFile)

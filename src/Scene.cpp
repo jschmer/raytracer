@@ -6,7 +6,7 @@
 
 #include <RayTracer/SceneReader/SceneReader.h>
 #include <RayTracer\SceneReader\SceneParser.h>
-#include <RayTracer\Output\RayTraceImage.h>
+#include <RayTracer\RenderTarget\RayTraceImage.h>
 #include <RayTracer\Camera.h>
 
 Scene::Scene() {
@@ -40,7 +40,7 @@ void Scene::load(std::string sceneFile) {
     _outputFilename = sceneFile.substr(0, point_pos) + ".png";
 
     delete _image;
-    _image = new RayTraceImage(_size.width, _size.height, _outputFilename);
+    _image = new RayTraceImage(_outputFilename, _size.width, _size.height);
 }
 
 void Scene::render() {

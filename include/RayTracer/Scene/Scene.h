@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <RayTracer\Ray.h>
-#include <RayTracer\Geometry.h>
+#include <RayTracer\Scene/Geometry.h>
 
 class Camera;
 class Primitive;

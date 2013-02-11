@@ -6,7 +6,7 @@ class Scene;
 /*
  * @brief   Interface for a scene reader
  */
-class ISceneReader
+class ISceneLoader
 {
 public:
     virtual std::unique_ptr<Scene> load() const = 0;

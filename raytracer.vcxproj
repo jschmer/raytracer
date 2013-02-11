@@ -93,21 +93,23 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\RayTracer\RenderTarget\RayTraceImage.cpp" />
     <ClCompile Include="src\RayTracer\SceneReader\ObjParser.cpp" />
     <ClCompile Include="src\RayTracer\SceneReader\SceneParser.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\RayTracer\Camera.h" />
-    <ClInclude Include="include\RayTracer\Geometry.h" />
-    <ClInclude Include="include\RayTracer\Output\RayTraceImage.h" />
     <ClInclude Include="include\RayTracer\Ray.h" />
-    <ClInclude Include="include\RayTracer\Scene.h" />
-    <ClInclude Include="include\RayTracer\SceneReader\ISceneReader.h" />
+    <ClInclude Include="include\RayTracer\RenderTarget\IRenderTarget.h" />
+    <ClInclude Include="include\RayTracer\RenderTarget\RayTraceImage.h" />
+    <ClInclude Include="include\RayTracer\SceneReader\ISceneLoader.h" />
     <ClInclude Include="include\RayTracer\SceneReader\ObjParser.h" />
     <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h" />
     <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h" />
+    <ClInclude Include="include\RayTracer\Scene\Camera.h" />
+    <ClInclude Include="include\RayTracer\Scene\Geometry.h" />
+    <ClInclude Include="include\RayTracer\Scene\Scene.h" />
     <ClInclude Include="include\StringSplit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -19,8 +19,14 @@
     <Filter Include="Source Files\SceneReader">
       <UniqueIdentifier>{f791977c-9e3b-4c8d-950e-d695cd059b16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Output">
+    <Filter Include="Header Files\RenderTarget">
       <UniqueIdentifier>{d566a43f-8c2c-4f0d-b67b-8186d19ba844}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderTarget">
+      <UniqueIdentifier>{9b76794d-cbe7-452c-87cb-da53b7da03bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{ff8126cf-1bd5-41dc-8dc1-70e2ac5bde3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,18 +42,12 @@
     <ClCompile Include="src\RayTracer\SceneReader\SceneParser.cpp">
       <Filter>Source Files\SceneReader</Filter>
     </ClCompile>
+    <ClCompile Include="src\RayTracer\RenderTarget\RayTraceImage.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\RayTracer\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\StringSplit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RayTracer\Geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RayTracer\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\RayTracer\Ray.h">
@@ -56,17 +56,29 @@
     <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h">
       <Filter>Header Files\SceneReader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RayTracer\SceneReader\ISceneReader.h">
-      <Filter>Header Files\SceneReader</Filter>
-    </ClInclude>
     <ClInclude Include="include\RayTracer\SceneReader\ObjParser.h">
       <Filter>Header Files\SceneReader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RayTracer\Output\RayTraceImage.h">
-      <Filter>Header Files\Output</Filter>
-    </ClInclude>
     <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h">
       <Filter>Header Files\SceneReader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\SceneReader\ISceneLoader.h">
+      <Filter>Header Files\SceneReader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\RenderTarget\IRenderTarget.h">
+      <Filter>Header Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\RenderTarget\RayTraceImage.h">
+      <Filter>Header Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Geometry.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Scene.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Camera.h">
+      <Filter>Header Files\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

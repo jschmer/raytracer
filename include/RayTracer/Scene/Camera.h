@@ -1,8 +1,8 @@
 #pragma once
 #include <glm\glm.hpp>
 
-#include <RayTracer\Output\RayTraceImage.h>
-#include "Ray.h"
+#include <RayTracer\RenderTarget\RayTraceImage.h>
+#include <RayTracer/Ray.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
