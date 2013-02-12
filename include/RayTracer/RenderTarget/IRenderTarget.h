@@ -26,7 +26,7 @@ class IRenderTarget {
 public:
     virtual void init(const unsigned int width, const unsigned int height, const unsigned int bytes_per_pixel = 3) = 0;
     virtual bool getSample(Sample& s) = 0;
-    virtual void commit(const Sample& s, const vec3 color) const = 0;
+    virtual void commit(const Sample& s, const vec3 color) = 0;
     virtual void done() = 0;
 
     unsigned int width() const {

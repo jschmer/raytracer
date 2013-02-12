@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
             auto out_file = String::replaceExtension(filepath, "png");
             std::cout << "    into: " << out_file << "\n";
 
-            RayTraceImage image(out_file, 400, 400);
+            RayTraceImage image(out_file, 600, 600);
             RayTracer tracer;
             tracer.load(filepath);
             tracer.renderInto(&image);
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
         auto out_file = String::replaceExtension(path, "png");
         std::cout << "    into: " << out_file << "\n";
 
-        RayTraceImage image(out_file, 4000, 4000);
+        RayTraceImage image(out_file, 600, 600);
         RayTracer tracer;
         tracer.load(path);
         tracer.renderInto(&image);

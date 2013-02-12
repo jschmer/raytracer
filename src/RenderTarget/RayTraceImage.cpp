@@ -43,7 +43,6 @@ bool RayTraceImage::getSample(Sample &s) {
         s.x = currentSampleWidth + 0.5f;
         s.y = currentSampleHeight + 0.5f;
         ++currentSampleWidth;
-        ++pixelCounter;
 
         return true;
     } else {
@@ -51,7 +50,7 @@ bool RayTraceImage::getSample(Sample &s) {
     }
 }
 
-void RayTraceImage::commit(const Sample &s, vec3 color) const {
+void RayTraceImage::commit(const Sample &s, vec3 color) {
     clampToUpper(color, 1.0f);
 
     Pixel PixelColor;
@@ -61,7 +60,7 @@ void RayTraceImage::commit(const Sample &s, vec3 color) const {
 
     pImage[(int)s.y*_width + (int)s.x] = PixelColor;
 
-    if ((pixelCounter % saveAfterNumPixel) == 0)
+    if ((++pixelCounter % saveAfterNumPixel) == 0)
         this->save();
 }
 
