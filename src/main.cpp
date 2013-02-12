@@ -100,15 +100,14 @@ int main(int argc, char* argv[]) {
         auto out_file = String::replaceExtension(path, "png");
         std::cout << "    into: " << out_file << "\n";
 
-        RayTraceImage image(out_file, 400, 400);
+        RayTraceImage image(out_file, 4000, 4000);
         RayTracer tracer;
         tracer.load(path);
         tracer.renderInto(&image);
 
         std::cout << "    Done! Duration: " << tracer.getRenderDuration().count() << " ms" << std::endl << std::endl;
     }
-    
-    getchar();
+
     return 0;
 }
 

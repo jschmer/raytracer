@@ -16,8 +16,8 @@ RayTraceImage::~RayTraceImage() {
 }
 
 void RayTraceImage::init(const unsigned int width, const unsigned int height, const unsigned int bytes_per_pixel) {
-    this->width  = width;
-    this->height = height;
+    _width  = width;
+    _height = height;
 
     numPixels = width*height;
     pImage.reset(new Pixel[numPixels]);
@@ -36,9 +36,9 @@ void RayTraceImage::init(const unsigned int width, const unsigned int height, co
 }
 
 bool RayTraceImage::getSample(Sample &s) {
-    if (currentSampleHeight < height) {
-        currentSampleHeight += currentSampleWidth/width;
-        currentSampleWidth %= width;
+    if (currentSampleHeight < _height) {
+        currentSampleHeight += currentSampleWidth/_width;
+        currentSampleWidth %= _width;
 
         s.x = currentSampleWidth + 0.5f;
         s.y = currentSampleHeight + 0.5f;
@@ -59,7 +59,7 @@ void RayTraceImage::commit(const Sample &s, vec3 color) const {
     PixelColor.Green = (unsigned int) (color[1]*255);
     PixelColor.Blue  = (unsigned int) (color[2]*255);
 
-    pImage[(int)s.y*width + (int)s.x] = PixelColor;
+    pImage[(int)s.y*_width + (int)s.x] = PixelColor;
 
     if ((pixelCounter % saveAfterNumPixel) == 0)
         this->save();
@@ -67,7 +67,7 @@ void RayTraceImage::commit(const Sample &s, vec3 color) const {
 
 void RayTraceImage::save() const {
     // save the rendered image
-    FIBITMAP *img = FreeImage_ConvertFromRawBits(this->getByteBuffer(), width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
+    FIBITMAP *img = FreeImage_ConvertFromRawBits(this->getByteBuffer(), _width, _height, _width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
     FreeImage_Save(FIF_PNG, img, filename.c_str(), 0);
 }
 

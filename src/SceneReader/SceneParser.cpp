@@ -78,6 +78,15 @@ std::unique_ptr<Scene> SceneParser::load() const {
                     s >> scene->_outputFilename; 
                 }
 
+                else if (cmd == "size") {
+                    validinput = readvals(s, 2, values); 
+                    if (validinput) {
+                        scene->_size.width  = (int)values[0];
+                        scene->_size.height = (int)values[1];
+                        scene->_hasSize = true;
+                    }
+                }
+
                 // camera spec
                 else if (cmd == "camera") {
                     validinput = readvals(s,10,values); // 10 values eye cen up fov

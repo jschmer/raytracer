@@ -25,9 +25,21 @@ public:
     Intersection trace(Ray const &ray, int depth);
     Intersection inShadow(Ray const &ray, float t_hit);
 
+    bool hasSize() const {
+        return _hasSize;
+    }
+
     ////////// scene variables
     int _maxdepth;
     std::string _outputFilename;
+
+    /*
+     * image size
+     */
+    struct size {
+        unsigned int width, height;
+    } _size;
+    bool _hasSize;
 
     /*
     * Camera

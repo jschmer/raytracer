@@ -26,12 +26,18 @@ void RayTracer::load(std::string scene_file) {
 }
 
 void RayTracer::renderInto(IRenderTarget* render_target) {
-    auto start = std::chrono::system_clock::now();
-
     auto& camera = *scene_->_camera;
     IRenderTarget& target = *render_target;
+    
+    // if the scene definition has a size
+    // then initialize the target accordingly
+    if (scene_->hasSize()) {
+        // set size on target
+        auto& size = scene_->_size;
+        target.init(size.width, size.height);
+    }
 
-    camera.initFov(static_cast<float>(target.width), static_cast<float>(target.height));
+    camera.initFov(static_cast<float>(target.width()), static_cast<float>(target.height()));
 
     SYSTEM_INFO sysinfo;
     GetSystemInfo(&sysinfo);
@@ -74,6 +80,8 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     unsigned int begin = 0;
     unsigned int end = dataset_size;
 
+    // start rendering
+    auto start = std::chrono::system_clock::now();
     std::vector<std::future<void>> futs;
     while (numCPU > 0) {
         // start thread
@@ -89,6 +97,7 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
 
     target.done();
 
+    // rendering done!
     auto diff = std::chrono::system_clock::now() - start;
     render_duration_ = std::chrono::duration_cast<std::chrono::milliseconds>(diff);
 }

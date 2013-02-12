@@ -29,6 +29,14 @@ public:
     virtual void commit(const Sample& s, const vec3 color) const = 0;
     virtual void done() = 0;
 
-public:
-    unsigned int width, height;
+    unsigned int width() const {
+        return _width;
+    }
+
+    unsigned int height() const {
+        return _height;
+    }
+
+protected:
+    unsigned int _width, _height;
 };

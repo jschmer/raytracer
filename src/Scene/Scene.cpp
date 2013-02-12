@@ -11,8 +11,8 @@
 
 Scene::Scene() {
     // default values
+    _hasSize  = false;
     _maxdepth = 5;
-
     _camera = nullptr;
 }
 Scene::~Scene() {
