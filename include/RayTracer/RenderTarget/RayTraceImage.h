@@ -24,7 +24,6 @@ public:
 
 private:
     // helper
-    void clampToUpper(vec3 &v, const float upper) const;
     BYTE* getByteBuffer() const;
 
 private:

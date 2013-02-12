@@ -37,6 +37,11 @@ public:
         return _height;
     }
 
+    void clampToUpper(vec3 &v, const float upper) const {
+        for (int i=0; i<3; ++i)
+            v[i] = v[i] > upper ? upper : v[i]; 
+    }
+
 protected:
     unsigned int _width, _height;
 };

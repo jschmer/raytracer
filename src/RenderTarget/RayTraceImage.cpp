@@ -70,12 +70,6 @@ void RayTraceImage::save() const {
     FreeImage_Save(FIF_PNG, img, filename.c_str(), 0);
 }
 
-
-void RayTraceImage::clampToUpper(vec3 &v, const float upper) const {
-    for (int i=0; i<3; ++i)
-        v[i] = v[i] > upper ? upper : v[i]; 
-}
-
 BYTE* RayTraceImage::getByteBuffer() const {
     return (BYTE*) (pImage.get());
 }
