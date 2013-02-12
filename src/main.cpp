@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
             tracer.load(filepath);
             tracer.renderInto(&image);
 
-            std::cout << "    Done!" << std::endl << std::endl;
+            std::cout << "    Done! Duration: " << tracer.getRenderDuration().count() << " ms" << std::endl << std::endl;
         }
     }
     else {
@@ -105,9 +105,10 @@ int main(int argc, char* argv[]) {
         tracer.load(path);
         tracer.renderInto(&image);
 
-        std::cout << "    Done!" << std::endl << std::endl;
+        std::cout << "    Done! Duration: " << tracer.getRenderDuration().count() << " ms" << std::endl << std::endl;
     }
     
+    getchar();
     return 0;
 }
 
