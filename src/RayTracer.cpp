@@ -11,9 +11,7 @@
 // project header
 #include <RayTracer/Scene/Scene.h>
 #include <RayTracer/SceneReader/SceneReader.h>
-
-// temporary
-#include <RayTracer/RenderTarget/RayTraceImage.h>
+#include <String/StringHelper.h>
 
 // class definition
 RayTracer::RayTracer()
@@ -25,13 +23,7 @@ RayTracer::~RayTracer()
 
 void RayTracer::load(std::string scene_file) {
     scene = loadScene(scene_file);
-
-    // set output filename to inpuptfilename with png extension
-    auto point_pos = scene_file.find_last_of('.');
-    if (point_pos == std::string::npos)
-        throw std::exception("Couldn't find a file extension?!");
-
-    scene->_outputFilename = scene_file.substr(0, point_pos) + ".png";}
+}
 
 void RayTracer::renderInto(IRenderTarget* target) {
     scene->_camera->initFov(static_cast<float>(target->width), static_cast<float>(target->height));

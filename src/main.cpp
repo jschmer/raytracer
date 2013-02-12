@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
         useExt = true;
     }
 
-    String::replace(path, "\\", "/");
+    path = String::replace(path, "\\", "/");
     
     // append a backslash
     if (argc != 2 && path != "" && path.at(path.length()-1) != '/')
@@ -115,8 +115,10 @@ int main(int argc, char* argv[]) {
     else {
         std::cout << "Rendering " << path << std::endl;
 
-        std::cout << "\tOutput name: " << "render.png" << "\n";
-        RayTraceImage image("render.png", 1000, 1000);
+        auto out_file = String::replaceExtension(path, "png");
+
+        std::cout << "\tOutput name: " << out_file << "\n";
+        RayTraceImage image(out_file, 1000, 1000);
         
         RayTracer tracer;
         tracer.load(path);

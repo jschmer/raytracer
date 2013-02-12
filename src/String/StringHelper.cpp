@@ -17,11 +17,21 @@ namespace String {
         return split(s, delim, elems);
     }
 
-    void replace(std::string &s, const std::string find, const std::string replace) {
+    std::string replace(std::string s, const std::string find, const std::string replace) {
         size_t len = find.length();
         size_t pos;
         while ((pos = s.find_first_of(find)) != std::string::npos) {
             s.replace(pos, len, replace);
         }
+
+        return s;
+    }
+
+    std::string replaceExtension(std::string inp, std::string new_ext) {
+        auto point_pos = inp.find_last_of('.');
+        if (point_pos == std::string::npos)
+            return inp;
+
+        return replace(inp, inp.substr(point_pos + 1, inp.length() - 1), new_ext);
     }
 }
