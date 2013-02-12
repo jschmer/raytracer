@@ -1,13 +1,13 @@
-#include <RayTracer\Scene.h>
+#include <RayTracer/Scene/Scene.h>
 
 #include <Windows.h>
 #include <iostream>
 #include <future>
 
 #include <RayTracer/SceneReader/SceneReader.h>
-#include <RayTracer\SceneReader\SceneParser.h>
-#include <RayTracer\RenderTarget\RayTraceImage.h>
-#include <RayTracer\Camera.h>
+#include <RayTracer/SceneReader/SceneParser.h>
+#include <RayTracer/RenderTarget/RayTraceImage.h>
+#include <RayTracer/Scene/Camera.h>
 
 Scene::Scene() {
     // default values

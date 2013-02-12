@@ -2,12 +2,12 @@
 #include <string>
 #include <memory>
 
-#include <FreeImage\FreeImage.h>
+#include <FreeImage/FreeImage.h>
 
 #include <RayTracer/RenderTarget/IRenderTarget.h>
 
 
-class RayTraceImage : IRenderTarget
+class RayTraceImage : public IRenderTarget
 {
 public:
     RayTraceImage(const std::string filename = "SceneRender.png", const int width = 200, const int height = 200);

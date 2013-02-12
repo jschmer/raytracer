@@ -1,13 +1,8 @@
-#pragma once
+#include <String/StringHelper.h>
 
-#include <iostream>
-#include <string>
 #include <sstream>
-#include <algorithm>
-#include <iterator>
-#include <vector>
 
-namespace StringSplit {
+namespace String {
     std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
         std::stringstream ss(s);
         std::string item;
@@ -20,5 +15,13 @@ namespace StringSplit {
     std::vector<std::string> split(const std::string &s, char delim) {
         std::vector<std::string> elems;
         return split(s, delim, elems);
+    }
+
+    void replace(std::string &s, const std::string find, const std::string replace) {
+        size_t len = find.length();
+        size_t pos;
+        while ((pos = s.find_first_of(find)) != std::string::npos) {
+            s.replace(pos, len, replace);
+        }
     }
 }

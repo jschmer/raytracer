@@ -1,12 +1,12 @@
 #pragma once
 #define GLM_SWIZZLE_XYZW 
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 #include <string>
 #include <vector>
 
-#include <RayTracer\Ray.h>
-#include <RayTracer\Scene/Geometry.h>
+#include <RayTracer/Ray.h>
+#include <RayTracer/Scene/Geometry.h>
 
 class Camera;
 class Primitive;

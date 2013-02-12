@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 #include <RayTracer/Ray.h>
 #include <RayTracer/Scene/Scene.h>
 
@@ -57,8 +57,8 @@ public:
     float Intersect(Ray const &ray, Intersection &Hit) {
         // transforming ray to object space
         Ray objRay;
-        objRay.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
-        objRay.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
+        objRay.pos = vec3(this->world2obj * vec4(ray.pos, 1));
+        objRay.dir = vec3(this->world2obj * vec4(ray.dir, 0));
 
         //Compute A, B and C coefficients
         float a = dot(objRay.dir, objRay.dir);
@@ -145,8 +145,8 @@ public:
     float Intersect(Ray const &ray, Intersection &Hit) {
         // transforming ray to object space
         Ray r;
-        r.pos = (this->world2obj * vec4(ray.pos, 1)).xyz;
-        r.dir = (this->world2obj * vec4(ray.dir, 0)).xyz;
+        r.pos = vec3(this->world2obj * vec4(ray.pos, 1));
+        r.dir = vec3(this->world2obj * vec4(ray.dir, 0));
 
         vec3 v0v1 = v1 - v0;
         vec3 v0v2 = v2 - v0;

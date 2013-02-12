@@ -2,16 +2,19 @@
 #include <string>
 #include <iostream>
 #include <Windows.h>
+#include <sstream>
+#include <Shlwapi.h>
 
 #define GLM_SWIZZLE_XYZW 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> 
 using namespace glm;
 
-#include <RayTracer\Scene.h>
-
-#include <sstream>
-#include <Shlwapi.h>
+//#include <RayTracer/Scene/Scene.h>
+#include <RayTracer/RenderTarget/RayTraceImage.h>
+#include <RayTracer/Scene/Scene.h>
+#include <RayTracer/RayTracer.h>
+#include <String/StringHelper.h>
 
 void getAllFilesIn(std::string folder, std::vector<std::string> &files, std::string ext = "test") {
     HANDLE hFind;
@@ -68,10 +71,12 @@ int main(int argc, char* argv[]) {
         ext = std::string(argv[2]);
         useExt = true;
     }
+
+    String::replace(path, "\\", "/");
     
     // append a backslash
-    if (argc != 2 && path != "" && path.at(path.length()-1) != '\\' && path.at(path.length()-1) != '/')
-        path += '\\';
+    if (argc != 2 && path != "" && path.at(path.length()-1) != '/')
+        path += '/';
 
     DWORD attr = 0;
     if (attr = GetFileAttributes(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
@@ -102,14 +107,21 @@ int main(int argc, char* argv[]) {
         for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
             std::cout << "Rendering " << path + *it << std::endl;
 
-            Scene scene;
-            scene.load(path + *it);
-            std::cout << "\tOutput name: " << scene._outputFilename << "\n";
-            scene.render();  
+            //Scene scene;
+            //scene.load(path + *it);
+            //std::cout << "\tOutput name: " << scene._outputFilename << "\n";
+            //scene.render();  
         }
     }
     else {
         std::cout << "Rendering " << path << std::endl;
+
+        //std::cout << "\tOutput name: " << "render.png" << "\n";
+        //RayTraceImage image("render.png", 1000, 1000);
+        //
+        //RayTracer tracer;
+        //tracer.load(path);
+        //tracer.renderInto(&image);
 
         // render only the specified file
         Scene scene;

@@ -1,7 +1,7 @@
-#include <RayTracer\SceneReader\SceneParser.h>
+#include <RayTracer/SceneReader/SceneParser.h>
 
-#include <RayTracer\Scene.h>
-#include <RayTracer\Camera.h>
+#include <RayTracer/Scene/Scene.h>
+#include <RayTracer/Scene/Camera.h>
 
 #include <string>
 #include <sstream>
@@ -10,7 +10,7 @@
 #include <stack>
 
 #define GLM_SWIZZLE_XYZW 
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
 
 using namespace std;
@@ -57,7 +57,7 @@ std::unique_ptr<Scene> SceneParser::load() const {
 
         std::getline(in, str); 
         while (in) {
-            if ((str.find_first_not_of(" \t\r\n") != string::npos) && (str[0] != '#')) {
+            if ((str.find_first_not_of(" \t/r\n") != string::npos) && (str[0] != '#')) {
                 // Ruled out comment and blank lines 
 
                 stringstream s(str);

@@ -28,28 +28,17 @@
     <Filter Include="Header Files\Scene">
       <UniqueIdentifier>{ff8126cf-1bd5-41dc-8dc1-70e2ac5bde3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\String">
+      <UniqueIdentifier>{19b51dfd-43c5-458f-b3eb-d12dbf97bce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{e1a365ce-e5bb-49c9-9397-f57a52bb19de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\String">
+      <UniqueIdentifier>{63b736a0-1de9-408b-9fd9-f1875d30372b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RayTracer\SceneReader\ObjParser.cpp">
-      <Filter>Source Files\SceneReader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RayTracer\SceneReader\SceneParser.cpp">
-      <Filter>Source Files\SceneReader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RayTracer\RenderTarget\RayTraceImage.cpp">
-      <Filter>Source Files\RenderTarget</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\StringSplit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\RayTracer\Ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -80,5 +69,37 @@
     <ClInclude Include="include\RayTracer\Scene\Camera.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="include\RayTracer\RayTracer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\String\StringHelper.h">
+      <Filter>Header Files\String</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RayTracer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\String\StringHelper.cpp">
+      <Filter>Source Files\String</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneReader\ObjParser.cpp">
+      <Filter>Source Files\SceneReader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneReader\SceneParser.cpp">
+      <Filter>Source Files\SceneReader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneReader\SceneReader.cpp">
+      <Filter>Source Files\SceneReader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Scene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\RayTraceImage.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

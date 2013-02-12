@@ -1,4 +1,4 @@
-#include <RayTracer\SceneReader\ObjParser.h>
+#include <RayTracer/SceneReader/ObjParser.h>
 
 #include <string>
 #include <sstream>
@@ -7,11 +7,11 @@
 #include <stack>
 
 #define GLM_SWIZZLE_XYZW 
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
-#include <RayTracer\Scene/Scene.h>
-#include <RayTracer\Scene/Camera.h>
-#include <Stringsplit.h>
+#include <RayTracer/Scene/Scene.h>
+#include <RayTracer/Scene/Camera.h>
+#include <String/StringHelper.h>
 
 using namespace std;
 using namespace glm;
@@ -66,7 +66,7 @@ std::unique_ptr<Scene> ObjParser::load() const {
 
         std::getline(in, str); 
         while (in) {
-            if ((str.find_first_not_of(" \t\r\n") != string::npos) && (str[0] != '#')) {
+            if ((str.find_first_not_of(" \t/r\n") != string::npos) && (str[0] != '#')) {
                 // Ruled out comment and blank lines 
 
                 stringstream s(str);
@@ -177,13 +177,13 @@ std::unique_ptr<Scene> ObjParser::load() const {
                 }
                 // triangle
                 else if (cmd == "f") {
-                    auto parts = StringSplit::split(s.str(), ' ');
+                    auto parts = String::split(s.str(), ' ');
                     parts.erase(parts.begin()); // get rid of 'f' at the start of the cmd
 
                     if (parts.size() == 3) {
                         std::vector<vec3> verts;
                         for (auto& part : parts) {
-                            auto single = StringSplit::split(part, '/');
+                            auto single = String::split(part, '/');
 
                             unsigned int vert_idx = std::stoi(single[0]);
 
