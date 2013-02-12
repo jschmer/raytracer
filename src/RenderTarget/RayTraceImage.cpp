@@ -9,8 +9,10 @@ RayTraceImage::RayTraceImage(const std::string filename, const int width, const 
 }
 
 RayTraceImage::~RayTraceImage() {
-    if (freeimage_initialised)
+    if (freeimage_initialised) {
         FreeImage_DeInitialise();
+        freeimage_initialised = false;
+    }
 }
 
 void RayTraceImage::init(const unsigned int width, const unsigned int height, const unsigned int bytes_per_pixel) {

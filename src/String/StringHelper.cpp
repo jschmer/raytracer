@@ -20,7 +20,7 @@ namespace String {
     std::string replace(std::string s, const std::string find, const std::string replace) {
         size_t len = find.length();
         size_t pos;
-        while ((pos = s.find_first_of(find)) != std::string::npos) {
+        while ((pos = s.find(find)) != std::string::npos) {
             s.replace(pos, len, replace);
         }
 

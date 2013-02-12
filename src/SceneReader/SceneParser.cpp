@@ -273,7 +273,7 @@ std::unique_ptr<Scene> SceneParser::load() const {
                     }
                 }
                 else {
-                    cerr << "Unknown Command: " << cmd << " Skipping \n"; 
+                    //cerr << "Unknown Command: " << cmd << " Skipping \n"; 
                 }
             }
             getline (in, str); 

@@ -29,6 +29,110 @@ void getAllFilesIn(std::string folder, std::vector<std::string> &files, std::str
     }
 }
 
+void printUsage() {
+    std::string usage = "\
+Usage:\n\
+    raytracer.exe filename\n\
+    raytracer.exe directory file_extenstion\n\
+\n\
+Examples:\n\
+    raytracer.exe Shuriken.obj\n\
+    raytracer.exe scenes/edx test\n\
+";
+    std::cout << usage;
+}
+
+int main(int argc, char* argv[]) {
+    std::string path = "";
+    std::string ext  = "";
+
+    switch (argc) {
+    case 2:
+        path = std::string(argv[1]);
+        break;
+    case 3:
+        path = std::string(argv[1]);
+        ext  = std::string(argv[2]);
+        break;
+    default:
+        printUsage();
+        std::cout << "Press any key to continue..." << std::endl;
+        getchar();
+        return -1;
+    }
+
+    // more portable and failsafe: forward slash!
+    path = String::replace(path, "\\", "/");
+   
+    // append a forward slash if we are in directory mode
+    if (argc != 2 && path != "" && path.at(path.length()-1) != '/')
+        path += '/';
+
+    // do the rendering for all files in path with ext extension
+    if (ext.length() > 0) {
+        // get all filenames
+        std::vector<std::string> files;
+        
+        getAllFilesIn(path, files, ext);
+
+        if (files.size() == 0)
+            std::cout << "No files found!" << std::endl;
+
+        // render all the files
+        for (auto it = files.begin(); it != files.end(); ++it) {
+            auto& filepath = path + *it;
+            std::cout << "Rendering " << filepath << std::endl;
+
+            auto out_file = String::replaceExtension(filepath, "png");
+            std::cout << "    into: " << out_file << "\n";
+
+            RayTraceImage image(out_file, 400, 400);
+            RayTracer tracer;
+            tracer.load(filepath);
+            tracer.renderInto(&image);
+
+            std::cout << "    Done!" << std::endl << std::endl;
+        }
+    }
+    else {
+        std::cout << "Rendering " << path << std::endl;
+
+        auto out_file = String::replaceExtension(path, "png");
+        std::cout << "    into: " << out_file << "\n";
+
+        RayTraceImage image(out_file, 400, 400);
+        RayTracer tracer;
+        tracer.load(path);
+        tracer.renderInto(&image);
+
+        std::cout << "    Done!" << std::endl << std::endl;
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Matrix Transformation Turotial :D
 void MatrixOps() {
     // vektoren von rechts multiplizieren!
     // matrix stack: rechte transformation kommt zuerst!!
@@ -54,77 +158,4 @@ void MatrixOps() {
     //printVec4(transf * pos, "pos = scale+translate+rotate");
 
     //printVec4(vec4(), "Vec4");
-}
-
-int main(int argc, char* argv[]) {
-    bool dir = false;
-    bool useExt = false;
-
-    std::string path = "";
-    std::string ext = "";
-    if (argc == 2) {
-        path = std::string(argv[1]);
-    }
-    else if (argc == 3) {
-        path = std::string(argv[1]);
-        ext = std::string(argv[2]);
-        useExt = true;
-    }
-
-    path = String::replace(path, "\\", "/");
-    
-    // append a backslash
-    if (argc != 2 && path != "" && path.at(path.length()-1) != '/')
-        path += '/';
-
-    DWORD attr = 0;
-    if (attr = GetFileAttributes(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
-        if (attr & FILE_ATTRIBUTE_DIRECTORY) {
-            dir = true;
-        } else if (attr & FILE_ATTRIBUTE_NORMAL) {
-            ;
-        }
-    }
-    else {
-        std::cout << "Error getting file attributes for: " << path << std::endl;
-        getchar();
-        return -1;
-    }
-
-    std::vector<std::string> files;
-    if (dir || useExt) {
-        // read all *.test files in directory
-        if (useExt)
-            getAllFilesIn(path, files, ext);
-        else
-            getAllFilesIn(path, files);
-
-        if (files.size() == 0)
-            std::cout << "No files found!" << std::endl;
-
-        // render all the files
-        for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
-            std::cout << "Rendering " << path + *it << std::endl;
-
-            //Scene scene;
-            //scene.load(path + *it);
-            //std::cout << "\tOutput name: " << scene._outputFilename << "\n";
-            //scene.render();  
-        }
-    }
-    else {
-        std::cout << "Rendering " << path << std::endl;
-
-        auto out_file = String::replaceExtension(path, "png");
-
-        std::cout << "\tOutput name: " << out_file << "\n";
-        RayTraceImage image(out_file, 1000, 1000);
-        
-        RayTracer tracer;
-        tracer.load(path);
-        tracer.renderInto(&image);
-    }
-    
-    std::cout << "Press a key...\n";
-    return 0;
 }
