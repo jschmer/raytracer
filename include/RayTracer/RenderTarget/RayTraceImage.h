@@ -17,6 +17,7 @@ public:
     void init(const unsigned int width, const unsigned int height, const unsigned int bytes_per_pixel = 3) override;
     bool getSample(Sample &s) override;
     void commit(const Sample &s, vec3 color) const override;
+    void done();
 
     void save() const;
 
@@ -25,8 +26,6 @@ private:
     BYTE* getByteBuffer() const;
 
 private:
-    unsigned int width;
-    unsigned int height;
     unsigned int numPixels;
 
     std::unique_ptr<Pixel[]> pImage;

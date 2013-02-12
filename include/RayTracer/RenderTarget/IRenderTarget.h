@@ -27,4 +27,8 @@ public:
     virtual void init(unsigned int const width, unsigned int const height, unsigned int const bytes_per_pixel) = 0;
     virtual bool getSample(Sample& s) = 0;
     virtual void commit(Sample const &s, vec3 color) const = 0;
+    virtual void done() = 0;
+
+public:
+    unsigned int width, height;
 };

@@ -12,7 +12,6 @@ using namespace glm;
 
 //#include <RayTracer/Scene/Scene.h>
 #include <RayTracer/RenderTarget/RayTraceImage.h>
-#include <RayTracer/Scene/Scene.h>
 #include <RayTracer/RayTracer.h>
 #include <String/StringHelper.h>
 
@@ -116,18 +115,12 @@ int main(int argc, char* argv[]) {
     else {
         std::cout << "Rendering " << path << std::endl;
 
-        //std::cout << "\tOutput name: " << "render.png" << "\n";
-        //RayTraceImage image("render.png", 1000, 1000);
-        //
-        //RayTracer tracer;
-        //tracer.load(path);
-        //tracer.renderInto(&image);
-
-        // render only the specified file
-        Scene scene;
-        scene.load(path);
-        std::cout << "\tOutput name: " << scene._outputFilename << "\n";
-        scene.render();  
+        std::cout << "\tOutput name: " << "render.png" << "\n";
+        RayTraceImage image("render.png", 1000, 1000);
+        
+        RayTracer tracer;
+        tracer.load(path);
+        tracer.renderInto(&image);
     }
     
     std::cout << "Press a key...\n";

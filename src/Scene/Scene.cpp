@@ -13,94 +13,10 @@ Scene::Scene() {
     // default values
     _maxdepth = 5;
 
-    _image = nullptr;
     _camera = nullptr;
-
-    _size.width  = 600;
-    _size.height = 600;
 }
 Scene::~Scene() {
     delete _camera;
-}
-
-void Scene::load(std::string sceneFile) {
-    auto scene = loadScene(sceneFile);
-
-    // copy scene content
-    *this = *scene;
-
-    // release scene from automatic memory management
-    scene.release();
-
-    // set output filename to inpuptfilename with png extension
-    auto point_pos = sceneFile.find_last_of('.');
-    if (point_pos == std::string::npos)
-        throw std::exception("Couldn't find a file extension?!");
-
-    _outputFilename = sceneFile.substr(0, point_pos) + ".png";
-
-    delete _image;
-    _image = new RayTraceImage(_outputFilename, _size.width, _size.height);
-}
-
-void Scene::render() {
-    _camera->initFov((float)_size.width, (float)_size.height);
-
-    SYSTEM_INFO sysinfo;
-    GetSystemInfo(&sysinfo);
-    auto numCPU = sysinfo.dwNumberOfProcessors;
-
-    // decrease process priority to prevent hangs of the system
-    SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
-    /*
-    REALTIME_PRIORITY_CLASS------highest
-    HIGH_PRIORITY_CLASS
-    ABOVE_NORMAL_PRIORITY_CLASS
-    NORMAL_PRIORITY_CLASS
-    BELOW_NORMAL_PRIORITY_CLASS
-    IDLE_PRIORITY_CLASS------lowest
-    */
-
-    // load all samples
-    std::vector<Sample> samples;
-    typedef std::vector<Sample>::iterator SampleIterator;
-
-    Sample sample;
-    while(_image->getSample(sample))
-        samples.push_back(sample);
-
-    auto thread_func = [=](SampleIterator begin, SampleIterator end){
-        Ray ray;
-        while (begin != end) {
-            this->_camera->generateRay(*begin, ray);
-
-            Intersection Hit = this->trace(ray, 0);
-
-            this->_image->commit(*begin, Hit.color);
-
-            // next sample!
-            ++begin;
-        }
-    };
-
-    auto dataset_size = samples.size() / numCPU;
-    unsigned int begin = 0;
-    unsigned int end = dataset_size;
-
-    std::vector<std::future<void>> futs;
-    while (numCPU > 0) {
-        // start thread
-        futs.push_back(std::async(thread_func, samples.begin() + begin, samples.begin() + end));
-
-        begin += dataset_size;
-        end += dataset_size;
-        --numCPU;
-    }
-
-    for (auto& fut : futs)
-        fut.get();
-
-    _image->save();
 }
 
 Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {

@@ -73,14 +73,6 @@ std::unique_ptr<Scene> SceneParser::load() const {
                     } 
                 }
 
-                else if (cmd == "size") {
-                    validinput = readvals(s, 2, values); 
-                    if (validinput) {
-                        scene->_size.width  = (int)values[0];
-                        scene->_size.height = (int)values[1];
-                    }
-                }
-
                 // output filename
                 else if (cmd == "output") {
                     s >> scene->_outputFilename; 

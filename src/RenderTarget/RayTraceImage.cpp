@@ -78,3 +78,7 @@ void RayTraceImage::clampToUpper(vec3 &v, const float upper) const {
 BYTE* RayTraceImage::getByteBuffer() const {
     return (BYTE*) (pImage.get());
 }
+
+void RayTraceImage::done() {
+    this->save();
+}
