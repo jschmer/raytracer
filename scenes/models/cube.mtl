@@ -1,0 +1,24 @@
+# COLORS
+newmtl red
+Ka 1 0 0
+Kd 1 0 0 
+
+newmtl blue
+Ka 0 0 1
+Kd 0 0 1
+
+newmtl green
+Ka 0 1 0
+Kd 0 1 0
+
+newmtl gold
+Ka 1 0.84 0
+Kd 1 0.84 0
+
+newmtl orange
+Ka 1 0.64 0
+Kd 1 0.64 0
+
+newmtl purple
+Ka 0.62 0.12 0.94
+Ka 0.62 0.12 0.94
