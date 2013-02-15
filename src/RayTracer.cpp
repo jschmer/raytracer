@@ -22,10 +22,18 @@ RayTracer::~RayTracer()
 {}
 
 void RayTracer::load(std::string scene_file) {
-    scene_ = loadScene(scene_file);
+    try {
+        scene_ = loadScene(scene_file);
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        scene_ = nullptr;
+    }
 }
 
 void RayTracer::renderInto(IRenderTarget* render_target) {
+    if (nullptr == scene_)
+        return;
+
     auto& camera = *scene_->_camera;
     IRenderTarget& target = *render_target;
     

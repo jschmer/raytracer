@@ -24,7 +24,5 @@ public:
 
 private:
     std::string sceneFile;
-
-    bool readvals(std::stringstream &s, const int numvals, std::vector<float> &values) const;
 };
 
