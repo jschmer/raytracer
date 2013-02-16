@@ -62,9 +62,17 @@ Intersection Scene::trace(Ray const &ray, int depth) {
 }
 
 vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
-    vec3 color(0.0);
-    color += Hit.obj->ambient;
-    color += Hit.obj->emission;
+    vec3 out_color(0.0);
+
+    // setting material props
+    vec3& ambient    = Hit.obj->mat.ambient;
+    vec3& diffuse    = Hit.obj->mat.diffuse;
+    vec3& specular   = Hit.obj->mat.specular;
+    vec3& emission   = Hit.obj->mat.emission;
+    float& shininess = Hit.obj->mat.shininess;
+
+    out_color += ambient;
+    out_color += emission;
 
     for (std::vector<Light>::iterator it = _lights.begin(); it != _lights.end(); ++it) {
         vec3 dir_to_light = it->LightVectorFrom(Hit.hitPoint);
@@ -100,18 +108,17 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
 
             // diffuse term
             float dotP = dot(Hit.normal, dir_to_light);
-            color += L * (Hit.obj->diffuse * common::max(dotP, 0.0f));
+            out_color += L * (diffuse * common::max(dotP, 0.0f));
 
             // specular term
             vec3 halfVec = normalize(dir_to_light + -ray.dir);
             float halfAngle = dot(Hit.normal, halfVec);
-            color += L * (Hit.obj->specular * pow(common::max(halfAngle, 0.0f), Hit.obj->shininess));
+            out_color += L * (specular * pow(common::max(halfAngle, 0.0f), shininess));
         }
     }
 
     // reflection
     // R = V – 2 * (V·N) * N 
-
     Ray reflectionRay;
     reflectionRay.dir = ray.dir - 2 * dot(ray.dir, Hit.normal) * Hit.normal;
     reflectionRay.pos = Hit.hitPoint + 0.01f*reflectionRay.dir;
@@ -119,7 +126,7 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     
     Intersection t = this->trace(reflectionRay, depth+1);
     if (t.obj)
-        color += Hit.obj->specular * t.color;
+        out_color += specular * t.color;
 
-    return color;
+    return out_color;
 }

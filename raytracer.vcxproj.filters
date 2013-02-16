@@ -75,6 +75,12 @@
     <ClInclude Include="include\String\StringHelper.h">
       <Filter>Header Files\String</Filter>
     </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Material.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\AssimpToRaytracerTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -100,6 +106,12 @@
     </ClCompile>
     <ClCompile Include="src\RenderTarget\RayTraceImage.cpp">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Material.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssimpToRaytracerTypes.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

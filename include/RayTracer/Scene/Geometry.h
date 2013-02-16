@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <RayTracer/Ray.h>
 #include <RayTracer/Scene/Scene.h>
+#include <RayTracer/Scene/Material.h>
 
 using namespace glm;
 
@@ -20,23 +21,15 @@ class Primitive {
 public:
     Primitive(mat4 obj2world)
         : obj2world(obj2world),
-        ambient(0.0),
-        diffuse(0.0),
-        specular(0.0),
-        emission(0.0) ,
-        shininess(0.0f)
+        mat()
     {
         world2obj = inverse(obj2world);
     }
 
     virtual float Intersect(Ray const &r, Intersection &Hit) = 0;
 
-    // lighting
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    vec3 emission;
-    float shininess;
+    // material props
+    Material mat;
 
     // transform matrix
     mat4 obj2world;

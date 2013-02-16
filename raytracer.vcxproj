@@ -135,6 +135,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\RayTracer\AssimpToRaytracerTypes.h" />
     <ClInclude Include="include\RayTracer\Ray.h" />
     <ClInclude Include="include\RayTracer\RayTracer.h" />
     <ClInclude Include="include\RayTracer\RenderTarget\IRenderTarget.h" />
@@ -145,10 +146,12 @@
     <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h" />
     <ClInclude Include="include\RayTracer\Scene\Camera.h" />
     <ClInclude Include="include\RayTracer\Scene\Geometry.h" />
+    <ClInclude Include="include\RayTracer\Scene\Material.h" />
     <ClInclude Include="include\RayTracer\Scene\Scene.h" />
     <ClInclude Include="include\String\StringHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AssimpToRaytracerTypes.cpp" />
     <ClCompile Include="src\main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='StaticLib|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -157,6 +160,7 @@
     <ClCompile Include="src\SceneReader\ObjParser.cpp" />
     <ClCompile Include="src\SceneReader\SceneParser.cpp" />
     <ClCompile Include="src\SceneReader\SceneReader.cpp" />
+    <ClCompile Include="src\Scene\Material.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\String\StringHelper.cpp" />
   </ItemGroup>

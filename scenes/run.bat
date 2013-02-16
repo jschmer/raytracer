@@ -1,2 +1,2 @@
 @echo off 
-raytracer.exe ShurikenWithTris.obj
+raytracer.exe scene_tris.test

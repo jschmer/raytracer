@@ -43,12 +43,9 @@ std::unique_ptr<Scene> SceneParser::load() const {
 
         vector<vec3> vertices;
 
-        vec3 ambient(0.2f, 0.2f, 0.2f);
-
-        vec3 diffuse(0.0);
-        vec3 specular(0.0);
-        vec3 emission(0.0);
-        float shininess = 0;
+        Material mat;
+        mat.diffuse = vec3(0);
+        bool push_mat = true;
 
         bool last = false;   // transformation applied last
 
@@ -110,7 +107,6 @@ std::unique_ptr<Scene> SceneParser::load() const {
                     }
                 }
 
-
                 // Process the lights, add it to database.
                 else if (cmd == "directional") {
                     validinput = readvals(s, 6, values); // Position/color for lts.
@@ -146,28 +142,31 @@ std::unique_ptr<Scene> SceneParser::load() const {
                     validinput = readvals(s, 3, values); // Position/color for lts.
                     if (validinput) {
                         // store temporary until light/object is stored
-                        ambient = vec3(values[0], values[1], values[2]);
+                        mat.ambient = vec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "diffuse") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
-                        diffuse = vec3(values[0], values[1], values[2]);
+                        mat.diffuse = vec3(values[0], values[1], values[2]);
                     }
-                } else if (cmd == "specular") {
+                }
+                else if (cmd == "specular") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
-                        specular = vec3(values[0], values[1], values[2]);
+                        mat.specular = vec3(values[0], values[1], values[2]);
                     }
-                } else if (cmd == "emission") {
+                }
+                else if (cmd == "emission") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
-                        emission = vec3(values[0], values[1], values[2]);
+                        mat.emission = vec3(values[0], values[1], values[2]);
                     }
-                } else if (cmd == "shininess") {
+                }
+                else if (cmd == "shininess") {
                     validinput = readvals(s, 1, values); 
                     if (validinput) {
-                        shininess = values[0];
+                        mat.shininess = values[0];
                     }
                 }
 
@@ -185,6 +184,11 @@ std::unique_ptr<Scene> SceneParser::load() const {
                     }
                 }
                 else if (cmd == "sphere") {
+                    if (push_mat) {
+                        scene->_materials.push_back(mat);
+                        mat.diffuse = vec3(0);
+                    }
+
                     validinput = readvals(s, 4, values); 
                     if (validinput) {
                         // store object with material properties and transformation
@@ -198,40 +202,29 @@ std::unique_ptr<Scene> SceneParser::load() const {
                             trans = transfstack.top() * trans;
 
                         Sphere* s = new Sphere(trans, vec4(0.0f), radius);
-                        s->ambient  = ambient;
-                        s->specular = specular;
-                        s->emission = emission;
-                        s->diffuse  = diffuse;
-                        s->shininess = shininess;
+                        s->mat = scene->_materials.back();
                         scene->_primitives.push_back(s);
                     }
                 }
                 else if (cmd == "tri") {
+                    if (push_mat) {
+                        scene->_materials.push_back(mat);
+                        mat.diffuse = vec3(0);
+                    }
+
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
                         vec4 v0(vertices[(unsigned int)values[0]], 1);
                         vec4 v1(vertices[(unsigned int)values[1]], 1);
                         vec4 v2(vertices[(unsigned int)values[2]], 1);
 
-                        //v0 = transfstack.top() * v0;
-                        //v1 = transfstack.top() * v1;
-                        //v2 = transfstack.top() * v2;
-
                         Triangle* t = new Triangle(transfstack.top(), vec3(v0), vec3(v1), vec3(v2));
-                        t->ambient  = ambient;
-                        t->specular = specular;
-                        t->emission = emission;
-                        t->diffuse  = diffuse;
-                        t->shininess = shininess;
+                        t->mat = scene->_materials.back();
                         scene->_primitives.push_back(t);
                     }
                 }
-
                 else if (cmd == "trinormal") {
-                    validinput = readvals(s, 3, values); 
-                    if (validinput) {
-
-                    }
+                    // skipping
                 }
 
                 // transformations
@@ -274,7 +267,8 @@ std::unique_ptr<Scene> SceneParser::load() const {
                 // basic push/pop code for matrix stacks
                 else if (cmd == "pushTransform") {
                     transfstack.push(transfstack.top()); 
-                } else if (cmd == "popTransform") {
+                }
+                else if (cmd == "popTransform") {
                     if (transfstack.size() <= 1) {
                         cerr << "Stack has no elements. Cannot Pop\n"; 
                     } else {

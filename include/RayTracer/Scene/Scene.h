@@ -8,6 +8,7 @@
 #include <RayTracer/Ray.h>
 #include <RayTracer/Scene/Geometry.h>
 #include <RayTracer/Scene/Camera.h>
+#include <RayTracer/Scene/Material.h>
 
 class Camera;
 class Primitive;
@@ -42,18 +43,23 @@ public:
     bool _hasSize;
 
     /*
-    * Camera
-    */
+     * Camera
+     */
     Camera *_camera;
 
     /*
-    * Geometry
+     * Geometry
     */
     std::vector<Primitive*> _primitives;
 
     /*
-    * Lights
-    */
+     * Materials
+     */
+    std::vector<Material> _materials;
+
+    /*
+     * Lights
+     */
     std::vector<Light> _lights;
 };
 
