@@ -37,6 +37,9 @@
     <Filter Include="Source Files\String">
       <UniqueIdentifier>{63b736a0-1de9-408b-9fd9-f1875d30372b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Scene\Primitives">
+      <UniqueIdentifier>{5894ef7b-1812-43b8-8f42-328f9187fa90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RayTracer\Ray.h">
@@ -60,9 +63,6 @@
     <ClInclude Include="include\RayTracer\RenderTarget\RayTraceImage.h">
       <Filter>Header Files\RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="include\RayTracer\Scene\Geometry.h">
-      <Filter>Header Files\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\RayTracer\Scene\Scene.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
@@ -80,6 +80,18 @@
     </ClInclude>
     <ClInclude Include="include\RayTracer\AssimpToRaytracerTypes.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Primitives\Sphere.h">
+      <Filter>Header Files\Scene\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Primitives\Triangle.h">
+      <Filter>Header Files\Scene\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Primitives\Primitive.h">
+      <Filter>Header Files\Scene\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Light.h">
+      <Filter>Header Files\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

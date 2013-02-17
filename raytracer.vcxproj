@@ -147,8 +147,11 @@
     </ClInclude>
     <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h" />
     <ClInclude Include="include\RayTracer\Scene\Camera.h" />
-    <ClInclude Include="include\RayTracer\Scene\Geometry.h" />
+    <ClInclude Include="include\RayTracer\Scene\Light.h" />
     <ClInclude Include="include\RayTracer\Scene\Material.h" />
+    <ClInclude Include="include\RayTracer\Scene\Primitives\Primitive.h" />
+    <ClInclude Include="include\RayTracer\Scene\Primitives\Sphere.h" />
+    <ClInclude Include="include\RayTracer\Scene\Primitives\Triangle.h" />
     <ClInclude Include="include\RayTracer\Scene\Scene.h" />
     <ClInclude Include="include\String\StringHelper.h" />
   </ItemGroup>

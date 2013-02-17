@@ -9,8 +9,9 @@
 #include <vector>
 
 #include <RayTracer/Ray.h>
-#include <RayTracer/Scene/Geometry.h>
+#include <RayTracer/Scene/Primitives/Primitive.h>
 #include <RayTracer/Scene/Camera.h>
+#include <RayTracer/Scene/Light.h>
 #include <RayTracer/Scene/Material.h>
 
 class Camera;
