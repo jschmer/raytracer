@@ -1,23 +1,29 @@
 #include <RayTracer/SceneReader/ObjParser.h>
 
+// system stuff
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <fstream>
 #include <stack>
 
-#define GLM_SWIZZLE_XYZW 
-#include <glm/glm.hpp>
-
-#include <RayTracer/Scene/Scene.h>
-#include <RayTracer/Scene/Camera.h>
-#include <String/StringHelper.h>
-
+// Assimp stuff
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h> // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
 
+// glm stuff
+#define GLM_SWIZZLE_XYZW 
+#include <glm/glm.hpp>
+
+// DevIL stuff
+#include <il/il.h>
+
+// own project includes
 #include <RayTracer/AssimpToRaytracerTypes.h>
+#include <RayTracer/Scene/Scene.h>
+#include <RayTracer/Scene/Camera.h>
+#include <String/StringHelper.h>
 
 using namespace std;
 using namespace glm;
@@ -31,6 +37,9 @@ std::unique_ptr<Scene> ObjParser::load() const {
         // ERROR while loading
         throw std::exception(loader.GetErrorString());
     }
+
+    // Initializing il library
+    ilInit();
 
     /*
      * Converting Assimp scene to own scene structure!
@@ -59,13 +68,11 @@ std::unique_ptr<Scene> ObjParser::load() const {
             mat.Get(AI_MATKEY_SHININESS, ai_shininess);
 
             // storing own material in scene
-            Material scene_mat;
-            scene_mat.setAmbient (ai_ambient);
-            scene_mat.setDiffuse (ai_diffuse);
-            scene_mat.setSpecular(ai_specular);
-            scene_mat.setEmission(ai_emission);
-
-            scene->_materials.push_back(scene_mat);
+            auto scene_mat = new Material;
+            scene_mat->setAmbient (ai_ambient);
+            scene_mat->setDiffuse (ai_diffuse);
+            scene_mat->setSpecular(ai_specular);
+            scene_mat->setEmission(ai_emission);
 
             // getting diffuse texture
             if (mat.GetTextureCount(aiTextureType_DIFFUSE) > 0) {
@@ -73,10 +80,58 @@ std::unique_ptr<Scene> ObjParser::load() const {
                 auto tex_return = mat.GetTexture(aiTextureType_DIFFUSE, 0, &tex_path); 
 
                 // TODO: load binary texture data!
-                aiTexture tex;
+
+                ILuint texid;           /* ILuint is a 32bit unsigned integer.´Variable texid will be used to store image name. */
+                ILboolean success;      /* ILboolean is type similar to GLboolean and can equal GL_FALSE (0) or GL_TRUE (1)
+                                           Variable success will be used to determine if some function returned success or failure. */
+                ilGenImages(1, &texid); /* Generation of one image name */
+                ilBindImage(texid);     /* Binding of image name */
+                success = ilLoadImage((const ILstring) "scenes/models/maps/brightgreenmap.jpg"); /* Loading of image "image.jpg" */
+                if (success) {
+                    // Convert every colour component into unsigned byte
+                    // If your image contains alpha channel you can replace IL_RGB with IL_RGBA
+                    success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE); 
+                    if (!success)
+                        continue;
+
+                    auto bpp    = ilGetInteger(IL_IMAGE_BPP);
+                    auto width  = ilGetInteger(IL_IMAGE_WIDTH);
+                    auto height = ilGetInteger(IL_IMAGE_HEIGHT);
+                    auto pdata  = ilGetData();
+
+                    // converting image data to aiTexels
+                    auto aiTexelData = new aiTexel[width*height];
+                    unsigned int dim = bpp * width * height;
+                    for (auto image_idx = 0u, texel_idx = 0u; image_idx < dim; ++image_idx) {
+                        auto r = pdata[image_idx];
+                        auto g = pdata[++image_idx];
+                        auto b = pdata[++image_idx];
+                        auto a = pdata[++image_idx];
+
+                        aiTexel texel;
+                        texel.r = r;
+                        texel.g = g;
+                        texel.b = b;
+                        texel.a = a;
+
+                        aiTexelData[texel_idx] = texel;
+                    }
+
+                    scene_mat->tex.mHeight = height;
+                    scene_mat->tex.mWidth  = width;
+                    scene_mat->tex.pcData  = aiTexelData;
+                }
+                else {
+                    continue;
+                }
+
+                ilDeleteImages(1, &texid); /* Because we have already copied image data into texture data
+                                           we can release memory used by image. */
 
                 printf(tex_path.C_Str());
             }
+
+            scene->_materials.push_back(scene_mat);
         }
     }
 
@@ -85,7 +140,7 @@ std::unique_ptr<Scene> ObjParser::load() const {
      */
     for (auto mesh_idx = 0u; mesh_idx < ai_scene->mNumMeshes; ++mesh_idx) {
         aiMesh& mesh = *ai_scene->mMeshes[mesh_idx];
-        
+
         if (mesh.HasFaces()) {
             // go through every face
             for (auto face_idx = 0u; face_idx < mesh.mNumFaces; ++face_idx) {

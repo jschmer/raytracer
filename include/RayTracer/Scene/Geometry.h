@@ -29,7 +29,7 @@ public:
     virtual float Intersect(Ray const &r, Intersection &Hit) = 0;
 
     // material props
-    Material mat;
+    Material* mat;
 
     // transform matrix
     mat4 obj2world;
@@ -44,6 +44,7 @@ public:
         radius(radius),
         radius2(radius*radius)
     {
+        mat = nullptr;
         transposed_world2obj = transpose(this->world2obj);
     }
 
@@ -131,6 +132,7 @@ public:
         v0 = f;
         v1 = g;
         v2 = h;
+        mat = nullptr;
         faceNormal = vec4(glm::cross(v1 - v0, v2 - v0), 0); 
         tranformedNormal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
     }

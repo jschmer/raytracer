@@ -7,6 +7,10 @@ Material::Material() {
     shininess = 0.0f;
 }
 
+bool Material::HasTexture() {
+    return tex.pcData != nullptr;
+}
+
 void Material::setAmbient(aiColor3D &ai_ambient) {
     ambient = ToVec3(ai_ambient);
 }

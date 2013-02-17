@@ -5,12 +5,16 @@
 
 using namespace glm;
 
-struct Material {
+class Material {
+public:
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     vec3 emission;
     float shininess;
+
+    aiTexture tex;
+    bool HasTexture();
 
     Material();
     void setAmbient (aiColor3D &ai_ambient);

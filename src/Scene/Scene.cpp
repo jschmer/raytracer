@@ -17,6 +17,9 @@ Scene::Scene() {
 }
 Scene::~Scene() {
     delete _camera;
+
+    for (auto prim : _primitives)
+        delete prim;
 }
 
 Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
@@ -65,11 +68,11 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     vec3 out_color(0.0);
 
     // setting material props
-    vec3& ambient    = Hit.obj->mat.ambient;
-    vec3& diffuse    = Hit.obj->mat.diffuse;
-    vec3& specular   = Hit.obj->mat.specular;
-    vec3& emission   = Hit.obj->mat.emission;
-    float& shininess = Hit.obj->mat.shininess;
+    vec3& ambient    = Hit.obj->mat->ambient;
+    vec3& diffuse    = Hit.obj->mat->diffuse;
+    vec3& specular   = Hit.obj->mat->specular;
+    vec3& emission   = Hit.obj->mat->emission;
+    float& shininess = Hit.obj->mat->shininess;
 
     out_color += ambient;
     out_color += emission;

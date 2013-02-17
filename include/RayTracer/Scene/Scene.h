@@ -1,4 +1,7 @@
 #pragma once
+
+
+
 #define GLM_SWIZZLE_XYZW 
 #include <glm/glm.hpp>
 
@@ -55,7 +58,7 @@ public:
     /*
      * Materials
      */
-    std::vector<Material> _materials;
+    std::vector<Material*> _materials;
 
     /*
      * Lights

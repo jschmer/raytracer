@@ -69,13 +69,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include;../$third-party-libs/assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;../$third-party-libs/assimp/include;../$third-party-libs/DevIL-SDK-x86-1.7.8/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\lib;../$third-party-libs/assimp/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>FreeImage.lib;assimp_debug-st_Win32/assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\lib;../$third-party-libs/assimp/lib;../$third-party-libs/DevIL-SDK-x86-1.7.8/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>FreeImage.lib;assimp_debug-st_Win32/assimp.lib;DevIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -94,7 +94,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include;../$third-party-libs/assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;../$third-party-libs/assimp/include;../$third-party-libs/DevIL-SDK-x86-1.7.8/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -103,8 +103,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>.\lib;../$third-party-libs/assimp/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>FreeImage.lib;assimp_release-st_Win32/assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\lib;../$third-party-libs/assimp/lib;../$third-party-libs/DevIL-SDK-x86-1.7.8/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>FreeImage.lib;assimp_release-st_Win32/assimp.lib;DevIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(ProjectDir)dependencies\FreeImage.dll $(ProjectDir)bin\$(Configuration)</Command>
@@ -117,7 +117,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include;../$third-party-libs/assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;../$third-party-libs/assimp/include;../$third-party-libs/DevIL-SDK-x86-1.7.8/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -142,7 +142,9 @@
     <ClInclude Include="include\RayTracer\RenderTarget\RayTraceImage.h" />
     <ClInclude Include="include\RayTracer\SceneReader\ISceneLoader.h" />
     <ClInclude Include="include\RayTracer\SceneReader\ObjParser.h" />
-    <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h" />
+    <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h" />
     <ClInclude Include="include\RayTracer\Scene\Camera.h" />
     <ClInclude Include="include\RayTracer\Scene\Geometry.h" />
@@ -158,7 +160,9 @@
     <ClCompile Include="src\RayTracer.cpp" />
     <ClCompile Include="src\RenderTarget\RayTraceImage.cpp" />
     <ClCompile Include="src\SceneReader\ObjParser.cpp" />
-    <ClCompile Include="src\SceneReader\SceneParser.cpp" />
+    <ClCompile Include="src\SceneReader\SceneParser.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\SceneReader\SceneReader.cpp" />
     <ClCompile Include="src\Scene\Material.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
