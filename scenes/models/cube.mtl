@@ -3,9 +3,6 @@
 newmtl red
 #Ka 1 0 0
 Kd 1 0 0 
-#Ks 0 1 0
-#Ns 500
-map_Kd maps\JP_Brick01_Bump.jpg
 
 newmtl blue
 #Ka 0 0 1
@@ -22,9 +19,15 @@ Kd 1 0.84 0
 newmtl orange
 #Ka 1 0.64 0
 Kd 1 0.64 0
+map_Kd maps\JP_Brick01_Bump.jpg
 
 newmtl purple
 #Ka 0.62 0.12 0.94
 Kd 0.62 0.12 0.94
 #Ks 1 0 0
 #Ns 500
+
+newmtl white_specular
+Kd .0005 .0005 .0005 
+Ks .8 .8 .8
+Ns 500

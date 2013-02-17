@@ -66,6 +66,17 @@ std::unique_ptr<Scene> ObjParser::load() const {
             scene_mat.setEmission(ai_emission);
 
             scene->_materials.push_back(scene_mat);
+
+            // getting diffuse texture
+            if (mat.GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+                aiString tex_path;
+                auto tex_return = mat.GetTexture(aiTextureType_DIFFUSE, 0, &tex_path); 
+
+                // TODO: load binary texture data!
+                aiTexture tex;
+
+                printf(tex_path.C_Str());
+            }
         }
     }
 
