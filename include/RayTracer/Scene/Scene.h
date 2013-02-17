@@ -1,21 +1,19 @@
 #pragma once
 
-
+// system header
+#include <string>
+#include <vector>
 
 #define GLM_SWIZZLE_XYZW 
 #include <glm/glm.hpp>
 using namespace glm;
 
-#include <string>
-#include <vector>
-
-#include <RayTracer/Ray.h>
-#include <RayTracer/Scene/Primitives/Primitive.h>
-#include <RayTracer/Scene/Camera.h>
 #include <RayTracer/Scene/Light.h>
-#include <RayTracer/Scene/Material.h>
 
+// forward declarations
+class Ray;
 class Camera;
+class Material;
 class Primitive;
 class RayTraceImage;
 struct Intersection;

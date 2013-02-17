@@ -1,5 +1,8 @@
 #include <RayTracer/Scene/Light.h>
 
+// glm functions
+using glm::normalize;
+
 Light::Light(vec4 pos_or_dir, vec3 color, vec3 attenuation, mat4 transform)
     : pos_or_dir(pos_or_dir),
     color(color),

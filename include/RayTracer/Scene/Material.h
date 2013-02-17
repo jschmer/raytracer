@@ -3,7 +3,8 @@
 #include <assimp/scene.h> // Output data structure
 #include <glm/glm.hpp>
 
-using namespace glm;
+// glm types
+using glm::vec3;
 
 class Material {
 public:

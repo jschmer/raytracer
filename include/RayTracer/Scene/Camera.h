@@ -7,7 +7,9 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-using namespace glm;
+// glm types
+using glm::vec3;
+
 
 class Camera {
 public:

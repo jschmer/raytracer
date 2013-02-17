@@ -10,6 +10,8 @@
 
 // project header
 #include <RayTracer/Scene/Scene.h>
+#include <RayTracer/Scene/Camera.h>
+#include <RayTracer/Scene/Primitives/Primitive.h>
 #include <RayTracer/SceneReader/SceneReader.h>
 #include <String/StringHelper.h>
 
