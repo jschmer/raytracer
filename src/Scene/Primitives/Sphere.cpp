@@ -4,6 +4,8 @@
 
 // glm functions
 using glm::transpose;
+using glm::normalize;
+using glm::dot;
 
 Sphere::Sphere(mat4 obj2world, vec4 pos, float radius)
     : Primitive(obj2world),

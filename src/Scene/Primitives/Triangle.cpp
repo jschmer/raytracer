@@ -3,8 +3,10 @@
 #include <RayTracer/Ray.h>
 
 // glm functions
-using glm::normalize;
 using glm::transpose;
+using glm::normalize;
+using glm::dot;
+using glm::cross;
 
 
 Triangle::Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h)
