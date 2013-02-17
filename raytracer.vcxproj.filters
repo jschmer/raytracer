@@ -125,5 +125,8 @@
     <ClCompile Include="src\AssimpToRaytracerTypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Light.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
