@@ -1,11 +1,13 @@
 #pragma once
 
-#include <glm/glm.hpp>
-using namespace glm;
-
-#include <RayTracer/Ray.h>
-#include <RayTracer/Scene/Material.h>
 #include <RayTracer/Scene/Primitives/Primitive.h>
+
+// glm types
+using glm::vec4;
+
+// forward declarations
+class Ray;
+struct Intersection;
 
 class Sphere : public Primitive {
 public:

@@ -1,12 +1,16 @@
 #pragma once
 
 #include <glm/glm.hpp>
-using namespace glm;
 
-#include <RayTracer/Ray.h>
-#include <RayTracer/Scene/Scene.h>
+// glm types
+using glm::mat4;
+using glm::vec3;
 
+// glm functions
+using glm::inverse;
 
+// forward declarations
+class Ray;
 class Material;
 class Primitive;
 

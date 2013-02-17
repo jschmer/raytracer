@@ -1,5 +1,10 @@
 #include <RayTracer/Scene/Primitives/Sphere.h>
 
+#include <RayTracer/Ray.h>
+
+// glm functions
+using glm::transpose;
+
 Sphere::Sphere(mat4 obj2world, vec4 pos, float radius)
     : Primitive(obj2world),
     position(pos),

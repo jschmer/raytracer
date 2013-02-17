@@ -1,5 +1,12 @@
 #include <RayTracer/Scene/Primitives/Triangle.h>
 
+#include <RayTracer/Ray.h>
+
+// glm functions
+using glm::normalize;
+using glm::transpose;
+
+
 Triangle::Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h)
     : Primitive(obj2world)
 {
