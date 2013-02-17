@@ -4,6 +4,7 @@
 
 #define GLM_SWIZZLE_XYZW 
 #include <glm/glm.hpp>
+using namespace glm;
 
 #include <string>
 #include <vector>
@@ -17,8 +18,8 @@
 class Camera;
 class Primitive;
 class RayTraceImage;
+struct Intersection;
 
-using namespace glm;
 
 class Scene
 {

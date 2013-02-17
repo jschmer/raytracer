@@ -5,8 +5,9 @@ using namespace glm;
 
 #include <RayTracer/Ray.h>
 #include <RayTracer/Scene/Scene.h>
-#include <RayTracer/Scene/Material.h>
 
+
+class Material;
 class Primitive;
 
 struct Intersection {

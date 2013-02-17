@@ -40,6 +40,9 @@
     <Filter Include="Header Files\Scene\Primitives">
       <UniqueIdentifier>{5894ef7b-1812-43b8-8f42-328f9187fa90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scene\Primitives">
+      <UniqueIdentifier>{45bd158d-7a9c-42f7-8015-0d87d0b2fad1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RayTracer\Ray.h">
@@ -127,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="src\Scene\Light.cpp">
       <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Primitives\Triangle.cpp">
+      <Filter>Source Files\Scene\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Primitives\Sphere.cpp">
+      <Filter>Source Files\Scene\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
