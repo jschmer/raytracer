@@ -14,7 +14,6 @@ Sphere::Sphere(mat4 obj2world, vec4 pos, float radius)
     radius(radius),
     radius2(radius*radius)
 {
-    mat = nullptr;
     transposed_world2obj = transpose(this->world2obj);
 }
 

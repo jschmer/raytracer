@@ -27,6 +27,16 @@ public:
     vec3 vt0, vt1, vt2;   // texture vertices
     bool hasTextureCoords;
 
-    vec4 faceNormal;
+    // cached triangle data
+    vec4 vec4_faceNormal;
+    vec3 vec3_faceNormal;
     vec3 transformedNormal;
+
+    vec3 v0v1;    // v0 nach v1!
+    vec3 v0v2;
+    vec3 v1v2;
+    vec3 v2v0;
+
+    float normal_len;
+    float d;
 };

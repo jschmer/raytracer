@@ -16,10 +16,20 @@ Triangle::Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h)
     v0 = f;
     v1 = g;
     v2 = h;
-    mat = nullptr;
-    faceNormal = vec4(glm::cross(v1 - v0, v2 - v0), 0); 
-    transformedNormal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
+
+    vec4_faceNormal = vec4(glm::cross(v1 - v0, v2 - v0), 0); 
+    vec3_faceNormal = vec3(vec4_faceNormal);
+    transformedNormal = normalize(vec3(transpose(this->world2obj) * vec4_faceNormal));
     hasTextureCoords = false;
+
+    // cached triangle data (for intersect method)
+    v0v1 = v1 - v0;    // v0 nach v1!
+    v0v2 = v2 - v0;
+    v1v2 = v2 - v1;
+    v2v0 = v0 - v2;
+
+    normal_len = dot(vec3_faceNormal, vec3_faceNormal);
+    d = dot(vec3_faceNormal, v0);
 }
 
 // taken from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/
@@ -29,17 +39,12 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     r.pos = vec3(this->world2obj * vec4(ray.pos, 1));
     r.dir = vec3(this->world2obj * vec4(ray.dir, 0));
 
-    vec3 v0v1 = v1 - v0;    // v0 nach v1!
-    vec3 v0v2 = v2 - v0;
-    vec3 N = vec3(faceNormal); //cross(v0v1, v0v2);
-
-    float nDotRay = dot(N, r.dir);
+    float nDotRay = dot(vec3_faceNormal, r.dir);
 
     if (nDotRay == 0)
         return -1.0f; // ray parallel to triangle
 
-    float d = dot(N, v0);
-    float t = -(dot(N, r.pos) - d) / nDotRay;
+    float t = -(dot(vec3_faceNormal, r.pos) - d) / nDotRay;
 
     // only consider objects closer than the closest intersection until now
     if (t > dist)
@@ -50,28 +55,27 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
 
     vec3 v0p = Phit - v0;
 
-    float bu, bv, bw;
-    Barycentric(Phit, bu, bv, bw);
+    //float bu, bv, bw;
+    //Barycentric(Phit, bu, bv, bw);
 
     // inside-out test edge0
-    float v = dot(N, cross(v0v1, v0p));
+    float v = dot(vec3_faceNormal, cross(v0v1, v0p));
     if (v < 0)
         return -1.0f; // P outside triangle
 
     // inside-out test edge1
-    float w = dot(N, cross(v2 - v1, Phit - v1));
+    float w = dot(vec3_faceNormal, cross(v1v2, Phit - v1));
     if (w < 0)
         return -1.0f; // P outside triangle
 
     // inside-out test edge2
-    float u = dot(N, cross(v0 - v2, Phit - v2));
+    float u = dot(vec3_faceNormal, cross(v2v0, Phit - v2));
     if (u < 0)
         return -1.0f; // P outside triangle
 
     // calculate barycentric coords
-    auto nlen2 = dot(N, N);
-    u = u / nlen2;
-    v = v / nlen2;
+    u = u / normal_len;
+    v = v / normal_len;
     w = 1 - u - v;
 
     // interpolate texture coords
