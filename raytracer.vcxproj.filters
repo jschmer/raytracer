@@ -99,6 +99,9 @@
     <ClInclude Include="include\RayTracer\glm_includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\RayTracer\windows_includes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

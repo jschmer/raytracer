@@ -1,11 +1,6 @@
-#define _USE_MATH_DEFINES
+#include <RayTracer/windows_includes.h>
 #include <string>
 #include <iostream>
-#include <Windows.h>
-
-#ifdef max
-#define max
-#endif
 
 #include <RayTracer/glm_includes.h>
 #include <glm/gtc/matrix_transform.hpp> 
@@ -112,27 +107,6 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Matrix Transformation Turotial :D
 void MatrixOps() {

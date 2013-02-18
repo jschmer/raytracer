@@ -154,6 +154,7 @@
     <ClInclude Include="include\RayTracer\Scene\Primitives\Sphere.h" />
     <ClInclude Include="include\RayTracer\Scene\Primitives\Triangle.h" />
     <ClInclude Include="include\RayTracer\Scene\Scene.h" />
+    <ClInclude Include="include\RayTracer\windows_includes.h" />
     <ClInclude Include="include\String\StringHelper.h" />
   </ItemGroup>
   <ItemGroup>

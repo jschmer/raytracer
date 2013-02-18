@@ -1,7 +1,7 @@
 #include <RayTracer/RayTracer.h>
 
 // system header
-#include <Windows.h>
+#include <RayTracer/windows_includes.h>
 #include <iostream>
 #include <future>
 #include <vector>

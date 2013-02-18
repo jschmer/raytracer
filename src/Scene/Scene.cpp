@@ -1,6 +1,5 @@
 #include <RayTracer/Scene/Scene.h>
 
-#include <Windows.h>
 #include <iostream>
 #include <future>
 
