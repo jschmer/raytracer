@@ -25,7 +25,6 @@ Scene::~Scene() {
 
 Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
     Intersection ret;
-    ret.obj = nullptr;
 
     float t;
     for (std::vector<Primitive*>::iterator it = _primitives.begin(); it < _primitives.end(); ++it) {
@@ -43,7 +42,6 @@ Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
 Intersection Scene::trace(Ray const &ray, int depth) {
     float t_hit = FLT_MAX;
     Intersection intersection;
-    intersection.obj = nullptr;
 
     if (depth <= this->_maxdepth) {
         float t;
@@ -58,7 +56,7 @@ Intersection Scene::trace(Ray const &ray, int depth) {
     }
 
     // got a hit point -> get color!
-    if (intersection.obj) {
+    if (intersection.has_hit) {
         intersection.color = shade(intersection, ray, depth);
     }
 
@@ -91,7 +89,7 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
             Ray r(Hit.hitPoint + 0.001f*dir_to_light, dir_to_light);
         
             Intersection ShadowHit = inShadow(r);
-            if (ShadowHit.obj) {
+            if (ShadowHit.has_hit) {
                 // if i'm testing against point light: check if intersection is between startpoint and light!
                 // the startpoint is in shadow only then!
                 if (it->pos_or_dir[3] == 1) {
@@ -134,7 +132,7 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
 
     
     Intersection t = this->trace(reflectionRay, depth+1);
-    if (t.obj)
+    if (t.has_hit)
         out_color += specular * t.color;
 
     return out_color;

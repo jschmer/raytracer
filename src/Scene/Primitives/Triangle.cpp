@@ -80,7 +80,7 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     // solve: 
 
     // storing intersection params
-    Hit.obj      = this;
+    Hit.has_hit  = true;
     Hit.t        = t;
     Hit.hitPoint = vec3(this->obj2world * vec4(Phit, 1));
     Hit.normal   = this->transformedNormal;

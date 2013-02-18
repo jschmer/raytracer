@@ -16,12 +16,20 @@ struct Color {
 };
 
 struct Intersection {
-    Primitive *obj;
+    bool has_hit;
     vec3 hitPoint;
     vec3 normal;
     color3 color;
     Color material_color;
     float t;
+
+    Intersection() {
+        has_hit  = false;
+        hitPoint = vec3(0.0f);
+        normal   = vec3(0.0f);
+        color    = color3(0.0f);
+        t        = FLT_MAX;
+    }
 };
 
 class Primitive {

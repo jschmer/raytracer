@@ -78,8 +78,8 @@ float Sphere::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     vec3 hitPointObjSpace = objRay.pos + ret * objRay.dir;
 
     // storing intersection params
-    Hit.obj = this;
-    Hit.t   = ret;
+    Hit.has_hit  = true;
+    Hit.t        = ret;
     Hit.hitPoint = vec3(this->obj2world * vec4(hitPointObjSpace, 1));
 
     // calculating the normal in object space
