@@ -21,6 +21,9 @@ Scene::~Scene() {
 
     for (auto prim : _primitives)
         delete prim;
+
+    for (auto mat : _materials)
+        delete mat;
 }
 
 Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {

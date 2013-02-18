@@ -31,6 +31,14 @@ std::unique_ptr<Scene> ObjParser::load() const {
     Assimp::Importer loader;
     const aiScene* ai_scene = loader.ReadFile(sceneFile, aiProcess_Triangulate );
 
+    // getting the folder the sceneFile lives in
+    std::string scene_base_folder;
+    auto pos = sceneFile.rfind('/');
+    if (std::string::npos != pos)
+        scene_base_folder = sceneFile.substr(0, pos + 1);
+    else
+        scene_base_folder = "./";
+
     if (!ai_scene) {
         // ERROR while loading
         throw std::exception(loader.GetErrorString());
@@ -77,56 +85,58 @@ std::unique_ptr<Scene> ObjParser::load() const {
                 aiString tex_path;
                 auto tex_return = mat.GetTexture(aiTextureType_DIFFUSE, 0, &tex_path); 
 
-                // TODO: load binary texture data!
+                if (aiReturn_SUCCESS == tex_return) {
+                    // load binary texture data! with DevIL
+                    ILuint texid;           /* ILuint is a 32bit unsigned integer.´Variable texid will be used to store image name. */
+                    ILboolean success;      /* ILboolean is type similar to GLboolean and can equal GL_FALSE (0) or GL_TRUE (1)
+                                            Variable success will be used to determine if some function returned success or failure. */
+                    ilGenImages(1, &texid); /* Generation of one image name */
+                    ilBindImage(texid);     /* Binding of image name */
 
-                ILuint texid;           /* ILuint is a 32bit unsigned integer.´Variable texid will be used to store image name. */
-                ILboolean success;      /* ILboolean is type similar to GLboolean and can equal GL_FALSE (0) or GL_TRUE (1)
-                                           Variable success will be used to determine if some function returned success or failure. */
-                ilGenImages(1, &texid); /* Generation of one image name */
-                ilBindImage(texid);     /* Binding of image name */
-                success = ilLoadImage((const ILstring) "scenes/models/maps/brightgreenmap.jpg"); /* Loading of image "image.jpg" */
-                if (success) {
-                    // Convert every colour component into unsigned byte
-                    // If your image contains alpha channel you can replace IL_RGB with IL_RGBA
-                    success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE); 
-                    if (!success)
-                        continue;
+                    std::string map_filename = scene_base_folder + tex_path.C_Str();
+                    map_filename = String::replace(map_filename, "\\", "/");
 
-                    auto bpp    = ilGetInteger(IL_IMAGE_BPP);
-                    auto width  = ilGetInteger(IL_IMAGE_WIDTH);
-                    auto height = ilGetInteger(IL_IMAGE_HEIGHT);
-                    auto pdata  = ilGetData();
+                    success = ilLoadImage((const ILstring) map_filename.c_str()); /* Loading of image "image.jpg" */
+                    if (success) {
+                        // Convert every colour component into unsigned byte
+                        // If your image contains alpha channel you can replace IL_RGB with IL_RGBA
+                        success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE); 
+                        if (!success)
+                            continue;
 
-                    // converting image data to aiTexels
-                    auto aiTexelData = new aiTexel[width*height];
-                    unsigned int dim = bpp * width * height;
-                    for (auto image_idx = 0u, texel_idx = 0u; image_idx < dim; ++image_idx) {
-                        auto r = pdata[image_idx];
-                        auto g = pdata[++image_idx];
-                        auto b = pdata[++image_idx];
-                        auto a = pdata[++image_idx];
+                        auto bpp    = ilGetInteger(IL_IMAGE_BPP);
+                        auto width  = ilGetInteger(IL_IMAGE_WIDTH);
+                        auto height = ilGetInteger(IL_IMAGE_HEIGHT);
+                        auto pdata  = ilGetData();
 
-                        aiTexel texel;
-                        texel.r = r;
-                        texel.g = g;
-                        texel.b = b;
-                        texel.a = a;
+                        // converting image data to aiTexels
+                        auto aiTexelData = new aiTexel[width*height];
+                        unsigned int dim = bpp * width * height;
+                        for (auto image_idx = 0u, texel_idx = 0u; image_idx < dim; ++image_idx, ++texel_idx) {
+                            auto r = pdata[image_idx];
+                            auto g = pdata[++image_idx];
+                            auto b = pdata[++image_idx];
+                            auto a = pdata[++image_idx];
 
-                        aiTexelData[texel_idx] = texel;
+                            aiTexel texel;
+                            texel.r = r;
+                            texel.g = g;
+                            texel.b = b;
+                            texel.a = a;
+
+                            aiTexelData[texel_idx] = texel;
+                        }
+
+                        scene_mat->tex.mHeight = height;
+                        scene_mat->tex.mWidth  = width;
+                        scene_mat->tex.pcData  = aiTexelData;
+
+                        ilDeleteImages(1, &texid); /* Because we have already copied image data into texture data
+                                               we can release memory used by image. */
+
+                        printf("Using diffuse map: %s", tex_path.C_Str());
                     }
-
-                    scene_mat->tex.mHeight = height;
-                    scene_mat->tex.mWidth  = width;
-                    scene_mat->tex.pcData  = aiTexelData;
                 }
-                else {
-                    continue;
-                }
-
-                ilDeleteImages(1, &texid); /* Because we have already copied image data into texture data
-                                           we can release memory used by image. */
-
-                printf(tex_path.C_Str());
             }
 
             scene->_materials.push_back(scene_mat);

@@ -4,6 +4,7 @@
 #include <assimp/scene.h> // Output data structure
 
 class Texture : public aiTexture {
+public:
     color3 getTextureColor(float u, float v);
 };
 

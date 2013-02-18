@@ -90,9 +90,16 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     Hit.normal   = this->transformedNormal;
 
     // storing material color
-    // TODO: fetch from texture! and barycentric coordinates from intersection point
+    // fetch diffuse color from texture!
+    if (HasTextureCoords() && mat->HasTexture()) {
+        // TODO: interpolate texture coordinates of all 3 vertices (vt0 - vt2)
+        // with barycentric coordinates (u, v, w)
+        Hit.material_color.diffuse = mat->tex.getTextureColor(vt0[0], vt0[1]);
+    }
+    else {
+        Hit.material_color.diffuse = mat->diffuse;
+    }
     Hit.material_color.ambient   = mat->ambient;
-    Hit.material_color.diffuse   = mat->diffuse;
     Hit.material_color.emission  = mat->emission;
     Hit.material_color.shininess = mat->shininess;
     Hit.material_color.specular  = mat->specular;
