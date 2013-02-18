@@ -13,6 +13,10 @@
 #include <RayTracer/glm_includes.h>
 #include <RayTracer/Scene/Scene.h>
 #include <RayTracer/Scene/Camera.h>
+#include <RayTracer/Scene/Material.h>
+
+#include <RayTracer/Scene/Primitives/Sphere.h>
+#include <RayTracer/Scene/Primitives/Triangle.h>
 
 using namespace std;
 
@@ -43,8 +47,8 @@ std::unique_ptr<Scene> SceneParser::load() const {
 
         vector<vec3> vertices;
 
-        Material mat;
-        mat.diffuse = vec3(0);
+        Material* mat = new Material;
+        mat->diffuse = vec3(0);
         bool push_mat = true;
 
         bool last = false;   // transformation applied last
@@ -142,31 +146,35 @@ std::unique_ptr<Scene> SceneParser::load() const {
                     validinput = readvals(s, 3, values); // Position/color for lts.
                     if (validinput) {
                         // store temporary until light/object is stored
-                        mat.ambient = vec3(values[0], values[1], values[2]);
+                        mat->ambient = vec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "diffuse") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
-                        mat.diffuse = vec3(values[0], values[1], values[2]);
+                        mat->diffuse = vec3(values[0], values[1], values[2]);
+                        push_mat = true;
                     }
                 }
                 else if (cmd == "specular") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
-                        mat.specular = vec3(values[0], values[1], values[2]);
+                        mat->specular = vec3(values[0], values[1], values[2]);
+                        push_mat = true;
                     }
                 }
                 else if (cmd == "emission") {
                     validinput = readvals(s, 3, values); 
                     if (validinput) {
-                        mat.emission = vec3(values[0], values[1], values[2]);
+                        mat->emission = vec3(values[0], values[1], values[2]);
+                        push_mat = true;
                     }
                 }
                 else if (cmd == "shininess") {
                     validinput = readvals(s, 1, values); 
                     if (validinput) {
-                        mat.shininess = values[0];
+                        mat->shininess = values[0];
+                        push_mat = true;
                     }
                 }
 
@@ -186,7 +194,8 @@ std::unique_ptr<Scene> SceneParser::load() const {
                 else if (cmd == "sphere") {
                     if (push_mat) {
                         scene->_materials.push_back(mat);
-                        mat.diffuse = vec3(0);
+                        mat = new Material(*mat);
+                        push_mat = false;
                     }
 
                     validinput = readvals(s, 4, values); 
@@ -209,7 +218,8 @@ std::unique_ptr<Scene> SceneParser::load() const {
                 else if (cmd == "tri") {
                     if (push_mat) {
                         scene->_materials.push_back(mat);
-                        mat.diffuse = vec3(0);
+                        mat = new Material(*mat);
+                        push_mat = false;
                     }
 
                     validinput = readvals(s, 3, values); 
@@ -285,7 +295,6 @@ std::unique_ptr<Scene> SceneParser::load() const {
         cerr << "Unable to Open Input Data File " << sceneFile << "\n"; 
         throw 2; 
     }
-
     
     return scene;
 }
