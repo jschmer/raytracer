@@ -9,10 +9,10 @@ class Texture : public aiTexture {
 
 class Material {
 public:
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    vec3 emission;
+    color3 ambient;
+    color3 diffuse;
+    color3 specular;
+    color3 emission;
     float shininess;
 
     Texture tex;

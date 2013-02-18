@@ -7,11 +7,20 @@ class Ray;
 class Material;
 class Primitive;
 
+struct Color {
+    color3 ambient;
+    color3 diffuse;
+    color3 specular;
+    color3 emission;
+    float shininess;
+};
+
 struct Intersection {
     Primitive *obj;
     vec3 hitPoint;
     vec3 normal;
-    vec3 color;
+    color3 color;
+    Color material_color;
     float t;
 };
 

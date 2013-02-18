@@ -7,7 +7,6 @@ using glm::vec4;
 
 // forward declarations
 class Ray;
-struct Intersection;
 
 class Sphere : public Primitive {
 public:

@@ -16,7 +16,7 @@ public:
     // IRenderTarget interface
     void init(const unsigned int width, const unsigned int height, const unsigned int bytes_per_pixel = 3) override;
     bool getSample(Sample &s) override;
-    void commit(const Sample& s, const vec3 color) override;
+    void commit(const Sample& s, const color3 color) override;
     void done() override;
 
     // additional public methods
