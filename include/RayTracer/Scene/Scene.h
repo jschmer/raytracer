@@ -4,10 +4,7 @@
 #include <string>
 #include <vector>
 
-#define GLM_SWIZZLE_XYZW 
-#include <glm/glm.hpp>
-using namespace glm;
-
+#include <RayTracer/glm_includes.h>
 #include <RayTracer/Scene/Light.h>
 
 // forward declarations
@@ -17,7 +14,6 @@ class Material;
 class Primitive;
 class RayTraceImage;
 struct Intersection;
-
 
 class Scene
 {

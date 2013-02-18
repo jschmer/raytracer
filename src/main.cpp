@@ -2,15 +2,17 @@
 #include <string>
 #include <iostream>
 #include <Windows.h>
-#include <sstream>
-#include <Shlwapi.h>
 
-#define GLM_SWIZZLE_XYZW 
-#include <glm/glm.hpp>
+#ifdef max
+#define max
+#endif
+
+#include <RayTracer/glm_includes.h>
 #include <glm/gtc/matrix_transform.hpp> 
-using namespace glm;
+using glm::scale;
+using glm::translate;
+using glm::rotate;
 
-//#include <RayTracer/Scene/Scene.h>
 #include <RayTracer/RenderTarget/RayTraceImage.h>
 #include <RayTracer/RayTracer.h>
 #include <String/StringHelper.h>

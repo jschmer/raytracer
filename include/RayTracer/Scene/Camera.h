@@ -1,15 +1,11 @@
 #pragma once
-#include <glm/glm.hpp>
+#include <RayTracer/glm_includes.h>
 
 #include <RayTracer/RenderTarget/RayTraceImage.h>
 #include <RayTracer/Ray.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-
-// glm types
-using glm::vec3;
-
 
 class Camera {
 public:

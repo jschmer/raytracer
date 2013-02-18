@@ -1,6 +1,6 @@
 #pragma once
-#include <glm/glm.hpp>
-using glm::vec3;
+
+#include <RayTracer/glm_includes.h>
 
 class Ray {
 public:

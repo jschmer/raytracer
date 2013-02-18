@@ -12,14 +12,11 @@
 #include <assimp/scene.h> // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
 
-// glm stuff
-#define GLM_SWIZZLE_XYZW 
-#include <glm/glm.hpp>
-
 // DevIL stuff
 #include <il/il.h>
 
 // own project includes
+#include <RayTracer/glm_includes.h>
 #include <RayTracer/AssimpToRaytracerTypes.h>
 #include <RayTracer/Scene/Scene.h>
 #include <RayTracer/Scene/Camera.h>
@@ -28,7 +25,6 @@
 #include <String/StringHelper.h>
 
 using namespace std;
-using namespace glm;
 
 std::unique_ptr<Scene> ObjParser::load() const {
     // load scene file

@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\RayTracer\AssimpToRaytracerTypes.h" />
+    <ClInclude Include="include\RayTracer\glm_includes.h" />
     <ClInclude Include="include\RayTracer\Ray.h" />
     <ClInclude Include="include\RayTracer\RayTracer.h" />
     <ClInclude Include="include\RayTracer\RenderTarget\IRenderTarget.h" />

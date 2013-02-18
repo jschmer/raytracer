@@ -1,8 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <RayTracer/glm_includes.h>
 
-using glm::vec3;
 typedef unsigned char BYTE;
 
 struct Sample {

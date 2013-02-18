@@ -1,7 +1,6 @@
 #include <RayTracer/SceneReader/SceneParser.h>
 
-#include <RayTracer/Scene/Scene.h>
-#include <RayTracer/Scene/Camera.h>
+
 
 #include <string>
 #include <sstream>
@@ -9,12 +8,13 @@
 #include <fstream>
 #include <stack>
 
-#define GLM_SWIZZLE_XYZW 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
 
+#include <RayTracer/glm_includes.h>
+#include <RayTracer/Scene/Scene.h>
+#include <RayTracer/Scene/Camera.h>
+
 using namespace std;
-using namespace glm;
 
 bool SceneParser::readvals(stringstream &s, const int numvals, vector<float> &values) const
 {

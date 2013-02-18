@@ -1,12 +1,7 @@
 #pragma once
 
+#include <RayTracer/glm_includes.h>
 #include <assimp/scene.h> // Output data structure
-#include <glm/glm.hpp>
-
-// glm types
-using glm::vec3;
-
-typedef glm::vec3 color3;
 
 class Texture : public aiTexture {
     color3 getTextureColor(float u, float v);

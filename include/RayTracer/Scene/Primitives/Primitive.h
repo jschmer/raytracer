@@ -1,13 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
-// glm types
-using glm::mat4;
-using glm::vec3;
-
-// glm functions
-using glm::inverse;
+#include <RayTracer/glm_includes.h>
 
 // forward declarations
 class Ray;
