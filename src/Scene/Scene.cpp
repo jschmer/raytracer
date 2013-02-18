@@ -69,12 +69,17 @@ Intersection Scene::trace(Ray const &ray, int depth) {
 vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     vec3 out_color(0.0);
 
+    auto& mat = Hit.obj->mat;
+
     // setting material props
-    vec3& ambient    = Hit.obj->mat->ambient;
-    vec3& diffuse    = Hit.obj->mat->diffuse;
-    vec3& specular   = Hit.obj->mat->specular;
-    vec3& emission   = Hit.obj->mat->emission;
-    float& shininess = Hit.obj->mat->shininess;
+    // die infos von der Intersection benutzen!
+    // die verschiedenen farben sollten in der Intersect methode der Primitiven gesetzt werden
+    // dort kann auch auf die texturen zugegriffen werden
+    vec3& diffuse    = mat->diffuse;
+    vec3& ambient    = mat->ambient;
+    vec3& specular   = mat->specular;
+    vec3& emission   = mat->emission;
+    float& shininess = mat->shininess;
 
     out_color += ambient;
     out_color += emission;
@@ -84,7 +89,7 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
 
         // light in front of object?
         if (dot(Hit.normal, dir_to_light) > 0) {
-            Ray r(Hit.hitPoint +0.001f*dir_to_light, dir_to_light);
+            Ray r(Hit.hitPoint + 0.001f*dir_to_light, dir_to_light);
         
             Intersection ShadowHit = inShadow(r);
             if (ShadowHit.obj) {

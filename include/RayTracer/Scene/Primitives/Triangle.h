@@ -21,8 +21,12 @@ public:
     // point p with respect to triangle (a, b, c)
     void Barycentric(vec3 phit, float &u, float &v, float &w);
 
+    bool HasTextureCoords();
+
     // object parameters
     vec3 v0, v1, v2;    // vertices
+    vec3 vt0, vt1, vt2; // texture vertices
+    bool hasTextureCoords;
     vec4 faceNormal;
     vec3 tranformedNormal;
 };

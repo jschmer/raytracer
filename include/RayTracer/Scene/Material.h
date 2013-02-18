@@ -6,6 +6,12 @@
 // glm types
 using glm::vec3;
 
+typedef glm::vec3 color3;
+
+class Texture : public aiTexture {
+    color3 getTextureColor(float u, float v);
+};
+
 class Material {
 public:
     vec3 ambient;
@@ -14,7 +20,7 @@ public:
     vec3 emission;
     float shininess;
 
-    aiTexture tex;
+    Texture tex;
     bool HasTexture();
 
     Material();

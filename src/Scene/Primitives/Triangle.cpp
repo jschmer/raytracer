@@ -1,6 +1,7 @@
 #include <RayTracer/Scene/Primitives/Triangle.h>
 
 #include <RayTracer/Ray.h>
+#include <RayTracer/Scene/Material.h>
 
 // glm functions
 using glm::transpose;
@@ -18,6 +19,7 @@ Triangle::Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h)
     mat = nullptr;
     faceNormal = vec4(glm::cross(v1 - v0, v2 - v0), 0); 
     tranformedNormal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
+    hasTextureCoords = false;
 }
 
 // taken from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/
@@ -97,4 +99,8 @@ void Triangle::Barycentric(vec3 phit, float &u, float &v, float &w)
     v = (d11 * d20 - d01 * d21) / denom;
     w = (d00 * d21 - d01 * d20) / denom;
     u = 1.0f - v - w;
+}
+
+bool Triangle::HasTextureCoords() {
+    return hasTextureCoords;
 }

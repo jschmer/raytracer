@@ -165,10 +165,15 @@ std::unique_ptr<Scene> ObjParser::load() const {
                 aiVector3D v3 = mesh.mVertices[vert_indices[2]];
 
                 Triangle* t = new Triangle(mat4(1.0f), ToVec3(v1), ToVec3(v2), ToVec3(v3));
+                if (mesh.GetNumUVChannels()) {
+                    t->vt0 = ToVec3(mesh.mTextureCoords[0][vert_indices[0]]);
+                    t->vt1 = ToVec3(mesh.mTextureCoords[0][vert_indices[1]]);
+                    t->vt2 = ToVec3(mesh.mTextureCoords[0][vert_indices[2]]);
+                    t->hasTextureCoords = true;
+                }
                 t->mat = scene->_materials[mesh.mMaterialIndex];
                 scene->_primitives.push_back(t);
             }
-
         }
     }
 
