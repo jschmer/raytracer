@@ -17,7 +17,7 @@ Sphere::Sphere(mat4 obj2world, vec4 pos, float radius)
     transposed_world2obj = transpose(this->world2obj);
 }
 
-float Sphere::Intersect(Ray const &ray, Intersection &Hit) {
+float Sphere::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     // transforming ray to object space
     Ray objRay;
     objRay.pos = vec3(this->world2obj * vec4(ray.pos, 1));
@@ -70,6 +70,10 @@ float Sphere::Intersect(Ray const &ray, Intersection &Hit) {
     // else the intersection point is at t0
     else
         ret = t0;
+
+    // only consider objects closer than the closest intersection until now
+    if (ret > dist)
+        return -1.0f;
 
     vec3 hitPointObjSpace = objRay.pos + ret * objRay.dir;
 

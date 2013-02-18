@@ -33,7 +33,7 @@ public:
         world2obj = inverse(obj2world);
     }
 
-    virtual float Intersect(Ray const &r, Intersection &Hit) = 0;
+    virtual float Intersect(Ray const &r, Intersection &Hit, float dist = FLT_MAX) = 0;
 
     // material props
     Material* mat;

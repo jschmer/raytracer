@@ -23,7 +23,7 @@ Triangle::Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h)
 }
 
 // taken from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/
-float Triangle::Intersect(Ray const &ray, Intersection &Hit) {
+float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     // transforming ray to object space
     Ray r;
     r.pos = vec3(this->world2obj * vec4(ray.pos, 1));
@@ -40,6 +40,10 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit) {
 
     float d = dot(N, v0);
     float t = -(dot(N, r.pos) - d) / nDotRay;
+
+    // only consider objects closer than the closest intersection until now
+    if (t > dist)
+        return -1.0f;
 
     // compute intersection point
     vec3 Phit = r.pos + t * r.dir;

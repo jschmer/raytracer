@@ -49,7 +49,7 @@ Intersection Scene::trace(Ray const &ray, int depth) {
         float t;
         Intersection hit;
         for (std::vector<Primitive*>::iterator it = _primitives.begin(); it < _primitives.end(); ++it) {
-            t = (*it)->Intersect(ray, hit);
+            t = (*it)->Intersect(ray, hit, t_hit);
             if (t > 0 && t < t_hit) {
                 t_hit = t;
                 ret = hit;
