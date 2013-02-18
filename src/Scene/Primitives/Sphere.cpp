@@ -1,6 +1,7 @@
 #include <RayTracer/Scene/Primitives/Sphere.h>
 
 #include <RayTracer/Ray.h>
+#include <RayTracer/Scene/Material.h>
 
 // glm functions
 using glm::transpose;
@@ -66,7 +67,6 @@ float Sphere::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     // if t0 is less than zero, the intersection point is at t1
     if (t0 < 0)
         ret = t1;
-
     // else the intersection point is at t0
     else
         ret = t0;
@@ -77,14 +77,23 @@ float Sphere::Intersect(Ray const &ray, Intersection &Hit, float dist) {
 
     vec3 hitPointObjSpace = objRay.pos + ret * objRay.dir;
 
+    // storing intersection params
     Hit.obj = this;
-    Hit.t = ret;
+    Hit.t   = ret;
     Hit.hitPoint = vec3(this->obj2world * vec4(hitPointObjSpace, 1));
 
     // calculating the normal in object space
-    Hit.normal = normalize(hitPointObjSpace - vec3(position));
+    auto temp_normal = normalize(hitPointObjSpace - vec3(position));
     // transforming the normal
-    Hit.normal = normalize(vec3(this->transposed_world2obj * vec4(Hit.normal, 0)));
+    Hit.normal = normalize(vec3(this->transposed_world2obj * vec4(temp_normal, 0)));
+
+    // storing material color
+    // TODO: fetch from texture! and barycentric coordinates from intersection point
+    Hit.material_color.ambient   = mat->ambient;
+    Hit.material_color.diffuse   = mat->diffuse;
+    Hit.material_color.emission  = mat->emission;
+    Hit.material_color.shininess = mat->shininess;
+    Hit.material_color.specular  = mat->specular;
 
     return ret;
 }

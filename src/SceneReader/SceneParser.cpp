@@ -147,6 +147,7 @@ std::unique_ptr<Scene> SceneParser::load() const {
                     if (validinput) {
                         // store temporary until light/object is stored
                         mat->ambient = vec3(values[0], values[1], values[2]);
+                        push_mat = true;
                     }
                 }
                 else if (cmd == "diffuse") {

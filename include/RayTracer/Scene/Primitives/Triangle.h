@@ -23,9 +23,10 @@ public:
     bool HasTextureCoords();
 
     // object parameters
-    vec3 v0, v1, v2;    // vertices
-    vec3 vt0, vt1, vt2; // texture vertices
+    vec3 v0,  v1,  v2;    // vertices
+    vec3 vt0, vt1, vt2;   // texture vertices
     bool hasTextureCoords;
+
     vec4 faceNormal;
-    vec3 tranformedNormal;
+    vec3 transformedNormal;
 };

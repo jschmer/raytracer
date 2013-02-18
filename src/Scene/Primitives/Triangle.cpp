@@ -18,7 +18,7 @@ Triangle::Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h)
     v2 = h;
     mat = nullptr;
     faceNormal = vec4(glm::cross(v1 - v0, v2 - v0), 0); 
-    tranformedNormal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
+    transformedNormal = normalize(vec3((transpose(this->world2obj) * faceNormal)));
     hasTextureCoords = false;
 }
 
@@ -79,11 +79,20 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     // p - p0 = (p2 - p1, p1 - p0)()
     // solve: 
 
-    Hit.obj = this;
-    Hit.t = t;
-    vec3 hitPoint = Phit;
-    Hit.hitPoint = vec3(this->obj2world * vec4(hitPoint, 1));
-    Hit.normal = this->tranformedNormal;
+    // storing intersection params
+    Hit.obj      = this;
+    Hit.t        = t;
+    Hit.hitPoint = vec3(this->obj2world * vec4(Phit, 1));
+    Hit.normal   = this->transformedNormal;
+
+    // storing material color
+    // TODO: fetch from texture! and barycentric coordinates from intersection point
+    Hit.material_color.ambient   = mat->ambient;
+    Hit.material_color.diffuse   = mat->diffuse;
+    Hit.material_color.emission  = mat->emission;
+    Hit.material_color.shininess = mat->shininess;
+    Hit.material_color.specular  = mat->specular;
+
     return t;
 }
 

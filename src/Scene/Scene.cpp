@@ -42,8 +42,8 @@ Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
 
 Intersection Scene::trace(Ray const &ray, int depth) {
     float t_hit = FLT_MAX;
-    Intersection ret;
-    ret.obj = nullptr;
+    Intersection intersection;
+    intersection.obj = nullptr;
 
     if (depth <= this->_maxdepth) {
         float t;
@@ -52,33 +52,33 @@ Intersection Scene::trace(Ray const &ray, int depth) {
             t = (*it)->Intersect(ray, hit, t_hit);
             if (t > 0 && t < t_hit) {
                 t_hit = t;
-                ret = hit;
+                intersection = hit;
             }
         }
     }
 
     // got a hit point -> get color!
-    if (ret.obj) {
-        ret.color = shade(ret, ray, depth);
+    if (intersection.obj) {
+        intersection.color = shade(intersection, ray, depth);
     }
 
-    return ret;
+    return intersection;
 }
 
 vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     vec3 out_color(0.0);
 
-    auto& mat = Hit.obj->mat;
+    auto& material_color = Hit.material_color;
 
     // setting material props
     // die infos von der Intersection benutzen!
     // die verschiedenen farben sollten in der Intersect methode der Primitiven gesetzt werden
     // dort kann auch auf die texturen zugegriffen werden
-    vec3& diffuse    = mat->diffuse;
-    vec3& ambient    = mat->ambient;
-    vec3& specular   = mat->specular;
-    vec3& emission   = mat->emission;
-    float& shininess = mat->shininess;
+    vec3& diffuse    = material_color.diffuse;
+    vec3& ambient    = material_color.ambient;
+    vec3& specular   = material_color.specular;
+    vec3& emission   = material_color.emission;
+    float& shininess = material_color.shininess;
 
     out_color += ambient;
     out_color += emission;
