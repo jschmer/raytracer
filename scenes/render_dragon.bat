@@ -1,3 +1,3 @@
 @echo off 
-raytracer.exe edx/scene7.test
+raytracer.exe edx/dragon/scene7.test
 pause
