@@ -19,6 +19,8 @@ color3 Texture::getTextureColor(float u, float v) {
     float x = u * this->mWidth;
     float y = v * this->mHeight;
 
+    // TODO: getBilinearInterpolatedColor(float x, float y);
+
     unsigned int idx = static_cast<unsigned int>(y*this->mWidth + x);
     aiTexel texel = this->pcData[idx];
     
@@ -29,7 +31,7 @@ color3 Texture::getTextureColor(float u, float v) {
 
     // fit rgba range 0..255 into range 0..1
     for (auto i = 0u; i < 3; ++i) {
-        color[i] /= 255;
+        color[i] /= 255.0f;
     }
 
     return color;

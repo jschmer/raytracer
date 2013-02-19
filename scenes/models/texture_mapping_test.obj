@@ -1,0 +1,16 @@
+# This cube has a different material
+# applied to each of its faces.
+mtllib texture_mapping_test.mtl
+
+v    0.000000    0.000000    0.000000
+v    2.000000    0.000000    0.000000
+v    0.000000    2.000000    0.000000
+# 8 vertices
+
+vt   0     0 0
+vt   .1228 0 0
+vt   0 .2455 0
+
+g texture_mapping_triangle
+usemtl texture_mapping_triangle
+f 1/1 2/2 3/3

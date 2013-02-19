@@ -1,0 +1,6 @@
+newmtl texture_mapping_triangle
+#Ka 1 0 0
+Kd 1 0 0
+map_Kd maps\JP_Brick01_Bump.jpg
+#map_Kd maps\brightgreenmap.jpg
+

@@ -191,24 +191,24 @@ std::unique_ptr<Scene> ObjParser::load() const {
         vec3 attenuation(1.0, 0.0, 0.0);
 
         // point light, fourth vector member = 1
-        vec4 pos(-.5, 1, 1, 1);
+        vec4 pos(1, 1, 1, 1);
         vec3 color2(1, 1, 1);
         // store object with transformation
         scene->_lights.push_back(Light(pos, color2, attenuation, mat4(1.0f)));
 
         // directional light, fourth vector member = 0, dir is TO THE LIGHTSOURCE
-        vec4 dir(-5, -2, 10, 0);
+        vec4 dir(0, 0, 1, 0);
         vec3 color1(.9);
         // store object with transformation
-        scene->_lights.push_back(Light(dir, color2, attenuation, mat4(1.0f)));
+        //scene->_lights.push_back(Light(dir, color2, attenuation, mat4(1.0f)));
     }
 
     {
         /*
          * Adding camera, TODO!
          */
-        vec3 eye    = vec3(-5, -2, 10);
-        vec3 center = vec3(1, 1, 1);
+        vec3 eye    = vec3(1, 1, 5);
+        vec3 center = vec3(1, 1, 0);
         vec3 up     = vec3(0, 1, 0);
         float fovy  = 30;
 

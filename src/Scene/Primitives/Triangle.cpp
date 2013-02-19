@@ -87,14 +87,22 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     Hit.has_hit  = true;
     Hit.t        = t;
     Hit.hitPoint = vec3(this->obj2world * vec4(Phit, 1));
+
+    // TODO: normal interpolation at hitpoint with barycentric coordinates (u, v, w)
     Hit.normal   = this->transformedNormal;
+
+    // auto hitpoint_vec = w*v0 + u*v1 + v*v2;
+    // w gehört zu v0
+    // u gehört zu v1
+    // w gehört zu v2
 
     // storing material color
     // fetch diffuse color from texture!
     if (HasTextureCoords() && mat->HasTexture()) {
         // TODO: interpolate texture coordinates of all 3 vertices (vt0 - vt2)
         // with barycentric coordinates (u, v, w)
-        Hit.material_color.diffuse = mat->tex.getTextureColor(vt0[0], vt0[1]);
+        auto interpolated_texture_coord = w*vt0 + u*vt1 + w*vt2;
+        Hit.material_color.diffuse = mat->tex.getTextureColor(interpolated_texture_coord[0], interpolated_texture_coord[1]);
     }
     else {
         Hit.material_color.diffuse = mat->diffuse;
