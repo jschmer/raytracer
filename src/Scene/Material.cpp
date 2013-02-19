@@ -16,12 +16,17 @@ color3 Texture::getTextureColor(float u, float v) {
     while (v > 1)
         --v;
 
-    float x = u * this->mWidth;
-    float y = v * this->mHeight;
+    auto x = static_cast<unsigned int>(u * this->mWidth);
+    auto y = static_cast<unsigned int>(v * this->mHeight);
 
     // TODO: getBilinearInterpolatedColor(float x, float y);
 
-    unsigned int idx = static_cast<unsigned int>(y*this->mWidth + x);
+    // image origin is top left corner
+    // u, v origin is lower left corner
+    unsigned int idx = (this->mHeight - y - 1)*this->mWidth + x;
+    if (idx > this->mHeight * this->mWidth)
+        return color3(0.0f);
+
     aiTexel texel = this->pcData[idx];
     
     color3 color;

@@ -57,7 +57,7 @@ std::unique_ptr<Scene> ObjParser::load() const {
      */
     if (ai_scene->HasMaterials()) {
         for (auto mat_idx = 0u; mat_idx < ai_scene->mNumMaterials; ++mat_idx) {
-            aiMaterial& mat = *ai_scene->mMaterials[mat_idx];
+            const aiMaterial& mat = *ai_scene->mMaterials[mat_idx];
 
             // material props vars
             aiColor3D ai_ambient  (0.f,0.f,0.f);
@@ -147,12 +147,12 @@ std::unique_ptr<Scene> ObjParser::load() const {
      * Adding geometry / primitives
      */
     for (auto mesh_idx = 0u; mesh_idx < ai_scene->mNumMeshes; ++mesh_idx) {
-        aiMesh& mesh = *ai_scene->mMeshes[mesh_idx];
+        const aiMesh& mesh = *ai_scene->mMeshes[mesh_idx];
 
         if (mesh.HasFaces()) {
             // go through every face
             for (auto face_idx = 0u; face_idx < mesh.mNumFaces; ++face_idx) {
-                aiFace& face = mesh.mFaces[face_idx];
+                const aiFace& face = mesh.mFaces[face_idx];
 
                 std::vector<unsigned int> vert_indices;
 
@@ -191,24 +191,23 @@ std::unique_ptr<Scene> ObjParser::load() const {
         vec3 attenuation(1.0, 0.0, 0.0);
 
         // point light, fourth vector member = 1
-        vec4 pos(1, 1, 1, 1);
+        vec4 pos(-.5, 1, 1, 1);
         vec3 color2(1, 1, 1);
         // store object with transformation
         scene->_lights.push_back(Light(pos, color2, attenuation, mat4(1.0f)));
 
         // directional light, fourth vector member = 0, dir is TO THE LIGHTSOURCE
-        vec4 dir(0, 0, 1, 0);
+        vec4 dir(-5, -2, 10, 0);
         vec3 color1(.9);
         // store object with transformation
-        //scene->_lights.push_back(Light(dir, color2, attenuation, mat4(1.0f)));
-    }
+        scene->_lights.push_back(Light(dir, color2, attenuation, mat4(1.0f)));}
 
     {
         /*
          * Adding camera, TODO!
          */
-        vec3 eye    = vec3(1, 1, 5);
-        vec3 center = vec3(1, 1, 0);
+        vec3 eye    = vec3(-5, -2, 10);
+        vec3 center = vec3(1, 1, 1);
         vec3 up     = vec3(0, 1, 0);
         float fovy  = 30;
 

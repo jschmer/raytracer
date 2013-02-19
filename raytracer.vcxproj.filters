@@ -102,6 +102,9 @@
     <ClInclude Include="include\RayTracer\windows_includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\VS_Memory_Allocation_Debugging.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

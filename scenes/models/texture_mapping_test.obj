@@ -7,9 +7,9 @@ v    2.000000    0.000000    0.000000
 v    0.000000    2.000000    0.000000
 # 8 vertices
 
-vt   0     0 0
-vt   .1228 0 0
-vt   0 .2455 0
+vt   0 0 0
+vt   1 0 0
+vt   0 1 0
 
 g texture_mapping_triangle
 usemtl texture_mapping_triangle

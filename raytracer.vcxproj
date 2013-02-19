@@ -70,8 +70,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include;../$third-party-libs/assimp/include;../$third-party-libs/DevIL-SDK-x86-1.7.8/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_ITERATOR_DEBUG_LEVEL=0;MULTICORE_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ForcedUsingFiles>
+      </ForcedUsingFiles>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -159,6 +162,7 @@
     <ClInclude Include="include\RayTracer\Scene\Scene.h" />
     <ClInclude Include="include\RayTracer\windows_includes.h" />
     <ClInclude Include="include\String\StringHelper.h" />
+    <ClInclude Include="include\VS_Memory_Allocation_Debugging.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssimpToRaytracerTypes.cpp" />

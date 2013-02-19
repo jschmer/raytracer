@@ -53,6 +53,10 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     GetSystemInfo(&sysinfo);
     auto numCPU = sysinfo.dwNumberOfProcessors;
 
+#ifdef MULTICORE_DISABLED
+    numCPU = 1;
+#endif
+
     // decrease process priority to prevent system hangs
     /*
     REALTIME_PRIORITY_CLASS------highest
