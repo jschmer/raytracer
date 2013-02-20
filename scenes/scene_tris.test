@@ -28,7 +28,7 @@ tri 2 1 0
 specular 0 0 .5  # second material
 tri 0 1 3
 
-specular .3 .3 .3   # third material
+specular 0 0 0   # third material
 shininess 15  
 diffuse 1 0 1
 

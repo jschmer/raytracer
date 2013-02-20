@@ -129,15 +129,19 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
         }
     }
 
-    // reflection
-    // R = V – 2 * (V·N) * N 
-    Ray reflectionRay;
-    reflectionRay.dir = ray.dir - 2 * dot(ray.dir, Hit.normal) * Hit.normal;
-    reflectionRay.pos = Hit.hitPoint + 0.01f*reflectionRay.dir;
+    if (color3(0.0f) != specular) {
+        // reflection
+        // R = V – 2 * (V·N) * N 
+        Ray reflectionRay;
+        reflectionRay.dir = ray.dir - 2 * dot(ray.dir, Hit.normal) * Hit.normal;
+        reflectionRay.pos = Hit.hitPoint + 0.01f*reflectionRay.dir;
     
-    Intersection t = this->trace(reflectionRay, depth+1);
-    if (t.has_hit)
-        out_color += specular * t.color;
+        Intersection t = this->trace(reflectionRay, depth+1);
+        if (t.has_hit)
+            out_color += specular * t.color;
+    }
+
+    // TODO: Refraction
 
     return out_color;
 }

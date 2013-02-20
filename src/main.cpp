@@ -120,7 +120,6 @@ int main(int argc, char* argv[]) {
         std::cout << "    Done! Duration: " << tracer.getRenderDuration().count() << " ms" << std::endl << std::endl;
     }
 
-    getchar();
     return 0;
 }
 

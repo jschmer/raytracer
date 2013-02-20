@@ -10,39 +10,52 @@ color3 Texture::getTextureColor(float u, float v) {
     u = u - floor(u);
     v = v - floor(v);
 
+    auto dim = this->mWidth * this->mHeight;
+
+    // convert to image indices
     auto x = u * this->mWidth;
     auto y = v * this->mHeight;
 
     typedef unsigned int uint;
 
+    // calculate image array indices
     // image origin is top left corner
     // u, v origin is lower left corner (thus: height - y - 1)
-    auto idx1 = static_cast<uint>((this->mHeight - floor(y) - 1)*this->mWidth + floor(x));
-    auto idx2 = static_cast<uint>((this->mHeight - floor(y) - 1)*this->mWidth + floor(x) + 1);
-    auto idx3 = static_cast<uint>((this->mHeight - floor(y))*this->mWidth + floor(x));
-    auto idx4 = static_cast<uint>((this->mHeight - floor(y))*this->mWidth + floor(x) + 1);
+    auto idx1 = static_cast<uint>((this->mHeight - floor(y))*this->mWidth + floor(x));         // upper left
+    auto idx2 = static_cast<uint>((this->mHeight - floor(y))*this->mWidth + floor(x) + 1);     // upper right
+    auto idx3 = static_cast<uint>((this->mHeight - floor(y) - 1)*this->mWidth + floor(x));     // lower left
+    auto idx4 = static_cast<uint>((this->mHeight - floor(y) - 1)*this->mWidth + floor(x) + 1); // lower right
 
-    if (idx4 > this->mHeight * this->mWidth)
-        return color3(0.0f);
+    // prevent indexing out of bounds
+    idx1 %= dim;
+    idx2 %= dim;
+    idx3 %= dim;
+    idx4 %= dim;
 
+    // fetch texels
     auto t1 = this->pcData[idx1];
     auto t2 = this->pcData[idx2];
     auto t3 = this->pcData[idx3];
     auto t4 = this->pcData[idx4];
 
-    auto Uf = x - floor(x);
-    auto Vf = y - floor(y);
+    // calc weights
+    auto deltaX = x - floor(x);
+    auto deltaY = y - floor(y);
 
-    // TODO: getBilinearInterpolatedColor(float x, float y);
-    auto w1 = Uf * Vf;             // linkes unten
-    auto w2 = (1 - Uf) * Vf;       // rechts unten
-    auto w3 = Uf * (1 - Vf);       // links oben
-    auto w4 = (1 - Uf) * (1 - Vf); // rechts oben
+    auto w1 = deltaX * deltaY;             // upper left
+    auto w2 = (1 - deltaX) * deltaY;       // upper right
+    auto w3 = deltaX * (1 - deltaY);       // lower left
+    auto w4 = (1 - deltaX) * (1 - deltaY); // lower right
 
+    // compute color
     color3 color;
     color.r = w1*t1.r + w2*t2.r + w3*t3.r + w4*t4.r;
     color.g = w1*t1.g + w2*t2.g + w3*t3.g + w4*t4.g;
     color.b = w1*t1.b + w2*t2.b + w3*t3.b + w4*t4.b;
+
+    //color.r = t3.r;
+    //color.g = t3.g;
+    //color.b = t3.b;
 
     // fit rgba range 0..255 into range 0..1
     for (auto i = 0u; i < 3; ++i) {
