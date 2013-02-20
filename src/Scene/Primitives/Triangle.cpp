@@ -122,6 +122,10 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
         else {
             Hit.material_color.specular = mat->specular;
         }
+    } else {
+        Hit.material_color.ambient  = mat->ambient;
+        Hit.material_color.diffuse  = mat->diffuse;
+        Hit.material_color.specular = mat->specular;
     }
     
     Hit.material_color.emission  = mat->emission;

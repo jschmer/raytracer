@@ -108,12 +108,12 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
                 }
             }
 
-            vec3 L = it->color;
+            vec3 L = it->intensity;
 
             // only consider point light for attenuation (directional light would be 1 0 0 -> no change)
             if (it->pos_or_dir[3] == 1) {
                 float d = glm::distance(Hit.hitPoint, vec3(it->pos_or_dir));
-                L = it->color / (it->attenuation[0] + it->attenuation[1] * d + it->attenuation[2] * d * d);
+                L = it->intensity / (it->attenuation[0] + it->attenuation[1] * d + it->attenuation[2] * d * d);
             }
 
             // diffuse term
@@ -132,7 +132,6 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     Ray reflectionRay;
     reflectionRay.dir = ray.dir - 2 * dot(ray.dir, Hit.normal) * Hit.normal;
     reflectionRay.pos = Hit.hitPoint + 0.01f*reflectionRay.dir;
-
     
     Intersection t = this->trace(reflectionRay, depth+1);
     if (t.has_hit)

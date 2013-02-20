@@ -112,7 +112,7 @@
       <AdditionalDependencies>FreeImage.lib;assimp_release-st_Win32/assimp.lib;DevIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)dependencies\FreeImage.dll $(ProjectDir)bin\$(Configuration)</Command>
+      <Command>copy_release_output_to_scenes.bat $(ProjectDir) $(Configuration)</Command>
       <Message>Copy FreeImage.dll dependency</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

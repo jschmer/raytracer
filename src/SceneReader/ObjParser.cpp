@@ -73,12 +73,10 @@ std::unique_ptr<Scene> ObjParser::load() const {
     std::unique_ptr<Scene> scene(new Scene());
 
     /*
-     * Looping through Nodes
+     * Looping through Nodes...
      */
     for (auto i = 0u; i < ai_scene->mRootNode->mNumChildren; ++i) {
         aiNode& node = *ai_scene->mRootNode->mChildren[i];
-
-        printf("");
     }
 
     /*
@@ -222,15 +220,16 @@ std::unique_ptr<Scene> ObjParser::load() const {
 
         // point light, fourth vector member = 1
         vec4 pos(10, 10, 10, 1);
-        vec3 color2(1);
+        vec3 color2(.8);
         // store object with transformation
         //scene->_lights.push_back(Light(pos, color2, attenuation, mat4(1.0f)));
 
         // directional light, fourth vector member = 0, dir is TO THE LIGHTSOURCE
         vec4 dir(1, 1, 1, 0);
-        vec3 color1(1);
+        vec3 color1(.5);
         // store object with transformation
-        scene->_lights.push_back(Light(dir, color1, attenuation, mat4(1.0f)));}
+        scene->_lights.push_back(Light(dir, color1, attenuation, mat4(1.0f)));
+    }
 
     {
         /*
