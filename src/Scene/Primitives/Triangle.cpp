@@ -40,7 +40,6 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     r.dir = vec3(this->world2obj * vec4(ray.dir, 0));
 
     float nDotRay = dot(vec3_faceNormal, r.dir);
-
     if (nDotRay == 0)
         return -1.0f; // ray parallel to triangle
 
@@ -52,11 +51,7 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
 
     // compute intersection point
     vec3 Phit = r.pos + t * r.dir;
-
     vec3 v0p = Phit - v0;
-
-    //float bu, bv, bw;
-    //Barycentric(Phit, bu, bv, bw);
 
     // inside-out test edge0
     float v = dot(vec3_faceNormal, cross(v0v1, v0p));
@@ -77,11 +72,6 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
     u = u / normal_len;
     v = v / normal_len;
     w = 1 - u - v;
-
-    // interpolate texture coords
-    // p = w
-    // p - p0 = (p2 - p1, p1 - p0)()
-    // solve: 
 
     // storing intersection params
     Hit.has_hit  = true;

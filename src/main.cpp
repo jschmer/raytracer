@@ -1,6 +1,7 @@
 #include <RayTracer/windows_includes.h>
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include <RayTracer/glm_includes.h>
 #include <glm/gtc/matrix_transform.hpp> 
@@ -97,15 +98,25 @@ int main(int argc, char* argv[]) {
     else {
         std::cout << "Rendering " << path << std::endl;
 
-
         auto out_file = String::replaceExtension(path, "png");
         std::cout << "    into: " << out_file << "\n";
 
-        RayTraceImage image(out_file, 600, 600);
+        RayTraceImage image(out_file, 600, 480);
         RayTracer tracer;
         tracer.load(path);
-        tracer.renderInto(&image);
 
+#ifdef PERF_TEST
+        long long sum = 0;
+        for (auto i=0; i<10; ++i) {
+#endif
+            tracer.renderInto(&image);
+
+#ifdef PERF_TEST
+            sum += tracer.getRenderDuration().count();
+        }
+        std::fstream out("perf.csv", std::fstream::out | std::fstream::app);
+        out << "Avg run: " << sum/10.0 << " ms" << std::endl;
+#endif
         std::cout << "    Done! Duration: " << tracer.getRenderDuration().count() << " ms" << std::endl << std::endl;
     }
 

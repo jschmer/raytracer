@@ -7,32 +7,42 @@ color3 Texture::getTextureColor(float u, float v) {
     // coordinates range from 0 to 1
 
     // u and v have to be be in the range 0..1
-    while (u < 0)
-        ++u;
-    while (u > 1)
-        --u;
-    while (v < 0)
-        ++v;
-    while (v > 1)
-        --v;
+    u = u - floor(u);
+    v = v - floor(v);
 
-    auto x = static_cast<unsigned int>(u * this->mWidth);
-    auto y = static_cast<unsigned int>(v * this->mHeight);
+    auto x = u * this->mWidth;
+    auto y = v * this->mHeight;
 
-    // TODO: getBilinearInterpolatedColor(float x, float y);
+    typedef unsigned int uint;
 
     // image origin is top left corner
-    // u, v origin is lower left corner
-    unsigned int idx = (this->mHeight - y - 1)*this->mWidth + x;
-    if (idx > this->mHeight * this->mWidth)
+    // u, v origin is lower left corner (thus: height - y - 1)
+    auto idx1 = static_cast<uint>((this->mHeight - floor(y) - 1)*this->mWidth + floor(x));
+    auto idx2 = static_cast<uint>((this->mHeight - floor(y) - 1)*this->mWidth + floor(x) + 1);
+    auto idx3 = static_cast<uint>((this->mHeight - floor(y))*this->mWidth + floor(x));
+    auto idx4 = static_cast<uint>((this->mHeight - floor(y))*this->mWidth + floor(x) + 1);
+
+    if (idx4 > this->mHeight * this->mWidth)
         return color3(0.0f);
 
-    aiTexel texel = this->pcData[idx];
+    auto t1 = this->pcData[idx1];
+    auto t2 = this->pcData[idx2];
+    auto t3 = this->pcData[idx3];
+    auto t4 = this->pcData[idx4];
+
+    auto Uf = x - floor(x);
+    auto Vf = y - floor(y);
+
+    // TODO: getBilinearInterpolatedColor(float x, float y);
+    auto w1 = Uf * Vf;             // linkes unten
+    auto w2 = (1 - Uf) * Vf;       // rechts unten
+    auto w3 = Uf * (1 - Vf);       // links oben
+    auto w4 = (1 - Uf) * (1 - Vf); // rechts oben
 
     color3 color;
-    color.r = texel.r;
-    color.g = texel.g;
-    color.b = texel.b;
+    color.r = w1*t1.r + w2*t2.r + w3*t3.r + w4*t4.r;
+    color.g = w1*t1.g + w2*t2.g + w3*t3.g + w4*t4.g;
+    color.b = w1*t1.b + w2*t2.b + w3*t3.b + w4*t4.b;
 
     // fit rgba range 0..255 into range 0..1
     for (auto i = 0u; i < 3; ++i) {

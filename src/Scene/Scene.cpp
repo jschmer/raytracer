@@ -91,6 +91,8 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
         if (dot(Hit.normal, dir_to_light) > 0) {
             Ray r(Hit.hitPoint + 0.001f*dir_to_light, dir_to_light);
         
+            // TODO: inShadow eine maximale distanz mitgeben (distanz zum Licht)
+            //       Die funktion kann dann abbrechen falls nur ein Objekt zwischen Licht und Hitpoint gefunden wurde
             Intersection ShadowHit = inShadow(r);
             if (ShadowHit.has_hit) {
                 // if i'm testing against point light: check if intersection is between startpoint and light!
