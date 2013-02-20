@@ -153,6 +153,7 @@
       </ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h" />
+    <ClInclude Include="include\RayTracer\SceneReader\TextureLoader.h" />
     <ClInclude Include="include\RayTracer\Scene\Camera.h" />
     <ClInclude Include="include\RayTracer\Scene\Light.h" />
     <ClInclude Include="include\RayTracer\Scene\Material.h" />

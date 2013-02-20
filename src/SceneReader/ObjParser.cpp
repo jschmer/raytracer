@@ -12,9 +12,6 @@
 #include <assimp/scene.h> // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
 
-// DevIL stuff
-#include <il/il.h>
-
 // own project includes
 #include <RayTracer/glm_includes.h>
 #include <RayTracer/AssimpToRaytracerTypes.h>
@@ -23,6 +20,8 @@
 #include <RayTracer/Scene/Material.h>
 #include <RayTracer/Scene/Primitives/Triangle.h>
 #include <String/StringHelper.h>
+
+#include <RayTracer/SceneReader/TextureLoader.h>
 
 using namespace std;
 
@@ -44,13 +43,19 @@ std::unique_ptr<Scene> ObjParser::load() const {
         throw std::exception(loader.GetErrorString());
     }
 
-    // Initializing il library
-    ilInit();
-
     /*
      * Converting Assimp scene to own scene structure!
      */
     std::unique_ptr<Scene> scene(new Scene());
+
+    /*
+     * Looping through Nodes
+     */
+    for (auto i = 0u; i < ai_scene->mRootNode->mNumChildren; ++i) {
+        aiNode& node = *ai_scene->mRootNode->mChildren[i];
+
+        printf("");
+    }
 
     /*
      * Adding materials
@@ -86,56 +91,17 @@ std::unique_ptr<Scene> ObjParser::load() const {
                 auto tex_return = mat.GetTexture(aiTextureType_DIFFUSE, 0, &tex_path); 
 
                 if (aiReturn_SUCCESS == tex_return) {
-                    // load binary texture data! with DevIL
-                    ILuint texid;           /* ILuint is a 32bit unsigned integer.´Variable texid will be used to store image name. */
-                    ILboolean success;      /* ILboolean is type similar to GLboolean and can equal GL_FALSE (0) or GL_TRUE (1)
-                                            Variable success will be used to determine if some function returned success or failure. */
-                    ilGenImages(1, &texid); /* Generation of one image name */
-                    ilBindImage(texid);     /* Binding of image name */
-
                     std::string map_filename = scene_base_folder + tex_path.C_Str();
                     map_filename = String::replace(map_filename, "\\", "/");
 
-                    success = ilLoadImage((const ILstring) map_filename.c_str()); /* Loading of image "image.jpg" */
-                    if (success) {
-                        // Convert every colour component into unsigned byte
-                        // If your image contains alpha channel you can replace IL_RGB with IL_RGBA
-                        success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE); 
-                        if (!success)
-                            continue;
+                    unsigned int width, height;
+                    auto texel_data = loadTexture(map_filename, width, height);
 
-                        auto bpp    = ilGetInteger(IL_IMAGE_BPP);
-                        auto width  = ilGetInteger(IL_IMAGE_WIDTH);
-                        auto height = ilGetInteger(IL_IMAGE_HEIGHT);
-                        auto pdata  = ilGetData();
+                    scene_mat->texture_diffuse.mHeight = height;
+                    scene_mat->texture_diffuse.mWidth  = width;
+                    scene_mat->texture_diffuse.pcData  = texel_data;
 
-                        // converting image data to aiTexels
-                        auto aiTexelData = new aiTexel[width*height];
-                        unsigned int dim = bpp * width * height;
-                        for (auto image_idx = 0u, texel_idx = 0u; image_idx < dim; ++image_idx, ++texel_idx) {
-                            auto r = pdata[image_idx];
-                            auto g = pdata[++image_idx];
-                            auto b = pdata[++image_idx];
-                            auto a = pdata[++image_idx];
-
-                            aiTexel texel;
-                            texel.r = r;
-                            texel.g = g;
-                            texel.b = b;
-                            texel.a = a;
-
-                            aiTexelData[texel_idx] = texel;
-                        }
-
-                        scene_mat->tex.mHeight = height;
-                        scene_mat->tex.mWidth  = width;
-                        scene_mat->tex.pcData  = aiTexelData;
-
-                        ilDeleteImages(1, &texid); /* Because we have already copied image data into texture data
-                                               we can release memory used by image. */
-
-                        printf("Using diffuse map: %s", tex_path.C_Str());
-                    }
+                    printf("Using diffuse map: %s\n", tex_path.C_Str());
                 }
             }
 
@@ -191,26 +157,40 @@ std::unique_ptr<Scene> ObjParser::load() const {
         vec3 attenuation(1.0, 0.0, 0.0);
 
         // point light, fourth vector member = 1
-        vec4 pos(-.5, 1, 1, 1);
-        vec3 color2(1, 1, 1);
+        vec4 pos(10, 10, 10, 1);
+        vec3 color2(1);
         // store object with transformation
-        scene->_lights.push_back(Light(pos, color2, attenuation, mat4(1.0f)));
+        //scene->_lights.push_back(Light(pos, color2, attenuation, mat4(1.0f)));
 
         // directional light, fourth vector member = 0, dir is TO THE LIGHTSOURCE
-        vec4 dir(-5, -2, 10, 0);
-        vec3 color1(.9);
+        vec4 dir(1, 1, 1, 0);
+        vec3 color1(1);
         // store object with transformation
-        scene->_lights.push_back(Light(dir, color2, attenuation, mat4(1.0f)));}
+        scene->_lights.push_back(Light(dir, color1, attenuation, mat4(1.0f)));}
 
     {
         /*
          * Adding camera, TODO!
          */
-        vec3 eye    = vec3(-5, -2, 10);
-        vec3 center = vec3(1, 1, 1);
-        vec3 up     = vec3(0, 1, 0);
-        float fovy  = 30;
+        vec3 eye;
+        vec3 center;
+        vec3 up;
+        float fovy;
 
+        if (ai_scene->HasCameras()) {
+            aiCamera& cam = *ai_scene->mCameras[0];
+
+            eye    = ToVec3(cam.mPosition);
+            center = ToVec3(cam.mLookAt);
+            up     = ToVec3(cam.mUp);
+            fovy   = 30;
+        }
+        else {
+            eye    = vec3(-40, 40, 40);
+            center = vec3(0, 0, 0);
+            up     = vec3(0, 0, 1);
+            fovy   = 30;
+        }
         delete scene->_camera;
         scene->_camera = new Camera(eye, center, up, fovy);
     }

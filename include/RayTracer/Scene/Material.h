@@ -8,6 +8,12 @@ public:
     color3 getTextureColor(float u, float v);
 };
 
+enum TextureType : char {
+    AMBIENT,
+    DIFFUSE,
+    SPECULAR
+};
+
 class Material {
 public:
     color3 ambient;
@@ -16,8 +22,10 @@ public:
     color3 emission;
     float shininess;
 
-    Texture tex;
-    bool HasTexture();
+    Texture texture_ambient;
+    Texture texture_diffuse;
+    Texture texture_specular;
+    bool HasTexture(TextureType type);
 
     Material();
     void setAmbient (aiColor3D &ai_ambient);

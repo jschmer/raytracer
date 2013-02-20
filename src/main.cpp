@@ -97,6 +97,7 @@ int main(int argc, char* argv[]) {
     else {
         std::cout << "Rendering " << path << std::endl;
 
+
         auto out_file = String::replaceExtension(path, "png");
         std::cout << "    into: " << out_file << "\n";
 

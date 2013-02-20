@@ -32,6 +32,6 @@ namespace String {
         if (point_pos == std::string::npos)
             return inp;
 
-        return replace(inp, inp.substr(point_pos + 1, inp.length() - 1), new_ext);
+        return replace(inp, inp.substr(point_pos, inp.length() - 1), "." + new_ext);
     }
 }

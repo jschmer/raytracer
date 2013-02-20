@@ -28,7 +28,7 @@ color3 Texture::getTextureColor(float u, float v) {
         return color3(0.0f);
 
     aiTexel texel = this->pcData[idx];
-    
+
     color3 color;
     color.r = texel.r;
     color.g = texel.g;
@@ -47,8 +47,21 @@ Material::Material() {
     shininess = 0.0f;
 }
 
-bool Material::HasTexture() {
-    return tex.pcData != nullptr;
+bool Material::HasTexture(TextureType type) {
+    switch (type) {
+    case TextureType::AMBIENT:
+        return texture_ambient.pcData != nullptr;
+        break;
+    case TextureType::DIFFUSE:
+        return texture_diffuse.pcData != nullptr;
+        break;
+    case TextureType::SPECULAR:
+        return texture_specular.pcData != nullptr;
+        break;
+    default:
+        return false;
+        break;
+    }
 }
 
 void Material::setAmbient(aiColor3D &ai_ambient) {

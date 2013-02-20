@@ -21,6 +21,9 @@ std::unique_ptr<Scene> loadScene(const std::string scenefile) {
     else if (ext.compare(".test") == 0) {
         return SceneParser(scenefile).load();
     }
+    else if (ext.compare(".3ds") == 0) {
+        return ObjParser(scenefile).load();
+    }
     else {
         throw std::exception("I can't load this file type!");
     }

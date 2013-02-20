@@ -105,6 +105,9 @@
     <ClInclude Include="include\VS_Memory_Allocation_Debugging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\RayTracer\SceneReader\TextureLoader.h">
+      <Filter>Header Files\SceneReader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
