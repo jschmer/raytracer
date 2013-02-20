@@ -98,19 +98,34 @@ float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
 
     // storing material color
     // fetch diffuse color from texture!
-    if (HasTextureCoords() && mat->HasTexture(TextureType::DIFFUSE)) {
-        // TODO: interpolate texture coordinates of all 3 vertices (vt0 - vt2)
-        // with barycentric coordinates (u, v, w)
-        auto interpolated_texture_coord = w*vt0 + u*vt1 + v*vt2;
-        Hit.material_color.diffuse = mat->texture_diffuse.getTextureColor(interpolated_texture_coord[0], interpolated_texture_coord[1]);
+    if (HasTextureCoords()) {
+        if (mat->HasTexture(TextureType::AMBIENT)) {
+            auto interpolated_texture_coord = w*vt0 + u*vt1 + v*vt2;
+            Hit.material_color.ambient = mat->getTextureColor(TextureType::AMBIENT, interpolated_texture_coord[0], interpolated_texture_coord[1]);
+        }
+        else {
+            Hit.material_color.ambient = mat->ambient;
+        }
+
+        if (mat->HasTexture(TextureType::DIFFUSE)) {
+            auto interpolated_texture_coord = w*vt0 + u*vt1 + v*vt2;
+            Hit.material_color.diffuse = mat->getTextureColor(TextureType::DIFFUSE, interpolated_texture_coord[0], interpolated_texture_coord[1]);
+        }
+        else {
+            Hit.material_color.diffuse = mat->diffuse;
+        }
+
+        if (mat->HasTexture(TextureType::SPECULAR)) {
+            auto interpolated_texture_coord = w*vt0 + u*vt1 + v*vt2;
+            Hit.material_color.specular = mat->getTextureColor(TextureType::SPECULAR, interpolated_texture_coord[0], interpolated_texture_coord[1]);
+        }
+        else {
+            Hit.material_color.specular = mat->specular;
+        }
     }
-    else {
-        Hit.material_color.diffuse = mat->diffuse;
-    }
-    Hit.material_color.ambient   = mat->ambient;
+    
     Hit.material_color.emission  = mat->emission;
     Hit.material_color.shininess = mat->shininess;
-    Hit.material_color.specular  = mat->specular;
 
     return t;
 }

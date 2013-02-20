@@ -1,7 +1,9 @@
 #pragma once
 
-#include <RayTracer/glm_includes.h>
-#include <RayTracer/AssimpToRaytracerTypes.h>
+#include <string>
+
+// Assimp stuff
+#include <assimp/scene.h> // Output data structure
 
 // DevIL stuff
 #include <il/il.h>

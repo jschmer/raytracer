@@ -42,6 +42,24 @@ color3 Texture::getTextureColor(float u, float v) {
     return color;
 }
 
+color3 Material::getTextureColor(TextureType type, float u, float v) {
+    switch (type) {
+    case TextureType::AMBIENT:
+        return texture_ambient.getTextureColor(u, v);
+        break;
+    case TextureType::DIFFUSE:
+        return texture_diffuse.getTextureColor(u, v);
+        break;
+    case TextureType::SPECULAR:
+        return texture_specular.getTextureColor(u, v);
+        break;
+    default:
+        assert(false);
+        return color3(0.0f);
+        break;
+    }
+}
+
 Material::Material() {
     diffuse = vec3(.6f);
     shininess = 0.0f;

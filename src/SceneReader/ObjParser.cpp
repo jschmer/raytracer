@@ -2,10 +2,6 @@
 
 // system stuff
 #include <string>
-#include <sstream>
-#include <iostream>
-#include <fstream>
-#include <stack>
 
 // Assimp stuff
 #include <assimp/Importer.hpp>
@@ -19,15 +15,43 @@
 #include <RayTracer/Scene/Camera.h>
 #include <RayTracer/Scene/Material.h>
 #include <RayTracer/Scene/Primitives/Triangle.h>
-#include <String/StringHelper.h>
-
 #include <RayTracer/SceneReader/TextureLoader.h>
+#include <String/StringHelper.h>
 
 using namespace std;
 
 std::unique_ptr<Scene> ObjParser::load() const {
     // load scene file
     Assimp::Importer loader;
+
+    aiProcess_CalcTangentSpace;
+    aiProcess_ConvertToLeftHanded;
+    aiProcess_Debone;
+    aiProcess_FindDegenerates;
+    aiProcess_FindInstances;
+    aiProcess_FindInvalidData;
+    aiProcess_FixInfacingNormals;
+    aiProcess_FlipUVs;
+    aiProcess_FlipWindingOrder;
+    aiProcess_GenNormals;
+    aiProcess_GenSmoothNormals;
+    aiProcess_GenUVCoords;
+    aiProcess_ImproveCacheLocality;
+    aiProcess_JoinIdenticalVertices;
+    aiProcess_LimitBoneWeights;
+    aiProcess_MakeLeftHanded;
+    aiProcess_OptimizeGraph;
+    aiProcess_OptimizeMeshes;
+    aiProcess_PreTransformVertices;
+    aiProcess_RemoveComponent;
+    aiProcess_RemoveRedundantMaterials;
+    aiProcess_SortByPType;
+    aiProcess_SplitByBoneCount;
+    aiProcess_SplitLargeMeshes;
+    aiProcess_TransformUVCoords;
+    aiProcess_Triangulate;
+    aiProcess_ValidateDataStructure;
+
     const aiScene* ai_scene = loader.ReadFile(sceneFile, aiProcess_Triangulate );
 
     // getting the folder the sceneFile lives in
@@ -85,6 +109,26 @@ std::unique_ptr<Scene> ObjParser::load() const {
             scene_mat->setSpecular(ai_specular);
             scene_mat->setEmission(ai_emission);
 
+            // getting ambient texture
+            if (mat.GetTextureCount(aiTextureType_AMBIENT) > 0) {
+                aiString tex_path;
+                auto tex_return = mat.GetTexture(aiTextureType_AMBIENT, 0, &tex_path); 
+
+                if (aiReturn_SUCCESS == tex_return) {
+                    std::string map_filename = scene_base_folder + tex_path.C_Str();
+                    map_filename = String::replace(map_filename, "\\", "/");
+
+                    unsigned int width, height;
+                    auto texel_data = loadTexture(map_filename, width, height);
+
+                    scene_mat->texture_ambient.mHeight = height;
+                    scene_mat->texture_ambient.mWidth  = width;
+                    scene_mat->texture_ambient.pcData  = texel_data;
+
+                    printf("Using ambient map: %s\n", tex_path.C_Str());
+                }
+            }
+
             // getting diffuse texture
             if (mat.GetTextureCount(aiTextureType_DIFFUSE) > 0) {
                 aiString tex_path;
@@ -102,6 +146,26 @@ std::unique_ptr<Scene> ObjParser::load() const {
                     scene_mat->texture_diffuse.pcData  = texel_data;
 
                     printf("Using diffuse map: %s\n", tex_path.C_Str());
+                }
+            }
+
+            // getting specular texture
+            if (mat.GetTextureCount(aiTextureType_SPECULAR) > 0) {
+                aiString tex_path;
+                auto tex_return = mat.GetTexture(aiTextureType_SPECULAR, 0, &tex_path); 
+
+                if (aiReturn_SUCCESS == tex_return) {
+                    std::string map_filename = scene_base_folder + tex_path.C_Str();
+                    map_filename = String::replace(map_filename, "\\", "/");
+
+                    unsigned int width, height;
+                    auto texel_data = loadTexture(map_filename, width, height);
+
+                    scene_mat->texture_specular.mHeight = height;
+                    scene_mat->texture_specular.mWidth  = width;
+                    scene_mat->texture_specular.pcData  = texel_data;
+
+                    printf("Using specular map: %s\n", tex_path.C_Str());
                 }
             }
 

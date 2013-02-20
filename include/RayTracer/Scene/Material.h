@@ -26,6 +26,7 @@ public:
     Texture texture_diffuse;
     Texture texture_specular;
     bool HasTexture(TextureType type);
+    color3 getTextureColor(TextureType type, float u, float v);
 
     Material();
     void setAmbient (aiColor3D &ai_ambient);
