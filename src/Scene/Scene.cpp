@@ -101,8 +101,7 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
                 max_dist = FLT_MAX;
             }
 
-            // TODO: inShadow eine maximale distanz mitgeben (distanz zum Licht)
-            //       Die funktion kann dann abbrechen falls nur ein Objekt zwischen Licht und Hitpoint gefunden wurde
+            // Hitpoint ist im Schatten wenn inShadow die erste Intersection zwischen Hitpoint und Light position findet
             auto is_in_shadow = inShadow(r, max_dist);
             if (is_in_shadow)
                 continue;       // pixel in shadow don't contribute to output color

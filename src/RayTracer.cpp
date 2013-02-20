@@ -7,6 +7,7 @@
 #include <vector>
 
 // other framework header
+#include <concurrent_queue.h>
 
 // project header
 #include <RayTracer/Scene/Scene.h>
@@ -69,40 +70,49 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
 
     // load all samples
-    std::vector<Sample> samples;
-    typedef std::vector<Sample>::iterator SampleIterator;
+    // TODO: split into tiles (32x32) and package them that each thread can work on one package
+    //       use a concurrent_queue
+    typedef std::vector<Sample> SamplePack;
+    concurrency::concurrent_queue<SamplePack> sample_packs;
+    
+    const auto Packsize = 32u;
 
+    // generating sample packs
+    SamplePack pack;
     Sample sample;
-    while(target.getSample(sample))
-        samples.push_back(sample);
+    bool clear = false;
+    while(target.getSample(sample)) {
+        pack.push_back(sample);
+        clear = false;
+        if (pack.size() == Packsize*Packsize) {
+            sample_packs.push(SamplePack(pack));
+            pack.clear();
+            clear = true;
+        }
+    }
+    if (!clear)
+        sample_packs.push(SamplePack(pack));
 
-    auto thread_func = [&](SampleIterator begin, SampleIterator end){
+    auto thread_func = [&](){
         Ray ray;
-        while (begin != end) {
-            camera.generateRay(*begin, ray);
+        SamplePack pack;
+        while (sample_packs.try_pop(pack)) {
+            for (auto& sample : pack) {
+                camera.generateRay(sample, ray);
 
-            Intersection Hit = scene_->trace(ray, 0);
+                Intersection Hit = scene_->trace(ray, 0);
 
-            target.commit(*begin, Hit.color);
-
-            // next sample!
-            ++begin;
+                target.commit(sample, Hit.color);
+            }
         }
     };
-
-    auto dataset_size = samples.size() / numCPU;
-    unsigned int begin = 0;
-    unsigned int end = dataset_size;
 
     // start rendering
     auto start = std::chrono::system_clock::now();
     std::vector<std::future<void>> futs;
     while (numCPU > 0) {
         // start thread
-        futs.push_back(std::async(thread_func, samples.begin() + begin, samples.begin() + end));
-
-        begin += dataset_size;
-        end   += dataset_size;
+        futs.push_back(std::async(thread_func));
         --numCPU;
     }
 

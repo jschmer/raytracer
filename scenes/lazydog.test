@@ -4,7 +4,8 @@ maxdepth 10
 
 #### Uncomment for a nice big picture with lots of reflections.
 # size 10240 7680
-size 5120 3840
+#size 5120 3840
+size 2560 1920
 # maxdepth 40
 maxdepth 40
 
