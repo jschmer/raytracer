@@ -23,7 +23,7 @@ public:
 
     color3 shade(Intersection &Hit, Ray const &ray, int depth);
     Intersection trace(Ray const &ray, int depth);
-    Intersection inShadow(Ray const &ray, float t_hit);
+    bool inShadow(Ray const &ray, float t_hit);
 
     bool hasSize() const {
         return _hasSize;

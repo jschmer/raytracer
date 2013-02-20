@@ -26,7 +26,7 @@ Scene::~Scene() {
         delete mat;
 }
 
-Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
+bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
     Intersection ret;
 
     float t;
@@ -34,12 +34,11 @@ Intersection Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
         Intersection hit;
         t = (*it)->Intersect(ray, hit);
         if (t > 0 && t < t_hit) {
-            t_hit = t;
-            ret = hit;
+            return true;
         }
     }
 
-    return ret;
+    return false;
 }
 
 Intersection Scene::trace(Ray const &ray, int depth) {
@@ -91,24 +90,22 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
         if (dot(Hit.normal, dir_to_light) > 0) {
             Ray r(Hit.hitPoint + 0.001f*dir_to_light, dir_to_light);
         
+            // distance from hitpoint to light
+            float max_dist;
+            if (it->pos_or_dir[3] == 1) {
+                // point light
+                max_dist = glm::distance(vec3(it->pos_or_dir), Hit.hitPoint);
+            }
+            else {
+                // directional light, distance = infinite
+                max_dist = FLT_MAX;
+            }
+
             // TODO: inShadow eine maximale distanz mitgeben (distanz zum Licht)
             //       Die funktion kann dann abbrechen falls nur ein Objekt zwischen Licht und Hitpoint gefunden wurde
-            Intersection ShadowHit = inShadow(r);
-            if (ShadowHit.has_hit) {
-                // if i'm testing against point light: check if intersection is between startpoint and light!
-                // the startpoint is in shadow only then!
-                if (it->pos_or_dir[3] == 1) {
-                    float len_to_light        = glm::distance(vec3(it->pos_or_dir), Hit.hitPoint);
-                    float len_to_intersection = glm::distance(ShadowHit.hitPoint, Hit.hitPoint);
-
-                    if (len_to_intersection <= len_to_light)
-                        // Hit.hitPoint in shadow, next light
-                        continue;  
-                } else {
-                    // intersection with directional light
-                    continue;
-                }
-            }
+            auto is_in_shadow = inShadow(r, max_dist);
+            if (is_in_shadow)
+                continue;       // pixel in shadow don't contribute to output color
 
             vec3 L = it->intensity;
 
