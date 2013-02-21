@@ -1,4 +1,4 @@
-#include <RayTracer/SceneReader/ObjParser.h>
+#include <RayTracer/SceneReader/AssimpParser.h>
 
 // system stuff
 #include <string>
@@ -20,7 +20,7 @@
 
 using namespace std;
 
-std::unique_ptr<Scene> ObjParser::load() const {
+std::unique_ptr<Scene> AssimpParser::load() const {
     // load scene file
     Assimp::Importer loader;
 

@@ -190,7 +190,7 @@
     <ClInclude Include="include\RayTracer\RenderTarget\IRenderTarget.h" />
     <ClInclude Include="include\RayTracer\RenderTarget\RayTraceImage.h" />
     <ClInclude Include="include\RayTracer\SceneReader\ISceneLoader.h" />
-    <ClInclude Include="include\RayTracer\SceneReader\ObjParser.h" />
+    <ClInclude Include="include\RayTracer\SceneReader\AssimpParser.h" />
     <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>
@@ -216,7 +216,7 @@
     </ClCompile>
     <ClCompile Include="src\RayTracer.cpp" />
     <ClCompile Include="src\RenderTarget\RayTraceImage.cpp" />
-    <ClCompile Include="src\SceneReader\ObjParser.cpp" />
+    <ClCompile Include="src\SceneReader\AssimpParser.cpp" />
     <ClCompile Include="src\SceneReader\SceneParser.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>

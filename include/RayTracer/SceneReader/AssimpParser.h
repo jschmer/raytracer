@@ -10,15 +10,15 @@ class Scene;
 /*
  * @brief   parses a Wavefront OBJ file
  */
-class ObjParser : public ISceneLoader
+class AssimpParser : public ISceneLoader
 {
 public:
-    ObjParser(std::string sceneFile)
+    AssimpParser(std::string sceneFile)
         : sceneFile(sceneFile)
     {
     }
 
-    ~ObjParser() {}
+    ~AssimpParser() {}
 
     std::unique_ptr<Scene> load() const override;
 
