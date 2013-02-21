@@ -135,7 +135,7 @@
       <AdditionalDependencies>FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)dependencies\FreeImage.dll $(ProjectDir)bin\$(Configuration)</Command>
+      <Command>copy_static_lib_to_third_party.bat $(ProjectDir) $(Configuration)</Command>
       <Message>Copy FreeImage.dll dependency</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
