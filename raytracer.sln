@@ -8,6 +8,7 @@ Global
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 		StaticLib|Win32 = StaticLib|Win32
+		StaticLib-Debug|Win32 = StaticLib-Debug|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -16,6 +17,8 @@ Global
 		{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}.Release|Win32.Build.0 = Release|Win32
 		{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}.StaticLib|Win32.ActiveCfg = StaticLib|Win32
 		{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}.StaticLib|Win32.Build.0 = StaticLib|Win32
+		{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}.StaticLib-Debug|Win32.ActiveCfg = StaticLib-Debug|Win32
+		{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}.StaticLib-Debug|Win32.Build.0 = StaticLib-Debug|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,5 +8,5 @@ SET TARGET_DIR=..\$third-party-libs\RayTracer\
 copy %PROJECT_DIR%dependencies\FreeImage.dll %PROJECT_DIR%bin\%CONFIGURATION%\
 
 :::third_party folder
-xcopy /Y %PROJECT_DIR%bin\%CONFIGURATION% %TARGET_DIR%lib\
-xcopy /S /Y %PROJECT_DIR%include %TARGET_DIR%include\
+xcopy /Y %PROJECT_DIR%bin\%CONFIGURATION% %TARGET_DIR%lib\%CONFIGURATION%\
+xcopy /S /Y %PROJECT_DIR%include %TARGET_DIR%include\%CONFIGURATION%\
