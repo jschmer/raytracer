@@ -46,6 +46,9 @@ bool RayTraceImage::getSample(Sample &s) {
 
         return true;
     } else {
+        pixelCounter = 0;
+        currentSampleWidth  = 0;
+        currentSampleHeight = 0;
         return false;
     }
 }

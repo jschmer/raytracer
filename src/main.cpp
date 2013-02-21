@@ -90,8 +90,8 @@ int main(int argc, char* argv[]) {
             RayTraceImage image(out_file, 600, 600);
             RayTracer tracer;
             tracer.load(filepath);
-            tracer.renderInto(&image);
 
+            tracer.renderInto(&image);
             std::cout << "    Done! Duration: " << tracer.getRenderDuration().count() << " ms" << std::endl << std::endl;
         }
     }
@@ -110,7 +110,6 @@ int main(int argc, char* argv[]) {
         for (auto i=0; i<10; ++i) {
 #endif
             tracer.renderInto(&image);
-
 #ifdef PERF_TEST
             sum += tracer.getRenderDuration().count();
         }
