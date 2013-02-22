@@ -1,7 +1,10 @@
-# comment
-
-# use this scene file (anything that can be loaded)
+# Uses this scene file (anything that can be loaded)
+# Has to be the first command!
+# Don't follow this rule if you want to have undefined behaviour!
 use_scene SuperCube.obj
 
-camera     -25 30 30    0 0 0    0 1 0   45
+# additional parameters
+size 640 480
+
+camera     -25 30 30    0 0 0    0 0 1   45
 directional 20 20 20    1 1 1

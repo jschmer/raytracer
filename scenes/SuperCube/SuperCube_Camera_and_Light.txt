@@ -1,8 +1,9 @@
 Camera
- Pos     20 20 20
+ Pos     -25 30 30
  LookAt  0 0 0
- Up      0 1 0
- FOVvert 30       (Degree)
+ Up      0 0 1
+ FOVvertical 45       (Degree)
  
 Directional Light
- Direction  1 1 1    (Direction TO light source)
+ Direction  20 20 20    (Direction TO light source)
+ Intensity  1 1 1

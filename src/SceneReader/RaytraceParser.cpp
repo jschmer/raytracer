@@ -2,9 +2,9 @@
 
 #include <string>
 #include <sstream>
-#include <iostream>
+//#include <iostream>
 #include <fstream>
-#include <stack>
+//#include <stack>
 
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
 
@@ -13,21 +13,23 @@
 #include <RayTracer/Scene/Camera.h>
 #include <RayTracer/Scene/Material.h>
 
-#include <RayTracer/Scene/Primitives/Sphere.h>
-#include <RayTracer/Scene/Primitives/Triangle.h>
+//#include <RayTracer/Scene/Primitives/Sphere.h>
+
+#include <RayTracer/SceneReader/SceneReader.h>
+#include <RayTracer/SceneReader/SceneParserHelper.h>
 
 using namespace std;
 
 std::unique_ptr<Scene> RaytraceParser::load(std::unique_ptr<Scene> scene) const {
-    return std::move(scene);
+    std::string sceneFile_dir = getDirectory(sceneFile);
 
     string str, cmd; 
     ifstream in;
     in.open(sceneFile); 
     if (in.is_open()) {
         // matrix stack to store transforms.  
-        stack <mat4> transfstack; 
-        transfstack.push(mat4(1.0f));  // identity
+        //stack <mat4> transfstack; 
+        //transfstack.push(mat4(1.0f));  // identity
 
         vector<vec3> vertices;
 
@@ -36,6 +38,8 @@ std::unique_ptr<Scene> RaytraceParser::load(std::unique_ptr<Scene> scene) const 
         bool push_mat = true;
 
         bool last = false;   // transformation applied last
+
+        bool scene_embedded = false;
 
         // constant, linear, quadratic attenuations 
         vec3 attenuation(1.0, 0.0, 0.0);
@@ -51,19 +55,19 @@ std::unique_ptr<Scene> RaytraceParser::load(std::unique_ptr<Scene> scene) const 
                 bool validinput; // Validity of input 
 
                 // embed another scene file
-                if (cmd == "use_scene") {
-                    //validinput = readvals(s,1,values); 
-                    //if (validinput) { 
-                    //    scene->_maxdepth = (int) values[0];
-                    //} 
+                if (!scene_embedded && cmd == "use_scene") {
+                    auto scene_file_to_embed = s.str();
+                    scene_file_to_embed.erase(0, cmd.length() + 1);
+
+                    scene = loadScene(sceneFile_dir + scene_file_to_embed);
                 }
 
                 // maximum number of reflection rays
                 if (cmd == "maxdepth") {
-                    //validinput = readvals(s,1,values); 
-                    //if (validinput) { 
-                    //    scene->_maxdepth = (int) values[0];
-                    //} 
+                    validinput = readvals(s, 1, values); 
+                    if (validinput) { 
+                        scene->_maxdepth = static_cast<int>(values[0]);
+                    } 
                 }
 
                 // output filename
@@ -72,63 +76,63 @@ std::unique_ptr<Scene> RaytraceParser::load(std::unique_ptr<Scene> scene) const 
                 }
                 // output image size
                 else if (cmd == "size") {
-                    //validinput = readvals(s, 2, values); 
-                    //if (validinput) {
-                    //    scene->_size.width  = (int)values[0];
-                    //    scene->_size.height = (int)values[1];
-                    //    scene->_hasSize = true;
-                    //}
+                    validinput = readvals(s, 2, values); 
+                    if (validinput) {
+                        scene->_size.width  = static_cast<int>(values[0]);
+                        scene->_size.height = static_cast<int>(values[1]);
+                        scene->_hasSize = true;
+                    }
                 }
 
                 // camera spec
                 else if (cmd == "camera") {
-                    //validinput = readvals(s,10,values); // 10 values eye cen up fov
-                    //if (validinput) {
-                    //    // camera       0 0 5 0 0 0 0 1 0 90.0
-                    //    // look from    0 0 5   eye
-                    //    // look at      0 0 0   origin
-                    //    // up           0 1 0   up
-                    //    // fovy         90.0
+                    validinput = readvals(s, 10, values); // 10 values eye cen up fov
+                    if (validinput) {
+                        // camera       0 0 5 0 0 0 0 1 0 90.0
+                        // look from    0 0 5   eye
+                        // look at      0 0 0   origin
+                        // up           0 1 0   up
+                        // fovy         90.0
 
-                    //    // camera 0 -2 2 0 0 0 0 1 1 30.0
-                    //    vec3 eye    = vec3(values[0], values[1], values[2]);
-                    //    vec3 center = vec3(values[3], values[4], values[5]);
-                    //    vec3 up     = vec3(values[6], values[7], values[8]);
-                    //    float fovy  = values[9];
+                        // camera 0 -2 2 0 0 0 0 1 1 30.0
+                        vec3 eye    = vec3(values[0], values[1], values[2]);
+                        vec3 center = vec3(values[3], values[4], values[5]);
+                        vec3 up     = vec3(values[6], values[7], values[8]);
+                        float fovy  = values[9];
 
-                    //    if (scene->_camera)
-                    //        delete scene->_camera;
-                    //    Camera *c = new Camera(eye, center, up, fovy);
-                    //    scene->_camera = c;
-                    //}
+                        if (scene->_camera)
+                            delete scene->_camera;
+                        Camera *c = new Camera(eye, center, up, fovy);
+                        scene->_camera = c;
+                    }
                 }
 
                 // Process the lights, add it to database.
                 else if (cmd == "directional") {
-                    //validinput = readvals(s, 6, values); // Position/color for lts.
-                    //if (validinput) {
-                    //    vec4 dir(values[0], values[1], values[2], 0);
-                    //    vec3 color(values[3], values[4], values[5]);
+                    validinput = readvals(s, 6, values); // Position/color for lts.
+                    if (validinput) {
+                        vec4 dir(values[0], values[1], values[2], 0);
+                        vec3 color(values[3], values[4], values[5]);
 
-                    //    // store object with transformation
-                    //    scene->_lights.push_back(Light(dir, color, attenuation, transfstack.top()));
-                    //}
+                        // store object with transformation
+                        scene->_lights.push_back(Light(dir, color, attenuation, /* transfstack.top() */ mat4(1.0f)));
+                    }
                 }
                 else if (cmd == "point") {
-                    //validinput = readvals(s, 6, values); // Position/color for lts.
-                    //if (validinput) {
-                    //    vec4 pos(values[0], values[1], values[2], 1);
-                    //    vec3 color(values[3], values[4], values[5]);
+                    validinput = readvals(s, 6, values); // Position/color for lts.
+                    if (validinput) {
+                        vec4 pos(values[0], values[1], values[2], 1);
+                        vec3 color(values[3], values[4], values[5]);
 
-                    //    // store object with transformation
-                    //    scene->_lights.push_back(Light(pos, color, attenuation, transfstack.top()));
-                    //}
+                        // store object with transformation
+                        scene->_lights.push_back(Light(pos, color, attenuation, /* transfstack.top() */ mat4(1.0f)));
+                    }
                 }
                 else if (cmd == "attenuation") {
-                    //validinput = readvals(s, 3, values); // Position/color for lts.
-                    //if (validinput) {
-                    //    attenuation = vec3(values[0], values[1], values[2]);
-                    //}
+                    validinput = readvals(s, 3, values); // Position/color for lts.
+                    if (validinput) {
+                        attenuation = vec3(values[0], values[1], values[2]);
+                    }
                 }
 
                 /* TODO: support sphere definition with translation, scaling and rotating */
@@ -204,7 +208,7 @@ std::unique_ptr<Scene> RaytraceParser::load(std::unique_ptr<Scene> scene) const 
             getline (in, str); 
         }
     } else {
-        cerr << "Unable to Open Input Data File " << sceneFile << "\n"; 
+        //cerr << "Unable to Open Input Data File " << sceneFile << "\n"; 
         throw 2; 
     }
     

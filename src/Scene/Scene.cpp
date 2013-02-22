@@ -4,7 +4,6 @@
 #include <future>
 
 #include <RayTracer/SceneReader/SceneReader.h>
-#include <RayTracer/SceneReader/SceneParser.h>
 #include <RayTracer/RenderTarget/RayTraceImage.h>
 #include <RayTracer/Scene/Camera.h>
 #include <RayTracer/Scene/Primitives/Primitive.h>
