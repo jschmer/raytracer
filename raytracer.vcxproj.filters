@@ -48,9 +48,6 @@
     <ClInclude Include="include\RayTracer\Ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\RayTracer\SceneReader\SceneParser.h">
-      <Filter>Header Files\SceneReader</Filter>
-    </ClInclude>
     <ClInclude Include="include\RayTracer\SceneReader\SceneReader.h">
       <Filter>Header Files\SceneReader</Filter>
     </ClInclude>
@@ -108,6 +105,12 @@
     <ClInclude Include="include\RayTracer\SceneReader\AssimpParser.h">
       <Filter>Header Files\SceneReader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RayTracer\SceneReader\TestParser.h">
+      <Filter>Header Files\SceneReader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RayTracer\SceneReader\RaytraceParser.h">
+      <Filter>Header Files\SceneReader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -118,9 +121,6 @@
     </ClCompile>
     <ClCompile Include="src\String\StringHelper.cpp">
       <Filter>Source Files\String</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SceneReader\SceneParser.cpp">
-      <Filter>Source Files\SceneReader</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneReader\SceneReader.cpp">
       <Filter>Source Files\SceneReader</Filter>
@@ -147,6 +147,12 @@
       <Filter>Source Files\Scene\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneReader\AssimpParser.cpp">
+      <Filter>Source Files\SceneReader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneReader\TestParser.cpp">
+      <Filter>Source Files\SceneReader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneReader\RaytraceParser.cpp">
       <Filter>Source Files\SceneReader</Filter>
     </ClCompile>
   </ItemGroup>

@@ -20,7 +20,7 @@ public:
 
     ~AssimpParser() {}
 
-    std::unique_ptr<Scene> load() const override;
+    std::unique_ptr<Scene> load(std::unique_ptr<Scene> scene) const override;
 
 private:
     std::string sceneFile;

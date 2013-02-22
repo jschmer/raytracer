@@ -1,4 +1,4 @@
-#include <RayTracer/SceneReader/SceneParser.h>
+#include <RayTracer/SceneReader/TestParser.h>
 
 
 
@@ -20,7 +20,7 @@
 
 using namespace std;
 
-bool SceneParser::readvals(stringstream &s, const int numvals, vector<float> &values) const
+bool TestParser::readvals(stringstream &s, const int numvals, vector<float> &values) const
 {
     for (int i = 0; i < numvals; i++) {
         float f;
@@ -34,9 +34,7 @@ bool SceneParser::readvals(stringstream &s, const int numvals, vector<float> &va
     return true; 
 }
 
-std::unique_ptr<Scene> SceneParser::load() const {
-    std::unique_ptr<Scene> scene(new Scene());
-
+std::unique_ptr<Scene> TestParser::load(std::unique_ptr<Scene> scene) const {
     string str, cmd; 
     ifstream in;
     in.open(sceneFile); 
@@ -297,5 +295,5 @@ std::unique_ptr<Scene> SceneParser::load() const {
         throw 2; 
     }
     
-    return scene;
+    return std::move(scene);
 }

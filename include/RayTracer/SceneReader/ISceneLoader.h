@@ -9,6 +9,6 @@ class Scene;
 class ISceneLoader
 {
 public:
-    virtual std::unique_ptr<Scene> load() const = 0;
+    virtual std::unique_ptr<Scene> load(std::unique_ptr<Scene> scene) const = 0;
 };
 

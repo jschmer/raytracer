@@ -20,10 +20,11 @@
 
 using namespace std;
 
-std::unique_ptr<Scene> AssimpParser::load() const {
+std::unique_ptr<Scene> AssimpParser::load(std::unique_ptr<Scene> scene) const {
     // load scene file
     Assimp::Importer loader;
 
+    /* Available flag for assimp importer
     aiProcess_CalcTangentSpace;
     aiProcess_ConvertToLeftHanded;
     aiProcess_Debone;
@@ -51,6 +52,7 @@ std::unique_ptr<Scene> AssimpParser::load() const {
     aiProcess_TransformUVCoords;
     aiProcess_Triangulate;
     aiProcess_ValidateDataStructure;
+    */
 
     const aiScene* ai_scene = loader.ReadFile(sceneFile, aiProcess_Triangulate );
 
@@ -66,11 +68,6 @@ std::unique_ptr<Scene> AssimpParser::load() const {
         // ERROR while loading
         throw std::exception(loader.GetErrorString());
     }
-
-    /*
-     * Converting Assimp scene to own scene structure!
-     */
-    std::unique_ptr<Scene> scene(new Scene());
 
     /*
      * Looping through Nodes...
@@ -258,5 +255,5 @@ std::unique_ptr<Scene> AssimpParser::load() const {
         scene->_camera = new Camera(eye, center, up, fovy);
     }
 
-    return scene;
+    return std::move(scene);
 }

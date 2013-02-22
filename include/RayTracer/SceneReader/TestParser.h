@@ -10,21 +10,20 @@ class Scene;
 /*
  * @brief   parses a ".test" scene file used in edx course "3D Graphics"
  */
-class SceneParser : public ISceneLoader
+class TestParser : public ISceneLoader
 {
 public:
-    SceneParser(std::string sceneFile)
+    TestParser(std::string sceneFile)
         : sceneFile(sceneFile)
     {
     }
 
-    ~SceneParser() {}
+    ~TestParser() {}
 
-    std::unique_ptr<Scene> load() const override;
+    std::unique_ptr<Scene> load(std::unique_ptr<Scene> scene) const override;
 
 private:
     std::string sceneFile;
 
     bool readvals(std::stringstream &s, const int numvals, std::vector<float> &values) const;
 };
-
