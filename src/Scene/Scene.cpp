@@ -24,11 +24,10 @@ Scene::~Scene() {
 }
 
 bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
-    Intersection ret;
-
+    Intersection hit;
     float t;
+
     for (std::vector<Primitive*>::iterator it = _primitives.begin(); it < _primitives.end(); ++it) {
-        Intersection hit;
         t = (*it)->Intersect(ray, hit);
         if (t > 0 && t < t_hit) {
             return true;

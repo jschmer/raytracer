@@ -14,7 +14,7 @@ public:
     Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h);
 
     // taken from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/
-    float Intersect(Ray const &ray, Intersection &Hit, float dist = FLT_MAX) override;
+    float Intersect(Ray ray, Intersection &Hit, float dist = FLT_MAX) override;
 
     // Compute barycentric coordinates (u, v, w) for
     // point p with respect to triangle (a, b, c)
@@ -39,4 +39,6 @@ public:
 
     float normal_len;
     float d;
+
+    bool has_transformation_matrix;  ///< true if the transformation matrix is anything other than the identity
 };

@@ -17,7 +17,7 @@ Sphere::Sphere(mat4 obj2world, vec4 pos, float radius)
     transposed_world2obj = transpose(this->world2obj);
 }
 
-float Sphere::Intersect(Ray const &ray, Intersection &Hit, float dist) {
+float Sphere::Intersect(Ray ray, Intersection &Hit, float dist) {
     // transforming ray to object space
     Ray objRay;
     objRay.pos = vec3(this->world2obj * vec4(ray.pos, 1));

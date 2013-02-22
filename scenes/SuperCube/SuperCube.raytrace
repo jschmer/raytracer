@@ -5,6 +5,7 @@ use_scene SuperCube.obj
 
 # additional parameters
 size 640 480
+size 1280 960
 
 camera     -25 30 30    0 0 0    0 0 1   45
 directional 20 20 20    1 1 1

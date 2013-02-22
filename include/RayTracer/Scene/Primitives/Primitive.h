@@ -41,7 +41,7 @@ public:
         mat = nullptr;
     }
 
-    virtual float Intersect(Ray const &r, Intersection &Hit, float dist = FLT_MAX) = 0;
+    virtual float Intersect(Ray ray, Intersection &Hit, float dist = FLT_MAX) = 0;
 
     // material props
     Material* mat;

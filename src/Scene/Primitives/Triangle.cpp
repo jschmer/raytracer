@@ -30,27 +30,33 @@ Triangle::Triangle(mat4 obj2world, vec3 &f, vec3 &g, vec3 &h)
 
     normal_len = dot(vec3_faceNormal, vec3_faceNormal);
     d = dot(vec3_faceNormal, v0);
+
+    if (this->world2obj == mat4(1.0f))
+        has_transformation_matrix = false;
+    else
+        has_transformation_matrix = true;
 }
 
 // taken from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/
-float Triangle::Intersect(Ray const &ray, Intersection &Hit, float dist) {
+float Triangle::Intersect(Ray ray, Intersection &Hit, float dist) {
     // transforming ray to object space
-    Ray r;
-    r.pos = vec3(this->world2obj * vec4(ray.pos, 1));
-    r.dir = vec3(this->world2obj * vec4(ray.dir, 0));
+    if (has_transformation_matrix) {
+        ray.pos = vec3(this->world2obj * vec4(ray.pos, 1));
+        ray.dir = vec3(this->world2obj * vec4(ray.dir, 0));
+    }
 
-    float nDotRay = dot(vec3_faceNormal, r.dir);
+    float nDotRay = dot(vec3_faceNormal, ray.dir);
     if (nDotRay == 0)
         return -1.0f; // ray parallel to triangle
 
-    float t = -(dot(vec3_faceNormal, r.pos) - d) / nDotRay;
+    float t = -(dot(vec3_faceNormal, ray.pos) - d) / nDotRay;
 
     // only consider objects closer than the closest intersection until now
     if (t > dist)
         return -1.0f;
 
     // compute intersection point
-    vec3 Phit = r.pos + t * r.dir;
+    vec3 Phit = ray.pos + t * ray.dir;
     vec3 v0p = Phit - v0;
 
     // inside-out test edge0

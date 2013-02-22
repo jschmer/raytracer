@@ -12,7 +12,7 @@ class Sphere : public Primitive {
 public:
     Sphere(mat4 obj2world, vec4 pos, float radius);
 
-    float Intersect(Ray const &ray, Intersection &Hit, float dist = FLT_MAX) override;
+    float Intersect(Ray ray, Intersection &Hit, float dist = FLT_MAX) override;
 
     // object parameters
     vec4 position;    // position
