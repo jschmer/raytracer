@@ -3,6 +3,7 @@
 // system header
 #include <string>
 #include <vector>
+#include <memory>
 
 #include <RayTracer/glm_includes.h>
 #include <RayTracer/Scene/Light.h>
@@ -44,7 +45,7 @@ public:
     /*
      * Camera
      */
-    Camera *_camera;
+    std::unique_ptr<Camera> _camera;
 
     /*
      * Geometry

@@ -102,10 +102,7 @@ std::unique_ptr<Scene> TestParser::load(std::unique_ptr<Scene> scene) const {
                         vec3 up     = vec3(values[6], values[7], values[8]);
                         float fovy  = values[9];
 
-                        if (scene->_camera)
-                            delete scene->_camera;
-                        Camera *c = new Camera(eye, center, up, fovy);
-                        scene->_camera = c;
+                        scene->_camera.reset(new Camera(eye, center, up, fovy));
                     }
                 }
 

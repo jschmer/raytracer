@@ -16,8 +16,6 @@ Scene::Scene() {
     _camera = nullptr;
 }
 Scene::~Scene() {
-    delete _camera;
-
     for (auto prim : _primitives)
         delete prim;
 

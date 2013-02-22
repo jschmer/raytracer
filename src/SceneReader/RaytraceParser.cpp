@@ -88,22 +88,18 @@ std::unique_ptr<Scene> RaytraceParser::load(std::unique_ptr<Scene> scene) const 
                 else if (cmd == "camera") {
                     validinput = readvals(s, 10, values); // 10 values eye cen up fov
                     if (validinput) {
-                        // camera       0 0 5 0 0 0 0 1 0 90.0
+                        // camera       0 0 5 0 0 0 0 1 0 45.0
                         // look from    0 0 5   eye
                         // look at      0 0 0   origin
                         // up           0 1 0   up
-                        // fovy         90.0
+                        // fovy         45.0
 
-                        // camera 0 -2 2 0 0 0 0 1 1 30.0
                         vec3 eye    = vec3(values[0], values[1], values[2]);
                         vec3 center = vec3(values[3], values[4], values[5]);
                         vec3 up     = vec3(values[6], values[7], values[8]);
                         float fovy  = values[9];
 
-                        if (scene->_camera)
-                            delete scene->_camera;
-                        Camera *c = new Camera(eye, center, up, fovy);
-                        scene->_camera = c;
+                        scene->_camera.reset(new Camera(eye, center, up, fovy));
                     }
                 }
 

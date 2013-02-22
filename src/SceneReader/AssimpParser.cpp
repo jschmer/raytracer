@@ -251,8 +251,7 @@ std::unique_ptr<Scene> AssimpParser::load(std::unique_ptr<Scene> scene) const {
             up     = vec3(0, 0, 1);
             fovy   = 30;
         }
-        delete scene->_camera;
-        scene->_camera = new Camera(eye, center, up, fovy);
+        scene->_camera.reset(new Camera(eye, center, up, fovy));
     }
 
     return std::move(scene);
