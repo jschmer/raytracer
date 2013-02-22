@@ -1,0 +1,7 @@
+# comment
+
+# use this scene file (anything that can be loaded)
+use_scene SuperCube.obj
+
+camera     -25 30 30    0 0 0    0 1 0   45
+directional 20 20 20    1 1 1
