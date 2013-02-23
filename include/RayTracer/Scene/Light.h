@@ -64,8 +64,12 @@ public:
     float getDistanceTo(vec3 const &point) const override;
     vec3 getIntensityAt(vec3 const &point) const override;
 
+private:
     // vars
     vec3 _pos;
     vec3 _dir;
     float _size;
+
+    vec3 plane_dir_first;
+    vec3 plane_dir_second;
 };

@@ -4,6 +4,7 @@
 using glm::normalize;
 
 const float shadow_ray_origin_offset = .001f;
+const float SampleSize = 6.0f;  // SampleSize*SampleSize shadow rays are generated
 
 /*
  * Point light
@@ -67,11 +68,10 @@ AreaLight::AreaLight(vec3 pos, vec3 dir, float size, color3 intensity, vec3 atte
     _pos(pos),
     _size(size)
 {
-}
+    // find two vectors that are vertical to _dir
+    // plane_dir_first is computed via the scalar product: vec1*vec2 = 0
+    // plane_dir_second is computed via cross
 
-ShadowRays AreaLight::getShadowRaysFrom(vec3 const &point) const {
-    // TODO: find a vector that is vertical to _dir
-    
     // find element in _dir that is not 0
     auto not_null_idx = 0u;
     for (auto i = 0u; i < 3; ++i){
@@ -82,8 +82,6 @@ ShadowRays AreaLight::getShadowRaysFrom(vec3 const &point) const {
     }
 
     float sum = 0.0f;
-    vec3 plane_dir_first;
-    vec3 plane_dir_second;
     for (auto i = 0u; i < 3; ++i) {
         if (i != not_null_idx) {
             sum += _dir[i];
@@ -91,15 +89,26 @@ ShadowRays AreaLight::getShadowRaysFrom(vec3 const &point) const {
         }
     }
 
-    plane_dir_first[not_null_idx] = - sum / _dir[not_null_idx];
+    plane_dir_first[not_null_idx] = -sum / _dir[not_null_idx];
     plane_dir_second = cross(_dir, plane_dir_first);
+}
 
-    ShadowRays rays;
+ShadowRays AreaLight::getShadowRaysFrom(vec3 const &point) const {
+    float stepsize = _size/SampleSize;
+    float lower = -SampleSize/2.0f;
+    float upper = SampleSize/2.0f;
+
     // generate directions with samples over the area of the light
-    // for (auto i=0u; i<SampleSize; ++i) {
-        auto pos = point + shadow_ray_origin_offset * _dir;
-        rays.push_back(Ray(pos, _dir));
-    //}
+    // TODO: add in some noise to reduce banding
+    ShadowRays rays;
+    for (auto i = lower; i < upper; ++i) {
+        for (auto k = lower; k < upper; ++k) {
+            auto light_pos = _pos + i*stepsize*plane_dir_first + k*stepsize*plane_dir_second;
+            auto dir = normalize(light_pos - point);
+            auto ray_pos = point + shadow_ray_origin_offset * dir;
+            rays.push_back(Ray(ray_pos, dir));
+        }
+    }
     return rays;
 }
 
