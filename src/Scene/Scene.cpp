@@ -84,28 +84,26 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
 
     for (auto it = _lights.begin(); it != _lights.end(); ++it) {
         auto p_light = *it;
-        auto dir_to_light = p_light->getLightVectorFrom(Hit.hitPoint);
+        auto shadow_ray = p_light->getShadowRayFrom(Hit.hitPoint);
 
         // light in front of object?
-        if (dot(Hit.normal, dir_to_light) > 0) {
-            Ray r(Hit.hitPoint + 0.001f*dir_to_light, dir_to_light);
-        
+        float dotP = dot(Hit.normal, shadow_ray.dir);
+        if (dot(Hit.normal, shadow_ray.dir) > 0) {        
             // distance from hitpoint to light
-            float max_dist = p_light->getDistanceTo(r.pos);
+            float max_dist = p_light->getDistanceTo(shadow_ray.pos);
 
             // Hitpoint ist im Schatten wenn inShadow die erste Intersection zwischen Hitpoint und Light position findet
-            auto is_in_shadow = inShadow(r, max_dist);
+            auto is_in_shadow = inShadow(shadow_ray, max_dist);
             if (is_in_shadow)
                 continue;       // pixel in shadow don't contribute to output color
 
             vec3 light_intensity = p_light->getIntensityAt(Hit.hitPoint);
 
             // diffuse term
-            float dotP = dot(Hit.normal, dir_to_light);
             out_color += light_intensity * (diffuse * common::max(dotP, 0.0f));
 
             // specular term
-            vec3 halfVec = normalize(dir_to_light + -ray.dir);
+            vec3 halfVec = normalize(shadow_ray.dir + -ray.dir);
             float halfAngle = dot(Hit.normal, halfVec);
             out_color += light_intensity * (specular * pow(common::max(halfAngle, 0.0f), shininess));
         }

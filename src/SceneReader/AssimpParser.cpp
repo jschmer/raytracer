@@ -208,51 +208,7 @@ std::unique_ptr<Scene> AssimpParser::load(std::unique_ptr<Scene> scene) const {
         }
     }
 
-    {
-        /*
-         * Adding lights, TODO!
-         */
-        // constant, linear, quadratic attenuations 
-        vec3 attenuation(1.0, 0.0, 0.0);
-
-        // point light, fourth vector member = 1
-        vec3 pos(10, 10, 10);
-        vec3 color2(.8);
-        // store object with transformation
-        scene->_lights.push_back(new PointLight(pos, color2, attenuation));
-
-        // directional light, fourth vector member = 0, dir is TO THE LIGHTSOURCE
-        vec3 dir(1, 1, 1);
-        vec3 color1(.5);
-        // store object with transformation
-        scene->_lights.push_back(new DirectionalLight(dir, color1, attenuation));
-    }
-
-    {
-        /*
-         * Adding camera, TODO!
-         */
-        vec3 eye;
-        vec3 center;
-        vec3 up;
-        float fovy;
-
-        if (ai_scene->HasCameras()) {
-            aiCamera& cam = *ai_scene->mCameras[0];
-
-            eye    = ToVec3(cam.mPosition);
-            center = ToVec3(cam.mLookAt);
-            up     = ToVec3(cam.mUp);
-            fovy   = 30;
-        }
-        else {
-            eye    = vec3(-40, 40, 40);
-            center = vec3(0, 0, 0);
-            up     = vec3(0, 0, 1);
-            fovy   = 30;
-        }
-        scene->_camera.reset(new Camera(eye, center, up, fovy));
-    }
+    // Camera and Lights can be specified in a .raytrace file!
 
     return std::move(scene);
 }

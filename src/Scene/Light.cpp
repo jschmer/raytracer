@@ -12,12 +12,15 @@ PointLight::PointLight(vec3 pos, color3 intensity, vec3 attenuation)
 {
 }
 
-vec3 PointLight::getLightVectorFrom(vec3 const &point) const {
-    return normalize(_pos - point);
+Ray PointLight::getShadowRayFrom(vec3 const &point) const {
+    auto dir = normalize(_pos - point);
+    auto pos = point + shadow_ray_origin_offset * dir;
+
+    return Ray(pos, dir);
 }
 
-LightRayDirections PointLight::getLightDirectionsFrom(vec3 const &point) const {
-    return LightRayDirections();
+ShadowRays PointLight::getShadowRaysFrom(vec3 const &point) const {
+    return ShadowRays();
 }
 
 float PointLight::getDistanceTo(vec3 const &point) const {
@@ -39,12 +42,14 @@ DirectionalLight::DirectionalLight(vec3 dir, color3 intensity, vec3 attenuation)
 {
 }
 
-vec3 DirectionalLight::getLightVectorFrom(vec3 const &point) const {
-    return _dir;
+Ray DirectionalLight::getShadowRayFrom(vec3 const &point) const {
+    auto pos = point + shadow_ray_origin_offset * _dir;
+
+    return Ray(pos, _dir);
 }
 
-LightRayDirections DirectionalLight::getLightDirectionsFrom(vec3 const &point) const {
-    return LightRayDirections();
+ShadowRays DirectionalLight::getShadowRaysFrom(vec3 const &point) const {
+    return ShadowRays();
 }
 
 float DirectionalLight::getDistanceTo(vec3 const &point) const {

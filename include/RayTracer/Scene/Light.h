@@ -3,8 +3,11 @@
 #include <vector>
 
 #include <RayTracer/glm_includes.h>
+#include <RayTracer/Ray.h>
 
-typedef std::vector<vec3> LightRayDirections;
+typedef std::vector<Ray> ShadowRays;
+
+const float shadow_ray_origin_offset = .0001f;
 
 class Light {
 public:
@@ -13,8 +16,8 @@ public:
         _attenuation(attenuation)
     {}
 
-    virtual vec3 getLightVectorFrom(vec3 const &point) const = 0;
-    virtual LightRayDirections getLightDirectionsFrom(vec3 const &point) const = 0;
+    virtual Ray getShadowRayFrom(vec3 const &point) const = 0;
+    virtual ShadowRays getShadowRaysFrom(vec3 const &point) const = 0;
 
     virtual float getDistanceTo(vec3 const &point) const = 0;
     virtual vec3 getIntensityAt(vec3 const &point) const = 0;
@@ -28,8 +31,8 @@ class PointLight : public Light {
 public:
     PointLight(vec3 pos, color3 intensity, vec3 attenuation);
 
-    vec3 getLightVectorFrom(vec3 const &point) const override;
-    LightRayDirections getLightDirectionsFrom(vec3 const &point) const override;
+    Ray getShadowRayFrom(vec3 const &point) const override;
+    ShadowRays getShadowRaysFrom(vec3 const &point) const override;
 
     float getDistanceTo(vec3 const &point) const override;
     vec3 getIntensityAt(vec3 const &point) const override;
@@ -43,8 +46,8 @@ class DirectionalLight : public Light {
 public:
     DirectionalLight(vec3 dir, color3 intensity, vec3 attenuation);
 
-    vec3 getLightVectorFrom(vec3 const &point) const override;
-    LightRayDirections getLightDirectionsFrom(vec3 const &point) const override;
+    Ray getShadowRayFrom(vec3 const &point) const override;
+    ShadowRays getShadowRaysFrom(vec3 const &point) const override;
 
     float getDistanceTo(vec3 const &point) const override;
     vec3 getIntensityAt(vec3 const &point) const override;
@@ -56,15 +59,15 @@ private:
 
 //class AreaLight {
 //public:
-//    AreaLight(vec4 pos_or_dir, color3 intensity, vec3 attenuation);
+//    AreaLight(vec3 pos, vec3 dir, color3 intensity, vec3 attenuation);
 //
-//    vec3 LightVectorFrom(vec3 const &point) const;
+    //vec3 getLightVectorFrom(vec3 const &point) const override;
+    //LightRayDirections getLightDirectionsFrom(vec3 const &point) const override;
+
+    //float getDistanceTo(vec3 const &point) const override;
+    //vec3 getIntensityAt(vec3 const &point) const override;
 //
 //    // vars
-//    vec3 v1, v2, v3, v4;
-//
-//    vec3 attenuation;   // const, linear, quadratic term
-//    color3 intensity;
-//
-//    mat3 transform;
+//    vec3 _pos;
+//    vec3 _dir;
 //};
