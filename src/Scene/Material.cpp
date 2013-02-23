@@ -21,10 +21,13 @@ color3 Texture::getTextureColor(float u, float v) {
     // calculate image array indices
     // image origin is top left corner
     // u, v origin is lower left corner (thus: height - y - 1)
-    auto idx1 = static_cast<uint>((this->mHeight - floor(y))*this->mWidth + floor(x));         // upper left
-    auto idx2 = static_cast<uint>((this->mHeight - floor(y))*this->mWidth + floor(x) + 1);     // upper right
-    auto idx3 = static_cast<uint>((this->mHeight - floor(y) - 1)*this->mWidth + floor(x));     // lower left
-    auto idx4 = static_cast<uint>((this->mHeight - floor(y) - 1)*this->mWidth + floor(x) + 1); // lower right
+    auto flipped_y = this->mHeight - floor(y);
+    auto floor_x = floor(x);
+
+    auto idx1 = static_cast<uint>( flipped_y*mWidth + floor_x);         // upper left
+    auto idx2 = static_cast<uint>( flipped_y*mWidth + floor_x + 1);     // upper right
+    auto idx3 = static_cast<uint>((flipped_y - 1)*mWidth + floor_x);     // lower left
+    auto idx4 = static_cast<uint>((flipped_y - 1)*mWidth + floor_x + 1); // lower right
 
     // prevent indexing out of bounds
     idx1 %= dim;
