@@ -19,6 +19,9 @@ Scene::~Scene() {
     for (auto prim : _primitives)
         delete prim;
 
+    for (auto light : _lights)
+        delete light;
+
     for (auto mat : _materials)
         delete mat;
 }
@@ -79,45 +82,32 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     out_color += ambient;
     out_color += emission;
 
-    for (std::vector<Light>::iterator it = _lights.begin(); it != _lights.end(); ++it) {
-        vec3 dir_to_light = it->LightVectorFrom(Hit.hitPoint);
+    for (auto it = _lights.begin(); it != _lights.end(); ++it) {
+        auto p_light = *it;
+        auto dir_to_light = p_light->getLightVectorFrom(Hit.hitPoint);
 
         // light in front of object?
         if (dot(Hit.normal, dir_to_light) > 0) {
             Ray r(Hit.hitPoint + 0.001f*dir_to_light, dir_to_light);
         
             // distance from hitpoint to light
-            float max_dist;
-            if (it->pos_or_dir[3] == 1) {
-                // point light
-                max_dist = glm::distance(vec3(it->pos_or_dir), Hit.hitPoint);
-            }
-            else {
-                // directional light, distance = infinite
-                max_dist = FLT_MAX;
-            }
+            float max_dist = p_light->getDistanceTo(r.pos);
 
             // Hitpoint ist im Schatten wenn inShadow die erste Intersection zwischen Hitpoint und Light position findet
             auto is_in_shadow = inShadow(r, max_dist);
             if (is_in_shadow)
                 continue;       // pixel in shadow don't contribute to output color
 
-            vec3 L = it->intensity;
-
-            // only consider point light for attenuation (directional light would be 1 0 0 -> no change)
-            if (it->pos_or_dir[3] == 1) {
-                float d = glm::distance(Hit.hitPoint, vec3(it->pos_or_dir));
-                L = it->intensity / (it->attenuation[0] + it->attenuation[1] * d + it->attenuation[2] * d * d);
-            }
+            vec3 light_intensity = p_light->getIntensityAt(Hit.hitPoint);
 
             // diffuse term
             float dotP = dot(Hit.normal, dir_to_light);
-            out_color += L * (diffuse * common::max(dotP, 0.0f));
+            out_color += light_intensity * (diffuse * common::max(dotP, 0.0f));
 
             // specular term
             vec3 halfVec = normalize(dir_to_light + -ray.dir);
             float halfAngle = dot(Hit.normal, halfVec);
-            out_color += L * (specular * pow(common::max(halfAngle, 0.0f), shininess));
+            out_color += light_intensity * (specular * pow(common::max(halfAngle, 0.0f), shininess));
         }
     }
 

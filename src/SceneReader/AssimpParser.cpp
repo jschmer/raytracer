@@ -216,16 +216,16 @@ std::unique_ptr<Scene> AssimpParser::load(std::unique_ptr<Scene> scene) const {
         vec3 attenuation(1.0, 0.0, 0.0);
 
         // point light, fourth vector member = 1
-        vec4 pos(10, 10, 10, 1);
+        vec3 pos(10, 10, 10);
         vec3 color2(.8);
         // store object with transformation
-        //scene->_lights.push_back(Light(pos, color2, attenuation, mat4(1.0f)));
+        scene->_lights.push_back(new PointLight(pos, color2, attenuation));
 
         // directional light, fourth vector member = 0, dir is TO THE LIGHTSOURCE
-        vec4 dir(1, 1, 1, 0);
+        vec3 dir(1, 1, 1);
         vec3 color1(.5);
         // store object with transformation
-        scene->_lights.push_back(Light(dir, color1, attenuation, mat4(1.0f)));
+        scene->_lights.push_back(new DirectionalLight(dir, color1, attenuation));
     }
 
     {

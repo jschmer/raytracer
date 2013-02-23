@@ -107,21 +107,21 @@ std::unique_ptr<Scene> RaytraceParser::load(std::unique_ptr<Scene> scene) const 
                 else if (cmd == "directional") {
                     validinput = readvals(s, 6, values); // Position/color for lts.
                     if (validinput) {
-                        vec4 dir(values[0], values[1], values[2], 0);
+                        vec3 dir(values[0], values[1], values[2]);
                         vec3 color(values[3], values[4], values[5]);
 
                         // store object with transformation
-                        scene->_lights.push_back(Light(dir, color, attenuation, /* transfstack.top() */ mat4(1.0f)));
+                        scene->_lights.push_back(new DirectionalLight(dir, color, attenuation));
                     }
                 }
                 else if (cmd == "point") {
                     validinput = readvals(s, 6, values); // Position/color for lts.
                     if (validinput) {
-                        vec4 pos(values[0], values[1], values[2], 1);
+                        vec3 pos(values[0], values[1], values[2]);
                         vec3 color(values[3], values[4], values[5]);
 
                         // store object with transformation
-                        scene->_lights.push_back(Light(pos, color, attenuation, /* transfstack.top() */ mat4(1.0f)));
+                        scene->_lights.push_back(new PointLight(pos, color, attenuation));
                     }
                 }
                 else if (cmd == "attenuation") {

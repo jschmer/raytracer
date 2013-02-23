@@ -3,20 +3,54 @@
 // glm functions
 using glm::normalize;
 
-Light::Light(vec4 pos_or_dir, vec3 intensity, vec3 attenuation, mat4 transform)
-    : pos_or_dir(pos_or_dir),
-    intensity(intensity),
-    attenuation(attenuation),
-    transform(transform)
+/*
+ * Point light
+ */
+PointLight::PointLight(vec3 pos, color3 intensity, vec3 attenuation)
+    : Light(intensity, attenuation),
+    _pos(pos)
 {
-    normalized_dir = normalize(vec3(pos_or_dir));
 }
 
-vec3 Light::LightVectorFrom(vec3 const &point) const {
-    if (pos_or_dir[3] == 1)
-        // point light
-            return normalize(vec3(pos_or_dir) - point);
-    else
-        // directional light, pos_or_dir is the light vector TO the light source
-        return this->normalized_dir;
+vec3 PointLight::getLightVectorFrom(vec3 const &point) const {
+    return normalize(_pos - point);
+}
+
+LightRayDirections PointLight::getLightDirectionsFrom(vec3 const &point) const {
+    return LightRayDirections();
+}
+
+float PointLight::getDistanceTo(vec3 const &point) const {
+    return glm::distance(_pos, point);
+}
+
+vec3 PointLight::getIntensityAt(vec3 const &point) const {
+    float d = glm::distance(point, _pos);
+    return _intensity / (_attenuation[0] + _attenuation[1] * d + _attenuation[2] * d * d);
+}
+                
+
+/*
+ * Directional light
+ */
+DirectionalLight::DirectionalLight(vec3 dir, color3 intensity, vec3 attenuation)
+    : Light(intensity, attenuation),
+    _dir(normalize(dir))
+{
+}
+
+vec3 DirectionalLight::getLightVectorFrom(vec3 const &point) const {
+    return _dir;
+}
+
+LightRayDirections DirectionalLight::getLightDirectionsFrom(vec3 const &point) const {
+    return LightRayDirections();
+}
+
+float DirectionalLight::getDistanceTo(vec3 const &point) const {
+    return FLT_MAX;
+}
+
+vec3 DirectionalLight::getIntensityAt(vec3 const &point) const {
+    return _intensity;
 }

@@ -60,6 +60,6 @@ public:
     /*
      * Lights
      */
-    std::vector<Light> _lights;
+    std::vector<Light*> _lights;
 };
 
