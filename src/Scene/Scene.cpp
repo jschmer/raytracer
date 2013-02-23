@@ -84,30 +84,35 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
 
     for (auto it = _lights.begin(); it != _lights.end(); ++it) {
         auto p_light = *it;
-        auto shadow_ray = p_light->getShadowRayFrom(Hit.hitPoint);
+        auto shadow_rays = p_light->getShadowRaysFrom(Hit.hitPoint);
 
-        // light in front of object?
-        float dotP = dot(Hit.normal, shadow_ray.dir);
-        if (dot(Hit.normal, shadow_ray.dir) > 0) {        
-            // distance from hitpoint to light
-            float max_dist = p_light->getDistanceTo(shadow_ray.pos);
+        // test every shadow ray sample, if the ray is not in shadow, it contributes 1/number of the shadowrays 
+        // to the color intensity
+        float shadow_intensity = 1.0f/shadow_rays.size();
+        for (auto& shadow_ray : shadow_rays) {
+            // light in front of object?
+            float dotP = dot(Hit.normal, shadow_ray.dir);
+            if (dot(Hit.normal, shadow_ray.dir) > 0) {    
+                // distance from hitpoint to light
+                float max_dist = p_light->getDistanceTo(shadow_ray.pos);
 
-            // Hitpoint ist im Schatten wenn inShadow die erste Intersection zwischen Hitpoint und Light position findet
-            auto is_in_shadow = inShadow(shadow_ray, max_dist);
-            if (is_in_shadow)
-                continue;       // pixel in shadow don't contribute to output color
+                // Hitpoint ist im Schatten wenn inShadow die erste Intersection zwischen Hitpoint und Light position findet
+                auto is_in_shadow = inShadow(shadow_ray, max_dist);
+                if (is_in_shadow)
+                    continue;       // pixel in shadow don't contribute to output color
 
-            vec3 light_intensity = p_light->getIntensityAt(Hit.hitPoint);
+                vec3 light_intensity = p_light->getIntensityAt(Hit.hitPoint);
 
-            // diffuse term
-            out_color += light_intensity * (diffuse * common::max(dotP, 0.0f));
+                // diffuse term
+                out_color += shadow_intensity * light_intensity * (diffuse * common::max(dotP, 0.0f));
 
-            // specular term
-            vec3 halfVec = normalize(shadow_ray.dir + -ray.dir);
-            float halfAngle = dot(Hit.normal, halfVec);
-            out_color += light_intensity * (specular * pow(common::max(halfAngle, 0.0f), shininess));
+                // specular term
+                vec3 halfVec = normalize(shadow_ray.dir + -ray.dir);
+                float halfAngle = dot(Hit.normal, halfVec);
+                out_color += shadow_intensity * light_intensity * (specular * pow(common::max(halfAngle, 0.0f), shininess));
+            }
         }
-    }
+ }
 
     if (color3(0.0f) != specular) {
         // reflection

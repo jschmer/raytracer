@@ -127,6 +127,18 @@ std::unique_ptr<Scene> TestParser::load(std::unique_ptr<Scene> scene) const {
                         scene->_lights.push_back(new PointLight(pos, color, attenuation));
                     }
                 }
+                else if (cmd == "area") {
+                    validinput = readvals(s, 10, values); // Position/color for lts.
+                    if (validinput) {
+                        vec3 pos(values[0], values[1], values[2]);
+                        vec3 dir(values[3], values[4], values[5]);
+                        float size = values[6];
+                        vec3 color(values[7], values[8], values[9]);
+
+                        // store object with transformation
+                        scene->_lights.push_back(new AreaLight(pos, dir, size, color, attenuation));
+                    }
+                }
                 else if (cmd == "attenuation") {
                     validinput = readvals(s, 3, values); // Position/color for lts.
                     if (validinput) {
