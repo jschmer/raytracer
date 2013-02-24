@@ -9,6 +9,11 @@ public:
         : pos(pos),
         dir(dir)
     {}
+    // move constructor
+    Ray(Ray&& other)
+        : pos(other.pos)
+        , dir(other.dir)
+    {}
 
     vec3 pos, dir;
 };

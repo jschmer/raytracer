@@ -4,7 +4,7 @@
 using glm::normalize;
 
 const float shadow_ray_origin_offset = .001f;
-const float SampleSize = 5.0f;  // SampleSize*SampleSize shadow rays are generated
+const int SampleSize = 4;  // SampleSize*SampleSize shadow rays are generated
 
 /*
  * Point light
@@ -101,13 +101,13 @@ ShadowRays AreaLight::getShadowRaysFrom(vec3 const &point) const {
     auto deltaX = stepsize*_plane_dir_first;
     auto deltaY = stepsize*_plane_dir_second;
 
-    auto randMax = static_cast<float>(RAND_MAX);
+    auto randMax = static_cast<float>(RAND_MAX) * 1.2f;
 
     // generate directions with samples over the area of the light
     // TODO: add in some noise to reduce banding
     ShadowRays rays;
-    for (auto i = lower; i < upper-1; ++i) {
-        for (auto k = lower; k < upper-1; ++k) {
+    for (auto i = lower; i < upper; ++i) {
+        for (auto k = lower; k < upper; ++k) {
             auto randX = rand() / randMax;
             auto randY = rand() / randMax;
 
