@@ -1,3 +1,3 @@
 @echo off 
-raytracer.exe models/ShurikenWithTris.obj
+raytracer.exe models/ShurikenWithTris.raytrace
 pause

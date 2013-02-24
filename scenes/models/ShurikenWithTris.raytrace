@@ -1,0 +1,10 @@
+# Uses this scene file (anything that can be loaded)
+# Has to be the first command!
+# Don't follow this rule if you want to have undefined behaviour!
+use_scene ShurikenWithTris.obj
+
+# additional parameters
+size 1280 960
+
+camera     -30 -10 35    0 0 0    0 1 0   45
+directional 0 0 1    1 1 1
