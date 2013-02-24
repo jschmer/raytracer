@@ -6,10 +6,11 @@
 #include <memory>
 
 #include <RayTracer/glm_includes.h>
-#include <RayTracer/Scene/Light.h>
+#include <RayTracer/Scene/Primitives/AABB.h>
 
 // forward declarations
 class Ray;
+class Light;
 class Camera;
 class Material;
 class Primitive;
@@ -21,6 +22,8 @@ class Scene
 public:
     Scene();
     ~Scene();
+
+    void createAABB();
 
     color3 shade(Intersection &Hit, Ray const &ray, int depth);
     Intersection trace(Ray const &ray, int depth);
@@ -51,6 +54,7 @@ public:
      * Geometry
     */
     std::vector<Primitive*> _primitives;
+    AABB aabb;
 
     /*
      * Materials

@@ -130,6 +130,22 @@ float Triangle::Intersect(Ray ray, Intersection &Hit, float dist) {
     return t;
 }
 
+AABB Triangle::getAABB() {
+    auto vert0 = obj2world * vec4(v0, 1);
+    auto vert1 = obj2world * vec4(v1, 1);
+    auto vert2 = obj2world * vec4(v2, 1);
+
+    auto minx = common::min(common::min(vert0.x, vert1.x), vert2.x);
+    auto miny = common::min(common::min(vert0.y, vert1.y), vert2.y);
+    auto minz = common::min(common::min(vert0.z, vert1.z), vert2.z);
+
+    auto maxx = common::max(common::max(vert0.x, vert1.x), vert2.x);
+    auto maxy = common::max(common::max(vert0.y, vert1.y), vert2.y);
+    auto maxz = common::max(common::max(vert0.z, vert1.z), vert2.z);
+
+    return AABB(vec3(minx, miny, minz), vec3(maxx, maxy, maxz));
+}
+
 // Compute barycentric coordinates (u, v, w) for
 // point p with respect to triangle (a, b, c)
 void Triangle::Barycentric(vec3 phit, float &u, float &v, float &w)

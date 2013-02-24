@@ -1,6 +1,7 @@
 #pragma once
 
 #include <RayTracer/glm_includes.h>
+#include <RayTracer/Scene/Primitives/AABB.h>
 
 // forward declarations
 class Ray;
@@ -42,6 +43,8 @@ public:
     }
 
     virtual float Intersect(Ray ray, Intersection &Hit, float dist = FLT_MAX) = 0;
+
+    virtual AABB getAABB() = 0;
 
     // material props
     Material* mat;

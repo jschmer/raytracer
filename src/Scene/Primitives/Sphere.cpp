@@ -10,7 +10,7 @@ using glm::dot;
 
 Sphere::Sphere(mat4 obj2world, vec4 pos, float radius)
     : Primitive(obj2world),
-    position(pos),
+    position(vec3(pos), 1),
     radius(radius),
     radius2(radius*radius)
 {
@@ -95,4 +95,12 @@ float Sphere::Intersect(Ray ray, Intersection &Hit, float dist) {
     Hit.material_color.specular  = mat->specular;
 
     return ret;
+}
+
+AABB Sphere::getAABB() {
+    auto ext = vec3(radius, radius, radius);
+    vec3 pos = vec3(obj2world * position);
+    auto min = pos - ext;
+    auto max = pos + ext;
+    return AABB(min, max);
 }

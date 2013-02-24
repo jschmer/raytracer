@@ -14,6 +14,7 @@
 #include <RayTracer/Scene/Scene.h>
 #include <RayTracer/Scene/Camera.h>
 #include <RayTracer/Scene/Material.h>
+#include <RayTracer/Scene/Light.h>
 
 #include <RayTracer/Scene/Primitives/Sphere.h>
 #include <RayTracer/Scene/Primitives/Triangle.h>

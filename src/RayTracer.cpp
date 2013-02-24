@@ -27,6 +27,14 @@ RayTracer::~RayTracer()
 void RayTracer::load(std::string scene_file) {
     try {
         scene_ = loadScene(scene_file);
+
+        // TODO: Compute a Axis aligned bounding box
+        //       for each Primitive and 
+        //       construct some kind of hirarchy tree from them
+        //       for example a 'fixed' grid (divide scene bounding box
+        //       into 20*20 boxes)
+
+        scene_->createAABB();
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
         scene_ = nullptr;
@@ -36,6 +44,11 @@ void RayTracer::load(std::string scene_file) {
 void RayTracer::renderInto(IRenderTarget* render_target) {
     if (nullptr == scene_)
         return;
+
+    if (!scene_->_camera) {
+        std::cout << "No Camera detected! Aborting..." << std::endl;
+        return;
+    }
 
     auto& camera = *scene_->_camera;
     IRenderTarget& target = *render_target;

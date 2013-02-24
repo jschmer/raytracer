@@ -202,6 +202,7 @@
     <ClInclude Include="include\RayTracer\Scene\Camera.h" />
     <ClInclude Include="include\RayTracer\Scene\Light.h" />
     <ClInclude Include="include\RayTracer\Scene\Material.h" />
+    <ClInclude Include="include\RayTracer\Scene\Primitives\AABB.h" />
     <ClInclude Include="include\RayTracer\Scene\Primitives\Primitive.h" />
     <ClInclude Include="include\RayTracer\Scene\Primitives\Sphere.h" />
     <ClInclude Include="include\RayTracer\Scene\Primitives\Triangle.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="src\SceneReader\SceneReader.cpp" />
     <ClCompile Include="src\Scene\Light.cpp" />
     <ClCompile Include="src\Scene\Material.cpp" />
+    <ClCompile Include="src\Scene\Primitives\AABB.cpp" />
     <ClCompile Include="src\Scene\Primitives\Sphere.cpp" />
     <ClCompile Include="src\Scene\Primitives\Triangle.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />

@@ -4,10 +4,11 @@
 #include <future>
 
 #include <RayTracer/SceneReader/SceneReader.h>
-#include <RayTracer/RenderTarget/RayTraceImage.h>
 #include <RayTracer/Scene/Camera.h>
-#include <RayTracer/Scene/Primitives/Primitive.h>
 #include <RayTracer/Scene/Material.h>
+#include <RayTracer/Scene/Light.h>
+#include <RayTracer/Scene/Primitives/Primitive.h>
+#include <RayTracer/RenderTarget/RayTraceImage.h>
 
 Scene::Scene() {
     // default values
@@ -15,6 +16,7 @@ Scene::Scene() {
     _maxdepth = 5;
     _camera = nullptr;
 }
+
 Scene::~Scene() {
     for (auto prim : _primitives)
         delete prim;
@@ -24,6 +26,32 @@ Scene::~Scene() {
 
     for (auto mat : _materials)
         delete mat;
+}
+
+void Scene::createAABB() {
+    float minx, miny, minz;
+    minx = miny = minz = FLT_MAX;
+
+    float maxx, maxy, maxz;
+    maxx = maxy = maxz = FLT_MIN;
+
+    for (auto prim : _primitives) {
+        // get the primitives bounding box
+        auto box = prim->getAABB();
+
+        // min values
+        minx = common::min(minx, box._min.x);
+        miny = common::min(miny, box._min.y);
+        minz = common::min(minz, box._min.z);
+
+        // max values
+        maxx = common::max(maxx, box._max.x);
+        maxy = common::max(maxy, box._max.y);
+        maxz = common::max(maxz, box._max.z);
+    }
+
+    aabb._min = vec3(minx, miny, minz);
+    aabb._max = vec3(maxx, maxy, maxz);
 }
 
 bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
@@ -41,6 +69,12 @@ bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
 }
 
 Intersection Scene::trace(Ray const &ray, int depth) {
+    // first fast test: does the ray intersect the scene AABB?
+    float hist_dist;
+    if (!aabb.Intersect(ray, hist_dist)) {
+        return Intersection();
+    }
+
     float t_hit = FLT_MAX;
     Intersection intersection;
 
@@ -97,8 +131,7 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
                 float max_dist = p_light->getDistanceTo(shadow_ray.pos);
 
                 // Hitpoint ist im Schatten wenn inShadow die erste Intersection zwischen Hitpoint und Light position findet
-                auto is_in_shadow = inShadow(shadow_ray, max_dist);
-                if (is_in_shadow)
+                if (inShadow(shadow_ray, max_dist))
                     continue;       // pixel in shadow don't contribute to output color
 
                 vec3 light_intensity = p_light->getIntensityAt(Hit.hitPoint);

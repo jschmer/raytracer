@@ -13,6 +13,7 @@ public:
     Sphere(mat4 obj2world, vec4 pos, float radius);
 
     float Intersect(Ray ray, Intersection &Hit, float dist = FLT_MAX) override;
+    AABB getAABB() override;
 
     // object parameters
     vec4 position;    // position

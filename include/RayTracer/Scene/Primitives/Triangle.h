@@ -15,11 +15,11 @@ public:
 
     // taken from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/
     float Intersect(Ray ray, Intersection &Hit, float dist = FLT_MAX) override;
+    AABB getAABB() override;
 
     // Compute barycentric coordinates (u, v, w) for
     // point p with respect to triangle (a, b, c)
     void Barycentric(vec3 phit, float &u, float &v, float &w);
-
     bool HasTextureCoords();
 
     // object parameters

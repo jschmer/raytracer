@@ -114,6 +114,9 @@
     <ClInclude Include="include\RayTracer\SceneReader\SceneParserHelper.h">
       <Filter>Header Files\SceneReader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RayTracer\Scene\Primitives\AABB.h">
+      <Filter>Header Files\Scene\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -160,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="src\SceneReader\SceneParserHelper.cpp">
       <Filter>Source Files\SceneReader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Primitives\AABB.cpp">
+      <Filter>Source Files\Scene\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
