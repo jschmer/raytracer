@@ -27,14 +27,6 @@ RayTracer::~RayTracer()
 void RayTracer::load(std::string scene_file) {
     try {
         scene_ = loadScene(scene_file);
-
-        // TODO: Compute a Axis aligned bounding box
-        //       for each Primitive and 
-        //       construct some kind of hirarchy tree from them
-        //       for example a 'fixed' grid (divide scene bounding box
-        //       into 20*20 boxes)
-
-        scene_->createAABB();
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
         scene_ = nullptr;
@@ -120,8 +112,15 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
         }
     };
 
-    // start rendering
+    // start rendering and timing
     auto start = std::chrono::system_clock::now();
+
+    // Compute Axis aligned bounding boxes
+    // for each Primitive and 
+    // construct some kind of hirarchy tree from them
+    // for example a 'fixed' grid (divide scene bounding box into 10*10*10 boxes)
+    scene_->createAABB();
+
     std::vector<std::future<void>> futs;
     while (numCPU > 0) {
         // start thread
