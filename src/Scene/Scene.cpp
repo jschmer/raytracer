@@ -10,8 +10,6 @@
 #include <RayTracer/Scene/Primitives/Primitive.h>
 #include <RayTracer/RenderTarget/RayTraceImage.h>
 
-const auto aabb_dimension = 10u; 
-
 Scene::Scene() {
     // default values
     _hasSize  = false;
@@ -56,6 +54,13 @@ void Scene::createAABB() {
 
     _scene_aabb._min = vec3(minx, miny, minz);
     _scene_aabb._max = vec3(maxx, maxy, maxz);
+
+    auto tenth = _primitives.size() / 10;
+    unsigned int aabb_dimension = (tenth != 0) ? tenth : 1;
+    aabb_dimension = static_cast<unsigned int>(ceil(pow( aabb_dimension, 1./3.)));
+    aabb_dimension = common::min(aabb_dimension, 10u);      // cap at 1000 AABBs
+        
+    std::cout << " Using " << aabb_dimension*aabb_dimension*aabb_dimension << " AABBs" << std::endl;
 
     // create aabb_dimension*aabb_dimension*aabb_dimension boxes in the AABB of the scene
     float dsizeX = ((maxx - minx) / aabb_dimension) * 1.0001f; // The mul with 1.0001f accounts for a little imprecision, it makes the boxes a bit bigger than the scene AABB

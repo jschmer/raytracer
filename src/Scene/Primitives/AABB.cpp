@@ -24,8 +24,8 @@ bool AABB::Intersect(Ray const &ray, float &hit_dist) const {
     if (tymax < tmax)
         tmax = tymax;
 
-    auto tzmin = (_min.z - ray.pos.z) / ray.dir.z;
-    auto tzmax = (_max.z - ray.pos.z) / ray.dir.z;
+    auto tzmax = (_min.z - ray.pos.z) / ray.dir.z;
+    auto tzmin = (_max.z - ray.pos.z) / ray.dir.z;
 
     if (tzmin > tzmax)
         std::swap(tzmin, tzmax);
