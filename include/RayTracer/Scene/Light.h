@@ -70,6 +70,6 @@ private:
     vec3 _dir;
     float _size;
 
-    vec3 plane_dir_first;
-    vec3 plane_dir_second;
+    vec3 _plane_dir_first;
+    vec3 _plane_dir_second;
 };

@@ -1,3 +1,3 @@
 @echo off 
-raytracer.exe SuperCube/SuperCube.obj
+raytracer.exe SuperCube/SuperCube.raytrace
 pause

@@ -12,7 +12,7 @@ camera 5 5 5   0 0 0   0 1 0   45
 
 # lights
 #     pos     dir    size  intensity
-area 0 5 0   0 -1 0   .5   1 1 1
+area 0 5 0   0 -1 0   1   1 1 1
 #directional 0 1 0   1 1 1
 
 # objects

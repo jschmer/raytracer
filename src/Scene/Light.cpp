@@ -4,7 +4,7 @@
 using glm::normalize;
 
 const float shadow_ray_origin_offset = .001f;
-const float SampleSize = 6.0f;  // SampleSize*SampleSize shadow rays are generated
+const float SampleSize = 5.0f;  // SampleSize*SampleSize shadow rays are generated
 
 /*
  * Point light
@@ -85,12 +85,12 @@ AreaLight::AreaLight(vec3 pos, vec3 dir, float size, color3 intensity, vec3 atte
     for (auto i = 0u; i < 3; ++i) {
         if (i != not_null_idx) {
             sum += _dir[i];
-            plane_dir_first[i] = 1.0f;
+            _plane_dir_first[i] = 1.0f;
         }
     }
 
-    plane_dir_first[not_null_idx] = -sum / _dir[not_null_idx];
-    plane_dir_second = cross(_dir, plane_dir_first);
+    _plane_dir_first[not_null_idx] = -sum / _dir[not_null_idx];
+    _plane_dir_second = cross(_dir, _plane_dir_first);
 }
 
 ShadowRays AreaLight::getShadowRaysFrom(vec3 const &point) const {
@@ -98,12 +98,20 @@ ShadowRays AreaLight::getShadowRaysFrom(vec3 const &point) const {
     float lower = -SampleSize/2.0f;
     float upper = SampleSize/2.0f;
 
+    auto deltaX = stepsize*_plane_dir_first;
+    auto deltaY = stepsize*_plane_dir_second;
+
+    auto randMax = static_cast<float>(RAND_MAX);
+
     // generate directions with samples over the area of the light
     // TODO: add in some noise to reduce banding
     ShadowRays rays;
-    for (auto i = lower; i < upper; ++i) {
-        for (auto k = lower; k < upper; ++k) {
-            auto light_pos = _pos + i*stepsize*plane_dir_first + k*stepsize*plane_dir_second;
+    for (auto i = lower; i < upper-1; ++i) {
+        for (auto k = lower; k < upper-1; ++k) {
+            auto randX = rand() / randMax;
+            auto randY = rand() / randMax;
+
+            auto light_pos = _pos + (i+randX)*deltaX + (k+randY)*deltaY;
             auto dir = normalize(light_pos - point);
             auto ray_pos = point + shadow_ray_origin_offset * dir;
             rays.push_back(Ray(ray_pos, dir));
