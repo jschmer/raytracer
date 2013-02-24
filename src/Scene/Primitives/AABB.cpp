@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-bool AABB::Intersect(Ray const ray, float &hit_dist) const {
+bool AABB::Intersect(Ray const &ray, float &hit_dist) const {
     auto tmin = (_min.x - ray.pos.x) / ray.dir.x;
     auto tmax = (_max.x - ray.pos.x) / ray.dir.x;
 
@@ -45,5 +45,13 @@ bool AABB::Intersect(Ray const ray, float &hit_dist) const {
     //    ray.tmin = tmin;
     //if (ray.tmax > tmax)
     //    ray.tmax = tmax;
+
+    return true;
+}
+
+bool AABB::Intersect(AABB const &other) const {
+    for (auto i = 0u; i < 3; ++i)
+        if (_min[i] > other._max[i] || other._min[i] > _max[i])
+            return false;
     return true;
 }
