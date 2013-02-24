@@ -10,6 +10,8 @@
 #include <RayTracer/Scene/Primitives/Primitive.h>
 #include <RayTracer/RenderTarget/RayTraceImage.h>
 
+const auto aabb_dimension = 10u; 
+
 Scene::Scene() {
     // default values
     _hasSize  = false;
@@ -39,19 +41,56 @@ void Scene::createAABB() {
         // get the primitives bounding box
         auto box = prim->getAABB();
 
-        // min values
+        // min values for scene AABB
         minx = common::min(minx, box._min.x);
         miny = common::min(miny, box._min.y);
         minz = common::min(minz, box._min.z);
 
-        // max values
+        // max values for scene AABB
         maxx = common::max(maxx, box._max.x);
         maxy = common::max(maxy, box._max.y);
         maxz = common::max(maxz, box._max.z);
+
+        // store adress of primitives in overlapping boxes
     }
 
-    aabb._min = vec3(minx, miny, minz);
-    aabb._max = vec3(maxx, maxy, maxz);
+    _scene_aabb._min = vec3(minx, miny, minz);
+    _scene_aabb._max = vec3(maxx, maxy, maxz);
+
+    // create aabb_dimension*aabb_dimension*aabb_dimension boxes in the AABB of the scene
+    float dsizeX = ((maxx - minx) / aabb_dimension) * 1.0001f; // The mul with 1.0001f accounts for a little imprecision, it makes the boxes a bit bigger than the scene AABB
+    float dsizeY = ((maxy - miny) / aabb_dimension) * 1.0001f;
+    float dsizeZ = ((maxz - minz) / aabb_dimension) * 1.0001f;
+    
+    for (float dminx = minx, dmaxx = minx + dsizeX; dminx <= maxx; ) {
+        for (float dminy = miny, dmaxy = miny + dsizeY; dminy <= maxy; ) {
+            for (float dminz = minz, dmaxz = minz + dsizeZ; dminz <= maxz; ) {
+                // do the work
+                _aabbs.push_back(AABB(vec3(dminx, dminy, dminz),
+                                      vec3(dmaxx, dmaxy, dmaxz)));
+
+                // after-run work
+                dminz = dmaxz;
+                dmaxz += dsizeZ;
+            }
+
+            // after-run work
+            dminy = dmaxy;
+            dmaxy += dsizeY;
+        }
+
+        // after-run work
+        dminx  = dmaxx;
+        dmaxx += dsizeX;
+    }
+
+    // fill the aabbs
+    for (auto& aabb : _aabbs) {
+        for (auto prim : _primitives) {
+            if (aabb.Intersect(prim->getAABB()))
+                aabb._primitives.push_back(prim);
+        }
+    }
 }
 
 bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
@@ -71,7 +110,7 @@ bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
 Intersection Scene::trace(Ray const &ray, int depth) {
     // first fast test: does the ray intersect the scene AABB?
     float hist_dist;
-    if (!aabb.Intersect(ray, hist_dist)) {
+    if (!_scene_aabb.Intersect(ray, hist_dist)) {
         return Intersection();
     }
 
@@ -81,11 +120,17 @@ Intersection Scene::trace(Ray const &ray, int depth) {
     if (depth <= this->_maxdepth) {
         float t;
         Intersection hit;
-        for (std::vector<Primitive*>::iterator it = _primitives.begin(); it < _primitives.end(); ++it) {
-            t = (*it)->Intersect(ray, hit, t_hit);
-            if (t > 0 && t < t_hit) {
-                t_hit = t;
-                intersection = hit;
+        // loop through the AABBs to see if the ray intersects them
+        for (auto const& aabb : _aabbs) {
+            // and if it does: do the primitive intersection
+            if (aabb.Intersect(ray, t)) {
+                for (auto const primitive : aabb._primitives) {
+                    t = primitive->Intersect(ray, hit, t_hit);
+                    if (t > 0 && t < t_hit) {
+                        t_hit = t;
+                        intersection = hit;
+                    }
+                }
             }
         }
     }

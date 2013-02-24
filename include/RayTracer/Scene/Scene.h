@@ -54,7 +54,8 @@ public:
      * Geometry
     */
     std::vector<Primitive*> _primitives;
-    AABB aabb;
+    AABB _scene_aabb;
+    std::vector<AABB> _aabbs;
 
     /*
      * Materials
