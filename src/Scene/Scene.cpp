@@ -97,10 +97,16 @@ bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
     Intersection hit;
     float t;
 
-    for (std::vector<Primitive*>::iterator it = _primitives.begin(); it < _primitives.end(); ++it) {
-        t = (*it)->Intersect(ray, hit);
-        if (t > 0 && t < t_hit) {
-            return true;
+    // loop through the AABBs to see if the ray intersects them
+    for (auto const& aabb : _aabbs) {
+        // and if it does: do the primitive intersection
+        if (aabb.Intersect(ray, t)) {
+            for (auto const primitive : aabb._primitives) {
+                t = primitive->Intersect(ray, hit);
+                if (t > 0 && t < t_hit) {
+                    return true;
+                }
+            }
         }
     }
 
