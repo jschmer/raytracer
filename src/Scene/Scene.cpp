@@ -10,12 +10,11 @@
 #include <RayTracer/Scene/Primitives/Primitive.h>
 #include <RayTracer/RenderTarget/RayTraceImage.h>
 
-Scene::Scene() {
-    // default values
-    _hasSize  = false;
-    _maxdepth = 5;
-    _camera = nullptr;
-}
+Scene::Scene()
+    : _hasSize(false),  // default values
+    _maxdepth(5),
+    _camera(nullptr)
+{}
 
 Scene::~Scene() {
     for (auto prim : _primitives)
@@ -97,6 +96,41 @@ void Scene::createAABB() {
         }
     }
 }
+
+void Scene::createDefaultCamera() {
+    std::cout << " >> No Camera detected! Setting one on the Z-Axis..." << std::endl;
+
+    // create a camera that looks at the center of the scene-bounding-box
+    // and that shows the entire scene
+    vec3 eye, lookAt, up(0, 1, 0);
+    float FOVy = 45;
+
+    // calculating the center of the scenes bounding box
+    auto& max = _scene_aabb._max;
+    auto& min = _scene_aabb._min;
+
+    lookAt.x = (max.x + min.x) / 2.0f;
+    lookAt.y = (max.y + min.y) / 2.0f;
+    lookAt.z = (max.z + min.z) / 2.0f;
+
+    eye.x = lookAt.x;
+    eye.y = lookAt.y;
+    eye.z = 20; // TODO: ordentlichen wert berechnen, der weit genug weg ist um alles zu sehen
+
+    _camera.reset(new Camera(eye, lookAt, up, FOVy));
+
+    // set up a light if there isn't one
+    if (_lights.size() == 0) {
+        std::cout << " >> No  Light detected! Setting up directional light on the Z-Axis..." << std::endl;
+        createDefaultLight();
+    }
+}
+
+void Scene::createDefaultLight() {
+    // create a directional light that shines down the Z-axis
+    _lights.push_back(new DirectionalLight(vec3(0, 1, 0), vec3(1, 1, 1)));
+}
+
 
 bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
     Intersection hit;

@@ -37,12 +37,15 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     if (nullptr == scene_)
         return;
 
-    if (!scene_->_camera) {
-        std::cout << "No Camera detected! Aborting..." << std::endl;
-        return;
-    }
+    // start timing
+    auto start = std::chrono::system_clock::now();
 
-    auto& camera = *scene_->_camera;
+    // Compute Axis aligned bounding boxes
+    // for each Primitive and 
+    // construct some kind of hirarchy tree from them
+    // for example a 'fixed' grid (divide scene bounding box into 10*10*10 boxes)
+    scene_->createAABB();
+
     IRenderTarget& target = *render_target;
     
     // if the scene definition has a size
@@ -53,6 +56,10 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
         target.init(size.width, size.height);
     }
 
+    if (!scene_->_camera)
+        scene_->createDefaultCamera();
+
+    auto& camera = *scene_->_camera;
     camera.initFov(static_cast<float>(target.width()), static_cast<float>(target.height()));
 
     SYSTEM_INFO sysinfo;
@@ -111,15 +118,6 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
             }
         }
     };
-
-    // start rendering and timing
-    auto start = std::chrono::system_clock::now();
-
-    // Compute Axis aligned bounding boxes
-    // for each Primitive and 
-    // construct some kind of hirarchy tree from them
-    // for example a 'fixed' grid (divide scene bounding box into 10*10*10 boxes)
-    scene_->createAABB();
 
     std::vector<std::future<void>> futs;
     while (numCPU > 0) {

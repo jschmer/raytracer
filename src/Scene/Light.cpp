@@ -4,7 +4,7 @@
 using glm::normalize;
 
 const float shadow_ray_origin_offset = .001f;
-const int SampleSize = 4;  // SampleSize*SampleSize shadow rays are generated
+const int SampleSize = 5;  // SampleSize*SampleSize shadow rays are generated for area lights
 
 /*
  * Point light

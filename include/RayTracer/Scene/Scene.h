@@ -24,7 +24,9 @@ public:
     ~Scene();
 
     void createAABB();
-
+    void createDefaultCamera();
+    void createDefaultLight();
+    
     color3 shade(Intersection &Hit, Ray const &ray, int depth);
     Intersection trace(Ray const &ray, int depth);
     bool inShadow(Ray const &ray, float t_hit);

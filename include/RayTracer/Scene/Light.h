@@ -27,7 +27,7 @@ protected:
 
 class PointLight : public Light {
 public:
-    PointLight(vec3 pos, color3 intensity, vec3 attenuation);
+    PointLight(vec3 pos, color3 intensity, vec3 attenuation = vec3(1, 0, 0));
 
     ShadowRays getShadowRaysFrom(vec3 const &point) const override;
 
@@ -41,7 +41,7 @@ private:
 
 class DirectionalLight : public Light {
 public:
-    DirectionalLight(vec3 dir, color3 intensity, vec3 attenuation);
+    DirectionalLight(vec3 dir, color3 intensity, vec3 attenuation = vec3(1, 0, 0));
 
     ShadowRays getShadowRaysFrom(vec3 const &point) const override;
 
@@ -57,7 +57,7 @@ private:
 class AreaLight : public Light {
 public:
     // size is the edge length
-    AreaLight(vec3 pos, vec3 dir, float size, color3 intensity, vec3 attenuation);
+    AreaLight(vec3 pos, vec3 dir, float size, color3 intensity, vec3 attenuation = vec3(1, 0, 0));
 
     ShadowRays getShadowRaysFrom(vec3 const &point) const override;
 
