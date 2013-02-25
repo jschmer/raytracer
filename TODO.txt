@@ -1,0 +1,15 @@
+Anti-Aliasing:
+  >Speeddown<
+  Mehrere Rays durch EINEN Pixel erzeugen und die Farben dieser Rays mitteln
+  (Supersampling)
+
+Uniform Grid Traversal:
+  >Speedup<
+  Das gleichmäßige Gitter nur dem Ray folgend durchgehen
+
+Falls keine Kamera im Scenefile definiert ist:
+  >Feature<
+  Eine Kamera anhand der Scene-AABB berechnen/erstellen
+
+Debug:
+  tricell.test -> AABB der Scene ist nicht richtig
