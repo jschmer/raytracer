@@ -4,7 +4,7 @@
 use_scene ShurikenWithTris.obj
 
 # additional parameters
-size 1280 960
+size 1920 1200
 
 camera     -30 -10 35    0 0 0    0 1 0   45
 directional 0 0 1    1 1 1

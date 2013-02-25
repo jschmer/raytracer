@@ -1,7 +1,7 @@
 # Test Scene 1 
 # A simple quad viewed from different camera positions
 
-size 600 600
+size 1920 1200
 
 output area_light.png
 
@@ -12,8 +12,8 @@ camera 1 7 7   1 0 .5   0 1 0   45
 
 # lights
 #     pos     dir    size  intensity
-area 0 15 0   0 -1 0   1   .6 .6 .6
-directional 0 1 -1  .4 .4 .4
+area 0 15 0   0 -1 0   1   .5 .5 .5
+directional 0 1 -1  .5 .5 .5
 
 # objects
 vertex -10 0  10
@@ -21,10 +21,11 @@ vertex -10 0 -10
 vertex  10 0 -10
 vertex  10 0  10
 
-diffuse 0 0 1  # first material
+diffuse 1 1 1  # first material
 tri 2 1 0
 tri 3 2 0
 
 diffuse 1 0 0  # second material
 sphere 0 2 0  1
+diffuse 0 0 1  # third material
 sphere 2 2 0  .5
