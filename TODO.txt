@@ -2,6 +2,12 @@ Falls keine Kamera im Scenefile definiert ist:
   >Feature<
   Eine Kamera anhand der Scene-AABB berechnen/erstellen
 
+Unterstützung von
+  >Feature<
+  Bump Map
+  Specular Map
+  Normal Map
+  
 Uniform Grid Traversal:
   >Speedup<
   Das gleichmäßige Gitter nur dem Ray folgend durchgehen
@@ -16,3 +22,5 @@ Anti-Aliasing:
 ------
 Debug:
   tricell.test -> AABB der Scene ist nicht richtig
+  >> Sphere Bounding box nicht ganz ok!
+     kommt wohl mit scale/rotate nicht zurecht
