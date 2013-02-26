@@ -3,6 +3,9 @@ raytracer
 
 Simple raytracer project for educational purposes written in C++
 
+This software uses the FreeImage open source image library. See http://freeimage.sourceforge.net for details.
+FreeImage is used under the GNU GPL, version 3. 
+
 TODO
 ====
 
