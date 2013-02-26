@@ -8,20 +8,23 @@ FreeImage is used under the GNU GPL, version 3.
 ## TODO
 
 ### Features
-- Falls keine Kamera im Scenefile definiert ist:
+* Falls keine Kamera im Scenefile definiert ist...
  - Eine Default-Kamera anhand der Scene-AABB berechnen/erstellen
 
-- Unterstützung von
+
+* Unterstützung von
  - Bump Map
  - Specular Map
  - Normal Map
 
-- Anti-Aliasing:
+
+* Anti-Aliasing
  - Mehrere Rays durch EINEN Pixel erzeugen und die Farben dieser Rays mitteln (Supersampling)
  - Diese Rays nur erzeugen wenn eine Kante im Spiel ist! (Sobel) (Edge detection)
 
+
 ### Speedups
-- Uniform Grid Traversal:
+- Uniform Grid Traversal
   - Das Bounding Box Gitter nur dem Ray folgend durchgehen
 
 ## Issues
