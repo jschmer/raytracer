@@ -139,7 +139,7 @@ bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
     // loop through the AABBs to see if the ray intersects them
     for (auto const& aabb : _aabbs) {
         // and if it does: do the primitive intersection
-        if (aabb.Intersect(ray, t)) {
+        if (!aabb.isEmpty() && aabb.Intersect(ray, t)) {
             for (auto const primitive : aabb._primitives) {
                 t = primitive->Intersect(ray, hit);
                 if (t > 0 && t < t_hit) {
@@ -168,7 +168,7 @@ Intersection Scene::trace(Ray const &ray, int depth) {
         // loop through the AABBs to see if the ray intersects them
         for (auto const& aabb : _aabbs) {
             // and if it does: do the primitive intersection
-            if (aabb.Intersect(ray, t)) {
+            if (!aabb.isEmpty() && aabb.Intersect(ray, t)) {
                 for (auto const primitive : aabb._primitives) {
                     t = primitive->Intersect(ray, hit, t_hit);
                     if (t > 0 && t < t_hit) {

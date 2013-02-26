@@ -20,6 +20,7 @@ public:
 
     bool Intersect(Ray const &ray, float &hit_dist) const;
     bool Intersect(AABB const &other) const;
+    bool isEmpty() const;
 
     vec3 _min;
     vec3 _max;

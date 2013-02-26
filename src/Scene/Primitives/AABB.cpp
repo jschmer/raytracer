@@ -55,3 +55,7 @@ bool AABB::Intersect(AABB const &other) const {
             return false;
     return true;
 }
+
+bool AABB::isEmpty() const {
+    return _primitives.size() == 0;
+}
