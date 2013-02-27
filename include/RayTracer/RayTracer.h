@@ -16,10 +16,13 @@ public:
     void load(std::string scene_file);
     void renderInto(IRenderTarget* target);
     void stop();
-
+    float getFPS();
     std::chrono::milliseconds getRenderDuration() const;
 
 private:
-    std::unique_ptr<Scene> scene_;
-    std::chrono::milliseconds render_duration_;
+    std::unique_ptr<Scene>    _scene;
+    std::chrono::milliseconds _render_duration;
+    IRenderTarget*            _target;
+    unsigned long             _numCPUs;
+    float                     _fps;
 };

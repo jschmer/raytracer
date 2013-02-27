@@ -15,7 +15,14 @@ public:
         up(up),
         fovx(0.0),
         fovy(fovy)
-    {}
+    {
+        // origin = eye
+        // v - w = vec, der von punkt w auf punkt v zeigt
+        // -> eye - center = vector, der von center auf eye zeigt
+        w = normalize(eye - center);
+        u = normalize(cross(up, w));
+        v = cross(w, u);
+    }
 
     void initFov(float width, float height) {
         double aspect = width/height;
@@ -28,13 +35,6 @@ public:
     }
 
     void generateRay(Sample& sample, Ray &ray) {
-        // origin = eye
-        // v - w = vec, der von punkt w auf punkt v zeigt
-        // -> eye - center = vector, der von center auf eye zeigt
-        vec3 w = normalize(eye - center);
-        vec3 u = normalize(cross(up, w));
-        vec3 v = cross(w, u);
-
         float alpha = static_cast<float>(tanFovx * ((sample.x - halfWidth)/halfWidth));
         float beta = static_cast<float>(tanFovy * ((halfHeight - sample.y)/halfHeight));
 
@@ -47,6 +47,10 @@ public:
     vec3 eye;
     vec3 center;
     vec3 up;
+
+    vec3 w;
+    vec3 u;
+    vec3 v;
 
     double fovy;
     double fovx;

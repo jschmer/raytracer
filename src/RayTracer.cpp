@@ -18,56 +18,17 @@
 
 // class definition
 RayTracer::RayTracer()
-    : scene_()
-{}
-
-RayTracer::~RayTracer()
-{}
-
-void RayTracer::load(std::string scene_file) {
-    try {
-        scene_ = loadScene(scene_file);
-    } catch (std::exception& e) {
-        std::cout << e.what() << std::endl;
-        scene_ = nullptr;
-    }
-}
-
-void RayTracer::renderInto(IRenderTarget* render_target) {
-    if (nullptr == scene_)
-        return;
-
-    // start timing
-    auto start = std::chrono::system_clock::now();
-
-    // Compute Axis aligned bounding boxes
-    // for each Primitive and 
-    // construct some kind of hirarchy tree from them
-    // for example a 'fixed' grid (divide scene bounding box into 10*10*10 boxes)
-    scene_->createAABB();
-
-    IRenderTarget& target = *render_target;
-    
-    // if the scene definition has a size
-    // then initialize the target accordingly
-    if (scene_->hasSize()) {
-        // set size on target
-        auto& size = scene_->_size;
-        target.init(size.width, size.height);
-    }
-
-    if (!scene_->_camera)
-        scene_->createDefaultCamera();
-
-    auto& camera = *scene_->_camera;
-    camera.initFov(static_cast<float>(target.width()), static_cast<float>(target.height()));
-
+    : _scene(),
+    _target(nullptr),
+    _fps(0.0f)
+{
+#ifdef MULTICORE_DISABLED
+    _numCPUs = 1;
+#else
+    // get number of cores/processors
     SYSTEM_INFO sysinfo;
     GetSystemInfo(&sysinfo);
-    auto numCPU = sysinfo.dwNumberOfProcessors;
-
-#ifdef MULTICORE_DISABLED
-    numCPU = 1;
+    _numCPUs = sysinfo.dwNumberOfProcessors;
 #endif
 
     // decrease process priority to prevent system hangs
@@ -80,6 +41,54 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     IDLE_PRIORITY_CLASS------lowest
     */
     SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+}
+
+RayTracer::~RayTracer()
+{}
+
+void RayTracer::load(std::string scene_file) {
+    try {
+        _scene = loadScene(scene_file);
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        _scene = nullptr;
+    }
+
+    // Compute Axis aligned bounding boxes
+    // for each Primitive and 
+    // construct some kind of hirarchy tree from them
+    // for example a 'fixed' grid (divide scene bounding box into 10*10*10 boxes)
+    _scene->createAABB();
+}
+
+void RayTracer::renderInto(IRenderTarget* render_target) {
+    if (nullptr == _scene)
+        return;
+
+    if (!_scene->_camera)
+            _scene->createDefaultCamera();
+
+    // aliases
+    IRenderTarget& target = *render_target;
+    auto& camera          = *_scene->_camera;
+
+    // new render target? Initialize target and camera with scene parameters 
+    if (_target != render_target) {
+        // if the scene definition has a size
+        // then initialize the target accordingly
+        if (_scene->hasSize()) {
+            // set size on target
+            auto& size = _scene->_size;
+            target.init(size.width, size.height);
+        }
+
+        camera.initFov(static_cast<float>(target.width()), static_cast<float>(target.height()));
+
+        _target = render_target;
+    }
+
+    // start timing
+    auto start = std::chrono::system_clock::now();
 
     // load all samples
     // TODO: split into tiles (32x32) and package them that each thread can work on one package
@@ -112,7 +121,7 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
             for (auto& sample : pack) {
                 camera.generateRay(sample, ray);
 
-                Intersection Hit = scene_->trace(ray, 0);
+                Intersection Hit = _scene->trace(ray, 0);
 
                 target.commit(sample, Hit.color);
             }
@@ -120,24 +129,36 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     };
 
     std::vector<std::future<void>> futs;
-    while (numCPU > 0) {
-        // start thread
+    auto numCPUs = _numCPUs;
+    while (numCPUs > 0) {
+        // start thread for every processor/core
         futs.push_back(std::async(thread_func));
-        --numCPU;
+        --numCPUs;
     }
 
+    // wait for all thread to finish
     for (auto& fut : futs)
         fut.get();
 
+    // call done method on target
     target.OnDone();
 
-    // rendering done!
+    // rendering done! compute render time
     auto diff = std::chrono::system_clock::now() - start;
-    render_duration_ = std::chrono::duration_cast<std::chrono::milliseconds>(diff);
+    _render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(diff);
+
+    // and fps
+    auto rendertime_ms = _render_duration.count();
+    auto this_fps = 1000.0f / rendertime_ms;
+    _fps = (_fps + this_fps)/2.0f;
+}
+
+float RayTracer::getFPS() {
+    return _fps;
 }
 
 std::chrono::milliseconds RayTracer::getRenderDuration() const {
-    return render_duration_;
+    return _render_duration;
 }
 
 void RayTracer::stop() {
