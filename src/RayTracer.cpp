@@ -129,7 +129,7 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     for (auto& fut : futs)
         fut.get();
 
-    target.done();
+    target.OnDone();
 
     // rendering done!
     auto diff = std::chrono::system_clock::now() - start;

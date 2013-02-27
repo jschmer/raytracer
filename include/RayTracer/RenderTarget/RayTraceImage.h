@@ -15,9 +15,8 @@ public:
 
     // IRenderTarget interface
     void init(const unsigned int width, const unsigned int height, const unsigned int bytes_per_pixel = 3) override;
-    bool getSample(Sample &s) override;
     void commit(const Sample& s, const color3 color) override;
-    void done() override;
+    void OnDone() override;
 
     // additional public methods
     void save() const;
@@ -31,11 +30,8 @@ private:
 
     std::unique_ptr<Pixel[]> pImage;
 
-    unsigned int numPixels;
-    unsigned int currentSampleWidth;
-    unsigned int currentSampleHeight;
-    unsigned int pixelCounter;
-    unsigned int saveAfterNumPixel;
+    unsigned int _num_committed_samples;
+    unsigned int _save_after_num_samples;
 
     std::string filename;
 };

@@ -19,37 +19,17 @@ void RayTraceImage::init(const unsigned int width, const unsigned int height, co
     _width  = width;
     _height = height;
 
-    numPixels = width*height;
+    auto numPixels = width*height;
     pImage.reset(new Pixel[numPixels]);
 
-    pixelCounter = 0;
-    currentSampleWidth  = 0;
-    currentSampleHeight = 0;
+    _num_committed_samples = 0;
 
     // save the image all 10%
-    saveAfterNumPixel = numPixels/10;
+    _save_after_num_samples = numPixels/10;
 
     if (!freeimage_initialised) {
         FreeImage_Initialise();
         freeimage_initialised = true;
-    }
-}
-
-bool RayTraceImage::getSample(Sample &s) {
-    if (currentSampleHeight < _height) {
-        currentSampleHeight += currentSampleWidth/_width;
-        currentSampleWidth %= _width;
-
-        s.x = currentSampleWidth + 0.5f;
-        s.y = currentSampleHeight + 0.5f;
-        ++currentSampleWidth;
-
-        return true;
-    } else {
-        pixelCounter = 0;
-        currentSampleWidth  = 0;
-        currentSampleHeight = 0;
-        return false;
     }
 }
 
@@ -63,7 +43,7 @@ void RayTraceImage::commit(const Sample &s, vec3 color) {
 
     pImage[(int)s.y*_width + (int)s.x] = PixelColor;
 
-    if ((++pixelCounter % saveAfterNumPixel) == 0)
+    if ((++_num_committed_samples % _save_after_num_samples) == 0)
         this->save();
 }
 
@@ -77,6 +57,6 @@ BYTE* RayTraceImage::getByteBuffer() const {
     return (BYTE*) (pImage.get());
 }
 
-void RayTraceImage::done() {
+void RayTraceImage::OnDone() {
     this->save();
 }
