@@ -1,3 +1,3 @@
 @echo off 
-raytracer.exe scene_tris.test
+call raytracer.bat scene_tris.test
 pause

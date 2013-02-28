@@ -1,3 +1,3 @@
 @echo off 
-raytracer.exe AreaLight/area_light.test
+call raytracer.bat area_light.test
 pause

@@ -1,5 +1,5 @@
 @echo off 
-raytracer.exe scene_tris.test
-raytracer.exe lazydog.test
-raytracer.exe tricell.test
+call raytracer.bat scene_tris.test
+call raytracer.bat lazydog.test
+call raytracer.bat tricell.test
 pause

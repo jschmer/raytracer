@@ -1,3 +1,3 @@
 @echo off 
-raytracer.exe 3ds/knot.3ds
+call raytracer.bat 3ds/knot.3ds
 pause

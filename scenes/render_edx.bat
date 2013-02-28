@@ -1,3 +1,3 @@
 @echo off 
-raytracer.exe edx test
+call raytracer.bat edx test
 pause

@@ -1,4 +1,4 @@
 @echo off 
-:::raytracer.exe models/ShurikenWithTris.raytrace
-raytracer.exe models/ShurikenWithTris.obj
+call raytracer.bat models/ShurikenWithTris.raytrace
+:::call raytracer.bat models/ShurikenWithTris.obj
 pause
