@@ -22,9 +22,7 @@ Global
 		{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}.StaticLib-Debug|Win32.ActiveCfg = StaticLib-Debug|Win32
 		{F0EABB12-26D6-4C2A-8B9D-C596A0857DB6}.StaticLib-Debug|Win32.Build.0 = StaticLib-Debug|Win32
 		{62A893B4-794A-401E-8423-6294B36A72BE}.Debug|Win32.ActiveCfg = Debug|Win32
-		{62A893B4-794A-401E-8423-6294B36A72BE}.Debug|Win32.Build.0 = Debug|Win32
 		{62A893B4-794A-401E-8423-6294B36A72BE}.Release|Win32.ActiveCfg = Release|Win32
-		{62A893B4-794A-401E-8423-6294B36A72BE}.Release|Win32.Build.0 = Release|Win32
 		{62A893B4-794A-401E-8423-6294B36A72BE}.StaticLib|Win32.ActiveCfg = Release|Win32
 		{62A893B4-794A-401E-8423-6294B36A72BE}.StaticLib-Debug|Win32.ActiveCfg = Debug|Win32
 	EndGlobalSection
