@@ -14,7 +14,10 @@ Scene::Scene()
     : _hasSize(false),  // default values
     _maxdepth(5),
     _camera(nullptr)
-{}
+{
+    _size.height = 600;
+    _size.width  = 600;
+}
 
 Scene::~Scene() {
     for (auto prim : _primitives)
@@ -148,7 +151,7 @@ void Scene::createDefaultCamera() {
 
 void Scene::createDefaultLight() {
     // create a directional light that shines down the Z-axis
-    _lights.push_back(new DirectionalLight(vec3(0, 1, 0), vec3(1, 1, 1)));
+    _lights.push_back(new DirectionalLight(vec3(0, 0, 1), vec3(1, 1, 1)));
 }
 
 

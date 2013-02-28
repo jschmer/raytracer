@@ -26,7 +26,7 @@ public:
 
     void initFov(float width, float height) {
         double aspect = width/height;
-        fovy = radians(fovy);
+        fovy    = radians(fovy);
         tanFovx = tan(fovy/2.0f)*aspect;
         tanFovy = tan(fovy/2.0f);
 

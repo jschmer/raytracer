@@ -65,24 +65,26 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     if (nullptr == _scene)
         return;
 
-    if (!_scene->_camera)
-            _scene->createDefaultCamera();
-
     // aliases
     IRenderTarget& target = *render_target;
-    auto& camera          = *_scene->_camera;
 
     // new render target? Initialize target and camera with scene parameters 
     if (_target != render_target) {
         // if the scene definition has a size
         // then initialize the target accordingly
+        auto& size = _scene->_size;
         if (_scene->hasSize()) {
             // set size on target
-            auto& size = _scene->_size;
             target.init(size.width, size.height);
+        } else {
+            size.height = target.height();
+            size.width  = target.width();
         }
 
-        camera.initFov(static_cast<float>(target.width()), static_cast<float>(target.height()));
+        if (!_scene->_camera)
+            _scene->createDefaultCamera();
+
+        _scene->_camera->initFov(static_cast<float>(size.width), static_cast<float>(size.height));
 
         _target = render_target;
     }
@@ -95,25 +97,25 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     //       use a concurrent_queue
     typedef std::vector<Sample> SamplePack;
     concurrency::concurrent_queue<SamplePack> sample_packs;
-    
-    const auto Packsize = 32u;
+    const auto Packsize = 1024u;
 
     // generating sample packs
     SamplePack pack;
     Sample sample;
-    bool clear = false;
     while(target.getSample(sample)) {
         pack.push_back(sample);
-        clear = false;
-        if (pack.size() == Packsize*Packsize) {
+        if (pack.size() == Packsize) {
             sample_packs.push(SamplePack(pack));
             pack.clear();
-            clear = true;
         }
     }
-    if (!clear)
+    if (!pack.empty())
         sample_packs.push(SamplePack(pack));
 
+    // aliases
+    auto& camera = *_scene->_camera;
+
+    // thread function == raytrace loop
     auto thread_func = [&](){
         Ray ray;
         SamplePack pack;
@@ -136,7 +138,7 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
         --numCPUs;
     }
 
-    // wait for all thread to finish
+    // wait for all threads to finish
     for (auto& fut : futs)
         fut.get();
 
