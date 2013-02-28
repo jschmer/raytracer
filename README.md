@@ -20,17 +20,17 @@ FreeImage is used under the GNU GPL, version 3.
   * Specular color map
  
 * Supported Scene file types:
-  * Everything Assimp (http://assimp.sourceforge.net/) can load
+  * Everything [Assimp](http://assimp.sourceforge.net/) can load
   * custom .test file type (see ./scenes/ for examples)
   * custom .raytrace file type
     * can embed other scene files
     * used for defining additional scene objects (camera, lights, output size, ...)
       for scene file types that can't specify these (e.g. .obj)
 * Automatically defines a camera and Light if there isn't one present (looking/shining down Z-Axis)
-  * good for plain model files (.obj)
+  * Required for plain model files (.obj)
 * Very simple spatial division speedup with regular grid inside the scenes AABB
 * easy derivable IRenderTarget interface to support your own render target
-  * default shipped implementation: PNGImage
+  * default shipped implementation: PNGImage (with [FreeImage](http://freeimage.sourceforge.net) library)
 
 ## TODO
 ### Features
