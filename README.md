@@ -5,13 +5,37 @@ Simple raytracer project for educational purposes written in C++
 This software uses the FreeImage open source image library. See http://freeimage.sourceforge.net for details.  
 FreeImage is used under the GNU GPL, version 3. 
 
+## Features
+* Supports only Triangles (except .test scene files: these support Spheres)
+* Illumination Model with
+  * Reflection
+  * Shadows
+* Lights:
+  * Point
+  * Directional
+  * Area (for soft shadows)
+* Texture/Material support:
+  * Ambient map
+  * Diffuse map
+  * Specular color map
+ 
+* Supported Scene file types:
+  * Everything Assimp (http://assimp.sourceforge.net/) can load
+  * custom .test file type (see ./scenes/ for examples)
+  * custom .raytrace file type
+    * can embed other scene files
+    * used for defining additional scene objects (camera, lights, output size, ...)
+      for scene file types that can't specify these (e.g. .obj)
+* Automatically defines a camera and Light if there isn't one present (looking/shining down Z-Axis)
+  * good for plain model files (.obj)
+* Very simple spatial division speedup with regular grid inside the scenes AABB
+* easy derivable IRenderTarget interface to support your own render target
+  * default shipped implementation: PNGImage
+
 ## TODO
 ### Features
-* Falls keine Kamera im Scenefile definiert ist...
-  - Eine Default-Kamera anhand der Scene-AABB berechnen/erstellen
-
 * Unterstützung von
-  - Specular Map
+  - Specular Level Map (shininess)
   - Bump Map
   - Normal Map
 
