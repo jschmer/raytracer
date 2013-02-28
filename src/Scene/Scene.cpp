@@ -3,12 +3,15 @@
 #include <iostream>
 #include <future>
 
+#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
+
 #include <RayTracer/SceneReader/SceneReader.h>
 #include <RayTracer/Scene/Camera.h>
 #include <RayTracer/Scene/Material.h>
 #include <RayTracer/Scene/Light.h>
 #include <RayTracer/Scene/Primitives/Primitive.h>
 #include <RayTracer/RenderTarget/RayTraceImage.h>
+#include <RayTracer/Scene/Transform.h>
 
 Scene::Scene()
     : _hasSize(false),  // default values
@@ -68,7 +71,8 @@ void Scene::createAABB() {
     float dsizeX = ((maxx - minx) / aabb_dimension) * 1.0001f; // The mul with 1.0001f accounts for a little imprecision, it makes the boxes a bit bigger than the scene AABB
     float dsizeY = ((maxy - miny) / aabb_dimension) * 1.0001f;
     float dsizeZ = ((maxz - minz) / aabb_dimension) * 1.0001f;
-    
+
+    _aabbs.clear();
     for (float dminx = minx, dmaxx = minx + dsizeX; dminx <= maxx; ) {
         for (float dminy = miny, dmaxy = miny + dsizeY; dminy <= maxy; ) {
             for (float dminz = minz, dmaxz = minz + dsizeZ; dminz <= maxz; ) {
@@ -93,6 +97,7 @@ void Scene::createAABB() {
 
     // fill the aabbs
     for (auto& aabb : _aabbs) {
+        aabb._primitives.clear();
         for (auto prim : _primitives) {
             if (aabb.Intersect(prim->getAABB()))
                 aabb._primitives.push_back(prim);
@@ -154,7 +159,6 @@ void Scene::createDefaultLight() {
     _lights.push_back(new DirectionalLight(vec3(0, 0, 1), vec3(1, 1, 1)));
 }
 
-
 bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
     Intersection hit;
     float t;
@@ -177,13 +181,11 @@ bool Scene::inShadow(Ray const &ray, float t_hit = FLT_MAX) {
 
 Intersection Scene::trace(Ray const &ray, int depth) {
     // first fast test: does the ray intersect the scene AABB?
-    float hist_dist;
-    if (!_scene_aabb.Intersect(ray, hist_dist)) {
-        return Intersection();
-    }
-
     float t_hit = FLT_MAX;
     Intersection intersection;
+    if (!_scene_aabb.Intersect(ray, t_hit)) {
+        return intersection;
+    }
 
     if (depth <= this->_maxdepth) {
         float t;
@@ -253,8 +255,9 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
                 out_color += shadow_intensity * light_intensity * (diffuse * common::max(dotP, 0.0f));
 
                 // specular term
-                vec3 halfVec = normalize(shadow_ray.dir + -ray.dir);
+                vec3 halfVec    = normalize(shadow_ray.dir + -ray.dir);
                 float halfAngle = dot(Hit.normal, halfVec);
+
                 out_color += shadow_intensity * light_intensity * (specular * pow(common::max(halfAngle, 0.0f), shininess));
             }
         }
@@ -275,4 +278,45 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     // TODO: Refraction
 
     return out_color;
+}
+
+void Scene::moveCamera(Direction dir, float amount_degrees) {
+    auto& eye = _camera->eye;
+    auto& up  = _camera->up;
+    auto& center  = _camera->center;
+
+    const float moving_percentage = .5f;
+    vec3 looking_dir = glm::normalize(center - eye);
+
+    // TODO
+    /*
+        1. Translate so that rotation axis passes through origin
+        2. Rotate so that the rotation axis is aligned with one of the principle coordinate axes
+        3. Perform rotation of object about coordinate axis
+        4. Perform inverse rotation of step 2
+        5. Perform iInverse translation of step 1
+    */
+
+    switch (dir) {
+    case LEFT: 
+        //Transform::left(amount_degrees, eye, up);
+        break;
+    case RIGHT:
+        //Transform::left(-amount_degrees, eye, up);
+        break;
+    case UP:
+        //Transform::up(amount_degrees, eye, up, up);
+        break;
+    case DOWN:
+        //Transform::up(-amount_degrees, eye, up, up);
+        break;
+    case CLOSER:
+        eye = eye + moving_percentage*looking_dir;
+        break;
+    case FARTHER:
+        eye = eye + moving_percentage*-looking_dir;
+        break;
+    default:
+        assert(false);
+    }
 }

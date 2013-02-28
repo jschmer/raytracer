@@ -156,7 +156,7 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     _fps = (_fps + this_fps)/2.0f;
 }
 
-float RayTracer::getFPS() {
+float RayTracer::getFPS() const {
     return _fps;
 }
 
@@ -166,4 +166,14 @@ std::chrono::milliseconds RayTracer::getRenderDuration() const {
 
 void RayTracer::stop() {
 
+}
+
+void RayTracer::moveCamera(Scene::Direction dir) const {
+    typedef Scene::Direction Direction;
+    auto& scene = *_scene;
+
+    if (scene._camera != nullptr) {
+        const float move_amount = 5.0f;
+        scene.moveCamera(dir, move_amount);
+    }
 }

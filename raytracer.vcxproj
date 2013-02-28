@@ -220,6 +220,7 @@
     <ClInclude Include="include\RayTracer\Scene\Primitives\Sphere.h" />
     <ClInclude Include="include\RayTracer\Scene\Primitives\Triangle.h" />
     <ClInclude Include="include\RayTracer\Scene\Scene.h" />
+    <ClInclude Include="include\RayTracer\Scene\Transform.h" />
     <ClInclude Include="include\RayTracer\windows_includes.h" />
     <ClInclude Include="include\String\StringHelper.h" />
     <ClInclude Include="include\VS_Memory_Allocation_Debugging.h" />
@@ -246,6 +247,7 @@
     <ClCompile Include="src\Scene\Primitives\Sphere.cpp" />
     <ClCompile Include="src\Scene\Primitives\Triangle.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\Transform.cpp" />
     <ClCompile Include="src\String\StringHelper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

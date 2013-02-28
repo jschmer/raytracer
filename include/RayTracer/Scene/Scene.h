@@ -23,6 +23,15 @@ public:
     Scene();
     ~Scene();
 
+    enum Direction {
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN,
+        CLOSER,
+        FARTHER
+    };
+
     void createAABB();
     void createDefaultCamera();
     void createDefaultLight();
@@ -30,6 +39,8 @@ public:
     color3 shade(Intersection &Hit, Ray const &ray, int depth);
     Intersection trace(Ray const &ray, int depth);
     bool inShadow(Ray const &ray, float t_hit);
+
+    void moveCamera(Direction dir, float amount_degrees);
 
     bool hasSize() const {
         return _hasSize;

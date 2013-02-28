@@ -5,8 +5,7 @@
 #include <chrono>
 
 #include <RayTracer/RenderTarget/IRenderTarget.h>
-
-class Scene;
+#include <RayTracer/Scene/Scene.h>
 
 class RayTracer {
 public:
@@ -16,7 +15,8 @@ public:
     void load(std::string scene_file);
     void renderInto(IRenderTarget* target);
     void stop();
-    float getFPS();
+    float getFPS() const;
+    void moveCamera(Scene::Direction dir) const;
     std::chrono::milliseconds getRenderDuration() const;
 
 private:
