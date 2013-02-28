@@ -10,7 +10,7 @@
 #include <RayTracer/Scene/Material.h>
 #include <RayTracer/Scene/Light.h>
 #include <RayTracer/Scene/Primitives/Primitive.h>
-#include <RayTracer/RenderTarget/RayTraceImage.h>
+#include <RayTracer/RenderTarget/PNGImage.h>
 #include <RayTracer/Scene/Transform.h>
 
 Scene::Scene()
