@@ -79,6 +79,7 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
         } else {
             size.height = target.height();
             size.width  = target.width();
+            _scene->_hasSize = true;
         }
 
         if (!_scene->_camera)
