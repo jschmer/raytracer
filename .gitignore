@@ -6,3 +6,4 @@
 *.user
 /bin
 /raytracerTest/bin
+/lib/raytracer
