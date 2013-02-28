@@ -57,9 +57,6 @@
     <ClInclude Include="include\RayTracer\RenderTarget\IRenderTarget.h">
       <Filter>Header Files\RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="include\RayTracer\RenderTarget\RayTraceImage.h">
-      <Filter>Header Files\RenderTarget</Filter>
-    </ClInclude>
     <ClInclude Include="include\RayTracer\Scene\Scene.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
@@ -117,6 +114,9 @@
     <ClInclude Include="include\RayTracer\Scene\Primitives\AABB.h">
       <Filter>Header Files\Scene\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="include\RayTracer\RenderTarget\PNGImage.h">
+      <Filter>Header Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -133,9 +133,6 @@
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>Source Files\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderTarget\RayTraceImage.cpp">
-      <Filter>Source Files\RenderTarget</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Material.cpp">
       <Filter>Source Files\Scene</Filter>
@@ -166,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="src\Scene\Primitives\AABB.cpp">
       <Filter>Source Files\Scene\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\PNGImage.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -201,7 +201,7 @@
     <ClInclude Include="include\RayTracer\Ray.h" />
     <ClInclude Include="include\RayTracer\RayTracer.h" />
     <ClInclude Include="include\RayTracer\RenderTarget\IRenderTarget.h" />
-    <ClInclude Include="include\RayTracer\RenderTarget\RayTraceImage.h" />
+    <ClInclude Include="include\RayTracer\RenderTarget\PNGImage.h" />
     <ClInclude Include="include\RayTracer\SceneReader\ISceneLoader.h" />
     <ClInclude Include="include\RayTracer\SceneReader\AssimpParser.h" />
     <ClInclude Include="include\RayTracer\SceneReader\RaytraceParser.h" />
@@ -231,7 +231,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='StaticLib-Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\RayTracer.cpp" />
-    <ClCompile Include="src\RenderTarget\RayTraceImage.cpp" />
+    <ClCompile Include="src\RenderTarget\PNGImage.cpp" />
     <ClCompile Include="src\SceneReader\AssimpParser.cpp" />
     <ClCompile Include="src\SceneReader\RaytraceParser.cpp" />
     <ClCompile Include="src\SceneReader\SceneParserHelper.cpp" />

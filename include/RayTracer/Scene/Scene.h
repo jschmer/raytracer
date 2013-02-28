@@ -14,7 +14,7 @@ class Light;
 class Camera;
 class Material;
 class Primitive;
-class RayTraceImage;
+class PNGImage;
 struct Intersection;
 
 class Scene

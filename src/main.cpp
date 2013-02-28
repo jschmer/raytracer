@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include <RayTracer/glm_includes.h>
 #include <glm/gtc/matrix_transform.hpp> 
@@ -9,7 +10,7 @@ using glm::scale;
 using glm::translate;
 using glm::rotate;
 
-#include <RayTracer/RenderTarget/RayTraceImage.h>
+#include <RayTracer/RenderTarget/PNGImage.h>
 #include <RayTracer/RayTracer.h>
 #include <String/StringHelper.h>
 
@@ -87,7 +88,7 @@ int main(int argc, char* argv[]) {
             auto out_file = String::replaceExtension(filepath, "png");
             std::cout << "    into: " << out_file << "\n";
 
-            RayTraceImage image(out_file, 600, 600);
+            PNGImage image(out_file, 600, 600);
             RayTracer tracer;
             tracer.load(filepath);
 
@@ -101,7 +102,10 @@ int main(int argc, char* argv[]) {
         auto out_file = String::replaceExtension(path, "png");
         std::cout << "    into: " << out_file << "\n";
 
-        RayTraceImage image(out_file, 600, 480);
+        
+
+        PNGImage image(out_file + ".png", 600, 480);
+        //Null image;
         RayTracer tracer;
         tracer.load(path);
 
@@ -109,7 +113,16 @@ int main(int argc, char* argv[]) {
         long long sum = 0;
         for (auto i=0; i<10; ++i) {
 #endif
-            tracer.renderInto(&image);
+            for (int i=0; i<10; ++i) {
+                tracer.renderInto(&image);
+                //if (i<5)
+                //    tracer.moveCamera(Scene::Direction::CLOSER);
+                //else
+                //    tracer.moveCamera(Scene::Direction::FARTHER);
+                //std::stringstream ss;
+                //ss << out_file << i << ".png";
+                //image.setOutputName(ss.str());
+            }
 #ifdef PERF_TEST
             sum += tracer.getRenderDuration().count();
         }
