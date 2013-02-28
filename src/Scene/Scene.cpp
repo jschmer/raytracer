@@ -103,7 +103,6 @@ void Scene::createDefaultCamera() {
     // create a camera that looks at the center of the scene-bounding-box
     // and that shows the entire scene
     vec3 eye, lookAt, up(0, 1, 0);
-    float FOVy = 45;
 
     // calculating the center of the scenes bounding box
     auto& max = _scene_aabb._max;
@@ -113,11 +112,32 @@ void Scene::createDefaultCamera() {
     lookAt.y = (max.y + min.y) / 2.0f;
     lookAt.z = (max.z + min.z) / 2.0f;
 
+    // calculating the distance of the camera to the scene
+    // has to be the distance where the camera can see the complete scene
+    float aspect = (float)_size.width/_size.height;
+    float FOVy_degree = 45.0f;
+    float FOVy = radians(FOVy_degree);
+    float FOVx = FOVy*aspect;          // basis of thought: (height/width) = (FOVy/FOVx)
+
+    auto half_AABB_height = (max.y - min.y)/2.0f;
+    auto half_AABB_width  = (max.x - min.x)/2.0f;
+    auto Zlen_height = half_AABB_height/tan(FOVy/2.0f);
+    auto Zlen_width  = half_AABB_width /tan(FOVx/2.0f);
+
+    // Zlen was calculated relative to z = 0
+    // --> add maximum z-value of AABB
+    Zlen_height += max.z;
+    Zlen_width  += max.z;
+
+    // offset the distance a bit further to get a bit space from the scene to the image border
+    Zlen_height *= 1.1f;
+    Zlen_width  *= 1.1f;
+
     eye.x = lookAt.x;
     eye.y = lookAt.y;
-    eye.z = 20; // TODO: ordentlichen wert berechnen, der weit genug weg ist um alles zu sehen
+    eye.z = common::max(Zlen_height, Zlen_width);
 
-    _camera.reset(new Camera(eye, lookAt, up, FOVy));
+    _camera.reset(new Camera(eye, lookAt, up, FOVy_degree));
 
     // set up a light if there isn't one
     if (_lights.size() == 0) {

@@ -8,7 +8,7 @@ output reflection_test.png
 maxdepth 5
 
 # camera
-camera 2 1.5 10    -.7 1.5 0 0 1 0 30
+#camera 2 1.5 10    -.7 1.5 0 0 1 0 30
 
 # lights
 directional 1 2 3 .3 .3 .3
