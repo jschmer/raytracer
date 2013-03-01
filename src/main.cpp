@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
 
         
 
-        PNGImage image(out_file + ".png", 600, 480);
+        PNGImage image(out_file, 600, 480);
         //Null image;
         RayTracer tracer;
         tracer.load(path);
