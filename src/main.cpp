@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
 
         
 
-        PNGImage image(out_file + ".png", 600, 480);
+        PNGImage image(out_file, 600, 480);
         //Null image;
         RayTracer tracer;
         tracer.load(path);
@@ -113,7 +113,7 @@ int main(int argc, char* argv[]) {
         long long sum = 0;
         for (auto i=0; i<10; ++i) {
 #endif
-            for (int i=0; i<10; ++i) {
+            //for (int i=0; i<10; ++i) {
                 tracer.renderInto(&image);
                 //if (i<5)
                 //    tracer.moveCamera(Scene::Direction::CLOSER);
@@ -122,7 +122,7 @@ int main(int argc, char* argv[]) {
                 //std::stringstream ss;
                 //ss << out_file << i << ".png";
                 //image.setOutputName(ss.str());
-            }
+            //}
 #ifdef PERF_TEST
             sum += tracer.getRenderDuration().count();
         }

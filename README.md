@@ -1,6 +1,7 @@
 # raytracer
 
-Simple raytracer project for educational purposes written in C++
+Simple raytracer project for educational purposes written in C++ with Visual Studio 2012.
+Target system is Windows for now.
 
 This software uses the FreeImage open source image library. See http://freeimage.sourceforge.net for details.  
 FreeImage is used under the GNU GPL, version 3. 
@@ -33,6 +34,10 @@ FreeImage is used under the GNU GPL, version 3.
   * default shipped implementation: PNGImage (with [FreeImage](http://freeimage.sourceforge.net) library)
 
 ## TODO
+Write some build info.
+- depends on Assimp (included)
+- depends on FreeImage (included)
+
 ### Features
 * Unterstützung von
   - Specular Level Map (shininess)
