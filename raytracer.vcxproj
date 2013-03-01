@@ -241,6 +241,7 @@
       </ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\SceneReader\SceneReader.cpp" />
+    <ClCompile Include="src\Scene\Camera.cpp" />
     <ClCompile Include="src\Scene\Light.cpp" />
     <ClCompile Include="src\Scene\Material.cpp" />
     <ClCompile Include="src\Scene\Primitives\AABB.cpp" />

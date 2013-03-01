@@ -281,42 +281,5 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
 }
 
 void Scene::moveCamera(Direction dir, float amount_degrees) {
-    auto& eye = _camera->eye;
-    auto& up  = _camera->up;
-    auto& center  = _camera->center;
-
-    const float moving_percentage = .5f;
-    vec3 looking_dir = glm::normalize(center - eye);
-
-    // TODO
-    /*
-        1. Translate so that rotation axis passes through origin
-        2. Rotate so that the rotation axis is aligned with one of the principle coordinate axes
-        3. Perform rotation of object about coordinate axis
-        4. Perform inverse rotation of step 2
-        5. Perform iInverse translation of step 1
-    */
-
-    switch (dir) {
-    case LEFT: 
-        //Transform::left(amount_degrees, eye, up);
-        break;
-    case RIGHT:
-        //Transform::left(-amount_degrees, eye, up);
-        break;
-    case UP:
-        //Transform::up(amount_degrees, eye, up, up);
-        break;
-    case DOWN:
-        //Transform::up(-amount_degrees, eye, up, up);
-        break;
-    case CLOSER:
-        eye = eye + moving_percentage*looking_dir;
-        break;
-    case FARTHER:
-        eye = eye + moving_percentage*-looking_dir;
-        break;
-    default:
-        assert(false);
-    }
+    _camera->move(dir, amount_degrees);
 }

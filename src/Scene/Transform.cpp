@@ -1,8 +1,3 @@
-#include <VS_Memory_Allocation_Debugging.h>
-
-// Transform.cpp: implementation of the Transform class.
-
-
 #include <RayTracer/Scene/Transform.h>
 
 const auto PI = 3.14159265358979323846f;

@@ -16,7 +16,7 @@ public:
     void renderInto(IRenderTarget* target);
     void stop();
     float getFPS() const;
-    void moveCamera(Scene::Direction dir) const;
+    void moveCamera(Direction dir) const;
     std::chrono::milliseconds getRenderDuration() const;
 
 private:

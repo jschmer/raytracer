@@ -7,11 +7,11 @@
 
 #include <RayTracer/glm_includes.h>
 #include <RayTracer/Scene/Primitives/AABB.h>
+#include <RayTracer/Scene/Camera.h>
 
 // forward declarations
 class Ray;
 class Light;
-class Camera;
 class Material;
 class Primitive;
 class PNGImage;
@@ -23,15 +23,6 @@ public:
     Scene();
     ~Scene();
 
-    enum Direction {
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN,
-        CLOSER,
-        FARTHER
-    };
-
     void createAABB();
     void createDefaultCamera();
     void createDefaultLight();
@@ -39,7 +30,6 @@ public:
     color3 shade(Intersection &Hit, Ray const &ray, int depth);
     Intersection trace(Ray const &ray, int depth);
     bool inShadow(Ray const &ray, float t_hit);
-
     void moveCamera(Direction dir, float amount_degrees);
 
     bool hasSize() const {

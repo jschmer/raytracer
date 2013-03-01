@@ -168,8 +168,7 @@ void RayTracer::stop() {
 
 }
 
-void RayTracer::moveCamera(Scene::Direction dir) const {
-    typedef Scene::Direction Direction;
+void RayTracer::moveCamera(Direction dir) const {
     auto& scene = *_scene;
 
     if (scene._camera != nullptr) {

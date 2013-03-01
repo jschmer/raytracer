@@ -179,5 +179,8 @@
     <ClCompile Include="src\RenderTarget\PNGImage.cpp">
       <Filter>Source Files\RenderTarget</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Camera.cpp">
+      <Filter>Source Files\Scene\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
