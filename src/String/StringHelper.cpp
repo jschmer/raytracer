@@ -34,4 +34,12 @@ namespace String {
 
         return replace(inp, inp.substr(point_pos, inp.length() - 1), "." + new_ext);
     }
+
+    std::string  ToString(std::wstring wstring) {
+        return std::string(begin(wstring), end(wstring));
+    }
+
+    std::wstring ToWString(std::string string) {
+        return std::wstring(begin(string), end(string));
+    }
 }

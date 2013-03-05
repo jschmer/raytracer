@@ -9,4 +9,7 @@ namespace String {
 
     std::string replace(std::string s, const std::string find, const std::string replace);
     std::string replaceExtension(std::string inp, const std::string new_ext);
+
+    std::string  ToString(std::wstring wstring);
+    std::wstring ToWString(std::string string);
 }
