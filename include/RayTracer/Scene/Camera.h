@@ -25,7 +25,9 @@ public:
 
     void generateRay(Sample& sample, Ray &ray);
 
-    void move(Direction dir, float amount_degrees);
+    void move(Direction dir, float angle);
+
+    void moveAroundCrystalBall(Direction dir, float angle);
 
 private:
     vec3 _eye;

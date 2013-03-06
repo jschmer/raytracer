@@ -11,7 +11,6 @@
 #include <RayTracer/Scene/Light.h>
 #include <RayTracer/Scene/Primitives/Primitive.h>
 #include <RayTracer/RenderTarget/PNGImage.h>
-#include <RayTracer/Scene/Transform.h>
 
 Scene::Scene()
     : _hasSize(false),  // default values

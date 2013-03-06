@@ -17,6 +17,7 @@ public:
     void stop();
     float getFPS() const;
     void moveCamera(Direction dir) const;
+    void moveCrystalBall(Direction dir) const;
     std::chrono::milliseconds getRenderDuration() const;
 
 private:

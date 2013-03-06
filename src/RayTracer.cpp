@@ -49,16 +49,20 @@ RayTracer::~RayTracer()
 void RayTracer::load(std::string scene_file) {
     try {
         _scene = loadScene(scene_file);
+
+        // Compute Axis aligned bounding boxes
+        // for each Primitive and 
+        // construct some kind of hirarchy tree from them
+        // for example a 'fixed' grid (divide scene bounding box into 10*10*10 boxes)
+        _scene->createAABB();
+
+        _target = nullptr;
+
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
         _scene = nullptr;
+        throw e;
     }
-
-    // Compute Axis aligned bounding boxes
-    // for each Primitive and 
-    // construct some kind of hirarchy tree from them
-    // for example a 'fixed' grid (divide scene bounding box into 10*10*10 boxes)
-    _scene->createAABB();
 }
 
 void RayTracer::renderInto(IRenderTarget* render_target) {
@@ -172,7 +176,16 @@ void RayTracer::moveCamera(Direction dir) const {
     auto& scene = *_scene;
 
     if (scene._camera != nullptr) {
-        const float move_amount = 5.0f;
+        const float move_amount = 1.0f;
         scene.moveCamera(dir, move_amount);
+    }
+}
+
+void RayTracer::moveCrystalBall(Direction dir) const {
+    auto& scene = *_scene;
+
+    if (scene._camera != nullptr) {
+        const float move_amount = 1.0f;
+        scene._camera->moveAroundCrystalBall(dir, move_amount);
     }
 }
