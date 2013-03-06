@@ -16,7 +16,7 @@ bool readvals(std::stringstream &s, const int numvals, std::vector<float> &value
 }
 
 std::string getDirectory(std::string path) {
-    String::replace(path, "\\", "/");
+    path = String::replace(path, "\\", "/");
     auto pos = path.rfind('/');
     if (std::string::npos != pos) {
         // leave trailing slash there!
