@@ -14,15 +14,25 @@ using glm::rotate;
 #include <RayTracer/RayTracer.h>
 #include <String/StringHelper.h>
 
+void getAllFilesIn(std::wstring folder, std::vector<std::wstring> &files, std::wstring ext);
+
 void getAllFilesIn(std::string folder, std::vector<std::string> &files, std::string ext = "test") {
+    std::vector<std::wstring> wide_files;
+    getAllFilesIn(String::ToWString(folder), wide_files, String::ToWString(ext));
+
+    for (auto wFile : wide_files)
+        files.push_back(String::ToString(wFile));
+}
+
+void getAllFilesIn(std::wstring folder, std::vector<std::wstring> &files, std::wstring ext = L"test") {
     HANDLE hFind;
     WIN32_FIND_DATA data;
 
-    hFind = FindFirstFile((folder + "*."+ext).c_str(), &data);
+    hFind = FindFirstFile((folder + L"*." + ext).c_str(), &data);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
             if (data.cFileName[0] != '.')
-                files.push_back(std::string(data.cFileName));
+                files.push_back(std::wstring(data.cFileName));
         } while (FindNextFile(hFind, &data));
         FindClose(hFind);
     }
