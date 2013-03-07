@@ -16,11 +16,14 @@
 #include <RayTracer/SceneReader/SceneReader.h>
 #include <String/StringHelper.h>
 
+#include <Win32Specifics.h>
+
 // class definition
 RayTracer::RayTracer()
     : _scene(),
     _target(nullptr),
-    _fps(0.0f)
+    _fps(0.0f),
+    _stop(false)
 {
 #ifdef MULTICORE_DISABLED
     _numCPUs = 1;
@@ -47,6 +50,8 @@ RayTracer::~RayTracer()
 {}
 
 void RayTracer::load(std::string scene_file) {
+    stop();
+
     try {
         _scene = loadScene(scene_file);
 
@@ -56,46 +61,66 @@ void RayTracer::load(std::string scene_file) {
         // for example a 'fixed' grid (divide scene bounding box into 10*10*10 boxes)
         _scene->createAABB();
 
-        _target = nullptr;
+        // create a default camera if none was specified, needs the AABB!
+        if (!_scene->_camera)
+            _scene->createDefaultCamera();
 
+        // reset render target
+        _target = nullptr;
     } catch (std::exception& e) {
+        // file not found or something else...
         std::cout << e.what() << std::endl;
         _scene = nullptr;
         throw e;
     }
+
+    start();
+}
+
+void RayTracer::initRendertarget(IRenderTarget* render_target) {
+    IRenderTarget& target = *render_target;
+
+    // if the scene definition has a size
+    // then initialize the target accordingly
+    auto& size = _scene->_size;
+    if (_scene->hasSize()) {
+        unsigned int width, height;
+        GetDesktopResolution(width, height);
+
+        // clamp to current display resolution
+        if (size.width > width)
+            size.width = width;
+        if (size.height > height)
+            size.height = height;
+
+        // set scene size on target
+        target.init(size.width, size.height);
+    } else {
+        // initialize the scene size with the targets values
+        size.height = target.height();
+        size.width  = target.width();
+        _scene->_hasSize = true;
+    }
+
+    _scene->_camera->initFov(static_cast<float>(size.width), static_cast<float>(size.height));
+
+    _target = render_target;
 }
 
 void RayTracer::renderInto(IRenderTarget* render_target) {
     if (nullptr == _scene)
         return;
 
-    // aliases
-    IRenderTarget& target = *render_target;
-
     // new render target? Initialize target and camera with scene parameters 
-    if (_target != render_target) {
-        // if the scene definition has a size
-        // then initialize the target accordingly
-        auto& size = _scene->_size;
-        if (_scene->hasSize()) {
-            // set size on target
-            target.init(size.width, size.height);
-        } else {
-            size.height = target.height();
-            size.width  = target.width();
-            _scene->_hasSize = true;
-        }
-
-        if (!_scene->_camera)
-            _scene->createDefaultCamera();
-
-        _scene->_camera->initFov(static_cast<float>(size.width), static_cast<float>(size.height));
-
-        _target = render_target;
-    }
+    if (_target != render_target) 
+        initRendertarget(render_target);
 
     // start timing
     auto start = std::chrono::system_clock::now();
+    
+    // aliases
+    IRenderTarget& target = *render_target;
+    auto& camera = *_scene->_camera;
 
     // load all samples
     // TODO: split into tiles (32x32) and package them that each thread can work on one package
@@ -117,14 +142,11 @@ void RayTracer::renderInto(IRenderTarget* render_target) {
     if (!pack.empty())
         sample_packs.push(SamplePack(pack));
 
-    // aliases
-    auto& camera = *_scene->_camera;
-
     // thread function == raytrace loop
-    auto thread_func = [&](){
+    auto thread_func = [&, this](){
         Ray ray;
         SamplePack pack;
-        while (sample_packs.try_pop(pack)) {
+        while (!_stop && sample_packs.try_pop(pack)) {
             for (auto& sample : pack) {
                 camera.generateRay(sample, ray);
 
@@ -169,7 +191,11 @@ std::chrono::milliseconds RayTracer::getRenderDuration() const {
 }
 
 void RayTracer::stop() {
+    _stop = true;
+}
 
+void RayTracer::start() {
+    _stop = false;
 }
 
 void RayTracer::moveCamera(Direction dir) const {

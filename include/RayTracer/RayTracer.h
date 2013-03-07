@@ -14,11 +14,20 @@ public:
 
     void load(std::string scene_file);
     void renderInto(IRenderTarget* target);
+
     void stop();
+    void start();
+
+    // Getter
     float getFPS() const;
+    std::chrono::milliseconds getRenderDuration() const;
+
+    // Camera transformation
     void moveCamera(Direction dir) const;
     void moveCrystalBall(Direction dir) const;
-    std::chrono::milliseconds getRenderDuration() const;
+
+private:
+    void initRendertarget(IRenderTarget* target);
 
 private:
     std::unique_ptr<Scene>    _scene;
@@ -26,4 +35,5 @@ private:
     IRenderTarget*            _target;
     unsigned long             _numCPUs;
     float                     _fps;
+    bool                      _stop;
 };

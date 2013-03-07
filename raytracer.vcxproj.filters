@@ -123,6 +123,9 @@
     <ClInclude Include="include\RayTracer\RenderTarget\PNGImage.h">
       <Filter>Header Files\RenderTarget</Filter>
     </ClInclude>
+    <ClInclude Include="include\Win32Specifics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

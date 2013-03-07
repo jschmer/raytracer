@@ -223,6 +223,7 @@
     <ClInclude Include="include\RayTracer\windows_includes.h" />
     <ClInclude Include="include\String\StringHelper.h" />
     <ClInclude Include="include\VS_Memory_Allocation_Debugging.h" />
+    <ClInclude Include="include\Win32Specifics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssimpToRaytracerTypes.cpp" />

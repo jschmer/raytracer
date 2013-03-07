@@ -112,8 +112,6 @@ int main(int argc, char* argv[]) {
         auto out_file = String::replaceExtension(path, "png");
         std::cout << "    into: " << out_file << "\n";
 
-        
-
         PNGImage image(out_file, 600, 480);
         //Null image;
         RayTracer tracer;

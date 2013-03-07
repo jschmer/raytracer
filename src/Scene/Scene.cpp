@@ -221,11 +221,11 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
     // die infos von der Intersection benutzen!
     // die verschiedenen farben sollten in der Intersect methode der Primitiven gesetzt werden
     // dort kann auch auf die texturen zugegriffen werden
-    vec3& diffuse    = material_color.diffuse;
-    vec3& ambient    = material_color.ambient;
-    vec3& specular   = material_color.specular;
-    vec3& emission   = material_color.emission;
-    float& shininess = material_color.shininess;
+    auto& diffuse    = material_color.diffuse;
+    auto& ambient    = material_color.ambient;
+    auto& specular   = material_color.specular;
+    auto& emission   = material_color.emission;
+    auto& shininess = material_color.shininess;
 
     out_color += ambient;
     out_color += emission;
