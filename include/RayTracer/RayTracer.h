@@ -14,6 +14,7 @@ public:
 
     void load(std::string scene_file);
     void renderInto(IRenderTarget* target);
+    void initRendertarget(IRenderTarget* target);
 
     void stop();
     void start();
@@ -25,9 +26,6 @@ public:
     // Camera transformation
     void moveCamera(Direction dir) const;
     void moveCrystalBall(Direction dir) const;
-
-private:
-    void initRendertarget(IRenderTarget* target);
 
 private:
     std::unique_ptr<Scene>    _scene;
