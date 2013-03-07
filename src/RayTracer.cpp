@@ -53,7 +53,8 @@ void RayTracer::load(std::string scene_file) {
     stop();
 
     try {
-        _scene = loadScene(scene_file);
+        auto new_scene = loadScene(scene_file);
+        _scene = std::move(new_scene);
 
         // Compute Axis aligned bounding boxes
         // for each Primitive and 
@@ -67,10 +68,11 @@ void RayTracer::load(std::string scene_file) {
 
         // reset render target
         _target = nullptr;
+        _fps = 0.f;
+        _render_duration = std::chrono::milliseconds(0);
     } catch (std::exception& e) {
         // file not found or something else...
         std::cout << e.what() << std::endl;
-        _scene = nullptr;
         throw e;
     }
 
