@@ -27,6 +27,9 @@ public:
     void moveCamera(Direction dir) const;
     void moveCrystalBall(Direction dir) const;
 
+    void enableFastmode() const;
+    void disableFastmode() const;
+
 private:
     std::unique_ptr<Scene>    _scene;
     std::chrono::milliseconds _render_duration;

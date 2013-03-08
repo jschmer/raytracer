@@ -217,3 +217,11 @@ void RayTracer::moveCrystalBall(Direction dir) const {
         scene._camera->moveAroundCrystalBall(dir, move_amount);
     }
 }
+
+void RayTracer::enableFastmode() const {
+    _scene->_fast_mode = true;
+}
+
+void RayTracer::disableFastmode() const {
+    _scene->_fast_mode = false;
+}

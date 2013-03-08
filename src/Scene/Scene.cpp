@@ -15,7 +15,8 @@
 Scene::Scene()
     : _hasSize(false),  // default values
     _maxdepth(5),
-    _camera(nullptr)
+    _camera(nullptr),
+    _fast_mode(false)
 {
     _size.height = 600;
     _size.width  = 600;
@@ -245,7 +246,7 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
                 float max_dist = p_light->getDistanceTo(shadow_ray.pos);
 
                 // Hitpoint ist im Schatten wenn inShadow die erste Intersection zwischen Hitpoint und Light position findet
-                if (inShadow(shadow_ray, max_dist))
+                if (!_fast_mode && inShadow(shadow_ray, max_dist))
                     continue;       // pixel in shadow don't contribute to output color
 
                 vec3 light_intensity = p_light->getIntensityAt(Hit.hitPoint);
@@ -262,7 +263,7 @@ vec3 Scene::shade(Intersection &Hit, Ray const &ray, int depth) {
         }
  }
 
-    if (color3(0.0f) != specular) {
+    if (!_fast_mode && (color3(0.0f) != specular)) {
         // reflection
         // R = V – 2 * (V·N) * N 
         Ray reflectionRay;

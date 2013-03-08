@@ -39,6 +39,7 @@ public:
     ////////// scene variables
     int _maxdepth;
     std::string _outputFilename;
+    bool _fast_mode;
 
     /*
      * image size
